@@ -1,0 +1,1 @@
+console.log("Assets loaded (Model 1 + Bootstrap).");
