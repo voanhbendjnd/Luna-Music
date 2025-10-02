@@ -125,7 +125,8 @@
             </div>
             <div class="modal-body">
                 <div class="d-grid gap-2">
-                    <a href="<%= request.getContextPath()%>/register" class="btn btn-outline-light">Sign up</a>
+                    <a href="<%= request.getContextPath()%>/register" class="btn btn-outline-light"
+                        style="background-color: #1f1c1c; color: #fff;">Sign up</a>
                     <a href="<%= request.getContextPath() %>/login" class="btn btn-light text-dark fw-bold">
                         Login
                     </a>
