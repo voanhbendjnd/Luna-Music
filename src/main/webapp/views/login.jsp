@@ -7,7 +7,7 @@
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Đăng ký</title>
+                <title>Login</title>
                 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
                     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
                     crossorigin="anonymous">
@@ -121,22 +121,25 @@
             <body>
 
                 <div class="signup-container">
-                    <img src="<%= request.getContextPath() %>/assets/img/LogoFinal.png" alt="Logo của tôi"
-                        class="spotify-logo" style="object-fit: contain;">
+                    <a href="<%= request.getContextPath()%>/">
+                        <img src="<%= request.getContextPath() %>/assets/img/LogoFinal.png" alt="Logo của tôi"
+                            class="spotify-logo" style="object-fit: contain;">
+
+                    </a>
 
                     <h1>Welcome back</h1>
 
                     <form action="<%= request.getContextPath() %>/login" method="post">
                         <div class="mb-3 text-start">
                             <label for="emailInput" class="form-label">Email address</label>
-                            <input type="email" class="form-control" id="emailInput" placeholder="name@domain.com" name ="email"
+                            <input class="form-control" id="emailInput" placeholder="name@domain.com" name="email"
                                 required>
                         </div>
 
                         <div class="mb-4 text-start">
                             <label for="passwordInput" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="passwordInput" placeholder="Password" name ="password"
-                                required>
+                            <input type="password" class="form-control" id="passwordInput" placeholder="Password"
+                                name="password" required>
                         </div>
 
                         <div class="d-grid mb-4" style="display: flex;
@@ -153,7 +156,9 @@
                     </div>
 
                     <div class="login-text">
-                        Don't have an account? <a href="#" class="login-link">Sign up</a>
+                        Don't have an account? <a href="<%= request.getContextPath() %>/register"
+                            class="login-link">Sign
+                            up</a>
                     </div>
                 </div>
 
