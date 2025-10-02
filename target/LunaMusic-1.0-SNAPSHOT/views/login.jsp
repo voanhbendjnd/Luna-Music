@@ -121,28 +121,21 @@
             <body>
 
                 <div class="signup-container">
-                    <!-- <svg class="spotify-logo" role="img" height="40" width="40" aria-hidden="true" viewBox="0 0 24 24"
-                        data-testid="spotify-logo">
-                        <path fill="#1ed760"
-                            d="M12 24c6.627 0 12-5.373 12-12S18.627 0 12 0 0 5.373 0 12s5.373 12 12 12zM7.5 7.5a.75.75 0 0 0 0 1.5h1.498a5.161 5.161 0 0 1 5.006 4.904c0 1.637-.621 3.16-1.748 4.363a.75.75 0 0 0 1.054 1.074 6.709 6.709 0 0 0 2.106-5.437 6.661 6.661 0 0 0-6.75-6.65h-1.499z">
-                        </path>
-                    </svg> -->
-                    <img src="${pageContext.request.contextPath}/assets/img/LogoFinal.png" alt="Logo của tôi"
-                        class="spotify-logo" style="object-fit: contain;
-                        ">
+                    <img src="<%= request.getContextPath() %>/assets/img/LogoFinal.png" alt="Logo của tôi"
+                        class="spotify-logo" style="object-fit: contain;">
 
                     <h1>Welcome back</h1>
 
-                    <form>
+                    <form action="<%= request.getContextPath() %>/login" method="post">
                         <div class="mb-3 text-start">
                             <label for="emailInput" class="form-label">Email address</label>
-                            <input type="email" class="form-control" id="emailInput" placeholder="name@domain.com"
+                            <input type="email" class="form-control" id="emailInput" placeholder="name@domain.com" name ="email"
                                 required>
                         </div>
 
                         <div class="mb-4 text-start">
                             <label for="passwordInput" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="passwordInput" placeholder="Password"
+                            <input type="password" class="form-control" id="passwordInput" placeholder="Password" name ="password"
                                 required>
                         </div>
 

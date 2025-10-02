@@ -1,3 +1,4 @@
+controllers\HomeController.class
 domain\entity\User.class
-repository\UserRepository.class
+controllers\LoginController.class
 utils\DatabaseConfig.class
