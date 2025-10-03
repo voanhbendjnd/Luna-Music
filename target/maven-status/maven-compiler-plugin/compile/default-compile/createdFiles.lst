@@ -1,7 +1,9 @@
 controllers\HomeController.class
+controllers\RegisterController.class
 domain\entity\User.class
 controllers\LoginController.class
 DALs\UserDAO.class
 constant\GenderEnum.class
+controllers\admin\AdminController.class
 utils\DatabaseConfig.class
 domain\entity\Role.class
