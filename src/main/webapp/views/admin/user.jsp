@@ -54,11 +54,15 @@
                                                 <td>
                                                     <c:out value="${u.gender}" />
                                                 </td>
-                                                <td>
-                                                    <span class="badge bg-info">
-                                                        <c:out value="${u.role.name}" />
-                                                    </span>
-                                                </td>
+                                    <td>
+                                        <span class="badge bg-info">
+                                            <c:choose>
+                                                <c:when test="${u.role == 1}">Admin</c:when>
+                                                <c:when test="${u.role == 2}">User</c:when>
+                                                <c:otherwise>Unknown</c:otherwise>
+                                            </c:choose>
+                                        </span>
+                                    </td>
                                                 <td>
                                                     <span
                                                         class="badge ${u.active ? 'bg-success' : 'bg-secondary'}">${u.active
@@ -71,7 +75,7 @@
                                                             data-bs-toggle="modal" data-bs-target="#editModal"
                                                             data-id="${u.id}" data-name="${u.name}"
                                                             data-email="${u.email}" data-gender="${u.gender}"
-                                                            data-role="${u.role.id}" data-active="${u.active}">
+                                                            data-role="${u.role}" data-active="${u.active}">
                                                             <i class="fas fa-edit"></i>
                                                         </button>
                                                         <button class="btn btn-sm btn-outline-danger"
@@ -127,7 +131,7 @@
                                 </div>
                                 <div class="col-md-6 d-flex align-items-end">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="active" id="createActive" checked>
+                                        <input class="form-check-input" type="checkbox" name="active" id="createActive">
                                         <label class="form-check-label" for="createActive">Active</label>
                                     </div>
                                 </div>
@@ -135,9 +139,8 @@
                                     <label class="form-label">Role</label>
                                     <select class="form-select" name="role">
                                         <option value="">-- Select Role --</option>
-                                        <c:forEach var="role" items="${requestScope.roles}">
-                                            <option value="${role.id}">${role.name}</option>
-                                        </c:forEach>
+                                        <option value="1">Admin</option>
+                                        <option value="2">User</option>
                                     </select>
                                 </div>
                             </div>
@@ -196,9 +199,8 @@
                                     <label class="form-label">Role</label>
                                     <select class="form-select" name="role" id="editRole">
                                         <option value="">-- Select Role --</option>
-                                        <c:forEach var="role" items="${requestScope.roles}">
-                                            <option value="${role.id}">${role.name}</option>
-                                        </c:forEach>
+                                        <option value="1">Admin</option>
+                                        <option value="2">User</option>
                                     </select>
                                 </div>
                             </div>
@@ -244,62 +246,22 @@
                 }
             });
 
-            // Debug and validate form submission
+            // Simple form validation for create user
             document.addEventListener('DOMContentLoaded', function() {
                 const createForm = document.querySelector('form[action*="/admin"]');
                 if (createForm && createForm.querySelector('input[name="action"][value="create"]')) {
                     createForm.addEventListener('submit', function(e) {
-                        console.log('Create form submitted');
-                        
-                        // Get form values
                         const name = this.querySelector('input[name="name"]').value.trim();
                         const email = this.querySelector('input[name="email"]').value.trim();
                         const password = this.querySelector('input[name="password"]').value.trim();
                         const gender = this.querySelector('select[name="gender"]').value;
                         const role = this.querySelector('select[name="role"]').value;
-                        const active = this.querySelector('input[name="active"]').checked;
                         
-                        console.log('Form values:', {
-                            name: name,
-                            email: email,
-                            password: password ? '***' : 'empty',
-                            gender: gender,
-                            role: role,
-                            active: active
-                        });
-                        
-                        // Validation
-                        if (!name) {
+                        if (!name || !email || !password || !gender || !role) {
                             e.preventDefault();
-                            alert('Please enter a name');
+                            alert('Please fill in all required fields');
                             return false;
                         }
-                        
-                        if (!email) {
-                            e.preventDefault();
-                            alert('Please enter an email');
-                            return false;
-                        }
-                        
-                        if (!password) {
-                            e.preventDefault();
-                            alert('Please enter a password');
-                            return false;
-                        }
-                        
-                        if (!gender) {
-                            e.preventDefault();
-                            alert('Please select a gender');
-                            return false;
-                        }
-                        
-                        if (!role) {
-                            e.preventDefault();
-                            alert('Please select a role');
-                            return false;
-                        }
-                        
-                        console.log('Form validation passed');
                     });
                 }
             });
