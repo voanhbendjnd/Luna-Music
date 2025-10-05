@@ -130,26 +130,26 @@
     .bottom-nav-container {
         padding: 10px 12px 20px;
     }
-    
+
     .bottom-nav-bar {
         padding: 6px 8px;
     }
-    
+
     .bottom-nav-text {
         font-size: 9px;
     }
-    
+
     .bottom-nav-icon {
         width: 22px;
         height: 22px;
     }
-    
+
     .bottom-nav-search .bottom-nav-link {
         width: 44px;
         height: 44px;
         min-height: 44px;
     }
-    
+
     .bottom-nav-search .bottom-nav-icon {
         width: 18px;
         height: 18px;

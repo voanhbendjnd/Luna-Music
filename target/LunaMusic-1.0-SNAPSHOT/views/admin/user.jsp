@@ -1,10 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-        <div class="card mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center">
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-8">
+            <div class="card mb-4 shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
                 <div>
-                    <i class="fas fa-table me-1"></i>
-                    User Management
+                    <i class="fas fa-users me-2"></i>
+                    <span class="fw-bold fs-5">User Management</span>
                 </div>
                 <form class="d-flex" method="get" action="${pageContext.request.contextPath}/admin">
                     <input type="hidden" name="action" value="list" />
@@ -16,19 +19,21 @@
             </div>
             <div class="card-body">
                 <div class="mb-3 text-end">
-                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createModal">Add
-                        User</button>
+                    <button class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#createModal">
+                        <i class="fas fa-user-plus me-2"></i>Add New User
+                    </button>
                 </div>
                 <div class="table-responsive">
                     <table id="datatablesSimple" class="table table-striped align-middle">
-                        <thead>
+                        <thead class="table-dark">
                             <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Gender</th>
-                                <th>Status</th>
-                                <th>Action</th>
+                                <th><i class="fas fa-hashtag me-1"></i>ID</th>
+                                <th><i class="fas fa-user me-1"></i>Name</th>
+                                <th><i class="fas fa-envelope me-1"></i>Email</th>
+                                <th><i class="fas fa-venus-mars me-1"></i>Gender</th>
+                                <th><i class="fas fa-user-tag me-1"></i>Role</th>
+                                <th><i class="fas fa-toggle-on me-1"></i>Status</th>
+                                <th><i class="fas fa-cogs me-1"></i>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -47,17 +52,26 @@
                                         <c:out value="${u.gender}" />
                                     </td>
                                     <td>
+                                        <span class="badge bg-info">
+                                            <c:out value="${u.role.name}" />
+                                        </span>
+                                    </td>
+                                    <td>
                                         <span class="badge ${u.active ? 'bg-success' : 'bg-secondary'}">${u.active ?
                                             'Active' : 'Inactive'}</span>
                                     </td>
                                     <td>
-                                        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal"
+                                        <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal"
                                             data-bs-target="#editModal" data-id="${u.id}" data-name="${u.name}"
-                                            data-email="${u.email}" data-gender="${u.gender}" data-avatar="${u.avatar}"
-                                            data-active="${u.active}">Edit</button>
+                                            data-email="${u.email}" data-gender="${u.gender}" data-role="${u.role}"
+                                            data-active="${u.active}">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </button>
                                         <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
                                             data-bs-target="#deleteModal" data-id="${u.id}"
-                                            data-name="${u.name}">Delete</button>
+                                            data-name="${u.name}">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </button>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -66,110 +80,163 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
 
         <!-- CREATE MODAL -->
         <div class="modal fade" id="createModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Add User</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title">
+                            <i class="fas fa-user-plus me-2"></i>Add New User
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form method="post" action="${pageContext.request.contextPath}/admin">
                         <input type="hidden" name="action" value="create" />
                         <div class="modal-body">
-                            <div class="mb-3">
-                                <label class="form-label">Name</label>
-                                <input required name="name" class="form-control" />
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Email</label>
-                                <input required type="email" name="email" class="form-control" />
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Password</label>
-                                <input required type="password" name="password" class="form-control" />
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Avatar URL</label>
-                                <input name="avatar" class="form-control" />
-                            </div>
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label class="form-label">Gender</label>
-                                    <select class="form-select" name="gender">
-                                        <option value="">--</option>
+                                    <label class="form-label fw-bold">
+                                        <i class="fas fa-user me-1"></i>Full Name
+                                    </label>
+                                    <input required name="name" class="form-control form-control-lg" 
+                                        placeholder="Enter full name" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">
+                                        <i class="fas fa-envelope me-1"></i>Email Address
+                                    </label>
+                                    <input required type="email" name="email" class="form-control form-control-lg" 
+                                        placeholder="Enter email address" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">
+                                        <i class="fas fa-lock me-1"></i>Password
+                                    </label>
+                                    <input required type="password" name="password" class="form-control form-control-lg" 
+                                        placeholder="Enter password" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">
+                                        <i class="fas fa-venus-mars me-1"></i>Gender
+                                    </label>
+                                    <select class="form-select form-select-lg" name="gender">
+                                        <option value="">-- Select Gender --</option>
                                         <option value="MALE">Male</option>
                                         <option value="FEMALE">Female</option>
                                         <option value="OTHER">Other</option>
                                     </select>
                                 </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">
+                                        <i class="fas fa-user-tag me-1"></i>Role
+                                    </label>
+                                    <select class="form-select form-select-lg" name="role">
+                                        <option value="">-- Select Role --</option>
+                                        <c:forEach var="role" items="${requestScope.roles}">
+                                            <option value="${role.id}">${role.name}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
                                 <div class="col-md-6 d-flex align-items-end">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="active" id="createActive">
-                                        <label class="form-check-label" for="createActive">Active</label>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" name="active" id="createActive" checked>
+                                        <label class="form-check-label fw-bold" for="createActive">
+                                            <i class="fas fa-toggle-on me-1"></i>Active Status
+                                        </label>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                    </form>
                 </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>Cancel
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save me-1"></i>Create User
+                    </button>
+                </div>
+                </form>
             </div>
+        </div>
         </div>
 
         <!-- EDIT MODAL -->
         <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Edit User</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title">
+                            <i class="fas fa-user-edit me-2"></i>Edit User
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form method="post" action="${pageContext.request.contextPath}/admin">
                         <input type="hidden" name="action" value="update" />
                         <input type="hidden" name="id" id="editId" />
                         <div class="modal-body">
-                            <div class="mb-3">
-                                <label class="form-label">Name</label>
-                                <input required name="name" id="editName" class="form-control" />
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Email</label>
-                                <input required type="email" name="email" id="editEmail" class="form-control" />
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Password</label>
-                                <input type="password" name="password" id="editPassword" class="form-control" />
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Avatar URL</label>
-                                <input name="avatar" id="editAvatar" class="form-control" />
-                            </div>
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label class="form-label">Gender</label>
-                                    <select class="form-select" name="gender" id="editGender">
-                                        <option value="">--</option>
+                                    <label class="form-label fw-bold">
+                                        <i class="fas fa-user me-1"></i>Full Name
+                                    </label>
+                                    <input required name="name" id="editName" class="form-control form-control-lg" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">
+                                        <i class="fas fa-envelope me-1"></i>Email Address
+                                    </label>
+                                    <input required type="email" name="email" id="editEmail" class="form-control form-control-lg" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">
+                                        <i class="fas fa-lock me-1"></i>Password
+                                    </label>
+                                    <input type="password" name="password" id="editPassword" class="form-control form-control-lg" 
+                                        placeholder="Leave blank to keep current password" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">
+                                        <i class="fas fa-venus-mars me-1"></i>Gender
+                                    </label>
+                                    <select class="form-select form-select-lg" name="gender" id="editGender">
+                                        <option value="">-- Select Gender --</option>
                                         <option value="MALE">Male</option>
                                         <option value="FEMALE">Female</option>
                                         <option value="OTHER">Other</option>
                                     </select>
                                 </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">
+                                        <i class="fas fa-user-tag me-1"></i>Role
+                                    </label>
+                                    <select class="form-select form-select-lg" name="role" id="editRole">
+                                        <option value="">-- Select Role --</option>
+                                        <c:forEach var="role" items="${requestScope.roles}">
+                                            <option value="${role.id}">${role.name}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
                                 <div class="col-md-6 d-flex align-items-end">
-                                    <div class="form-check">
+                                    <div class="form-check form-switch">
                                         <input class="form-check-input" type="checkbox" name="active" id="editActive">
-                                        <label class="form-check-label" for="editActive">Active</label>
+                                        <label class="form-check-label fw-bold" for="editActive">
+                                            <i class="fas fa-toggle-on me-1"></i>Active Status
+                                        </label>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <i class="fas fa-times me-1"></i>Cancel
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i>Update User
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -180,19 +247,31 @@
         <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Delete User</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title">
+                            <i class="fas fa-exclamation-triangle me-2"></i>Delete User
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form method="post" action="${pageContext.request.contextPath}/admin">
                         <input type="hidden" name="action" value="delete" />
                         <input type="hidden" name="id" id="deleteId" />
                         <div class="modal-body">
-                            <p>Are you sure you want to delete user: <strong id="deleteName"></strong>?</p>
+                            <div class="alert alert-warning d-flex align-items-center" role="alert">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                <div>
+                                    Are you sure you want to delete user: <strong id="deleteName"></strong>?
+                                    <br><small class="text-muted">This action cannot be undone.</small>
+                                </div>
+                            </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-danger">Delete</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <i class="fas fa-times me-1"></i>Cancel
+                            </button>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash me-1"></i>Delete User
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -218,9 +297,10 @@
                         document.getElementById('editName').value = btn.getAttribute('data-name');
                         document.getElementById('editEmail').value = btn.getAttribute('data-email');
                         document.getElementById('editPassword').value = '';
-                        document.getElementById('editAvatar').value = btn.getAttribute('data-avatar') || '';
                         const gender = btn.getAttribute('data-gender') || '';
                         document.getElementById('editGender').value = gender;
+                        const role = btn.getAttribute('data-role') || '';
+                        document.getElementById('editRole').value = role;
                         const active = btn.getAttribute('data-active') === 'true';
                         document.getElementById('editActive').checked = active;
                     });
