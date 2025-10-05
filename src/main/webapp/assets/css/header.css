@@ -46,9 +46,10 @@
 
 /* Search Bar Section */
 .search-container {
-    max-width: 450px;
+    max-width: 600px;
     width: 100%;
     margin: 0 auto;
+    flex: 1;
 }
 
 .search-input-group {
@@ -272,7 +273,7 @@
     .header-nav-link {
         display: none;
     }
-    
+
     .header-nav-separator {
         display: none;
     }
@@ -288,11 +289,11 @@
     .header-navbar {
         padding: 0.5rem 0;
     }
-    
+
     .header-logo {
         height: 28px;
     }
-    
+
     .header-logo img {
         height: 28px;
     }
