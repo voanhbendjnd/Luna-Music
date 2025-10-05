@@ -9,8 +9,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <title>Admin Dashboard</title>
 
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
-            crossorigin="anonymous" />
+        <link href="${pageContext.request.contextPath}/assets/css/bootstrap.min.css" rel="stylesheet" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
             crossorigin="anonymous" referrerpolicy="no-referrer" />
 
@@ -20,27 +19,35 @@
             }
 
             #layoutSidenav_nav {
-                /* flex-basis: 10px; */
-                /* Chiều rộng sidebar */
                 flex-shrink: 0;
-                transition: width 0.15s;
+                transition: width 0.3s ease-in-out;
                 z-index: 1030;
             }
 
             #sidenavAccordion {
                 background-color: #212529;
-                /* Màu nền tối cho sidebar */
                 height: 100vh;
                 position: fixed;
                 width: 225px;
                 overflow-y: auto;
+                transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+                transform: translateX(0);
+            }
+
+            #sidenavAccordion.collapsed {
+                transform: translateX(-100%);
+                width: 0;
             }
 
             #layoutSidenav_content {
                 flex-grow: 1;
                 margin-left: 225px;
-                /* Bù trừ cho sidebar cố định */
                 padding: 20px;
+                transition: margin-left 0.3s ease-in-out;
+            }
+
+            #layoutSidenav_content.expanded {
+                margin-left: 0;
             }
 
             .sb-sidenav-menu .nav-link {
@@ -161,22 +168,34 @@
 
 
         <%-- 3. JAVASCRIPT --%>
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-                crossorigin="anonymous"></script>
+            <script src="${pageContext.request.contextPath}/assets/js/bootstrap.bundle.min.js"></script>
             <script>
-                // Sidebar toggle only
+                // Sidebar toggle with smooth animation
                 document.addEventListener('DOMContentLoaded', function () {
                     const toggle = document.getElementById('sidebarToggle');
                     const sidenav = document.getElementById('sidenavAccordion');
                     const content = document.getElementById('layoutSidenav_content');
+
                     if (toggle && sidenav && content) {
                         let collapsed = false;
-                        const apply = (on) => {
-                            if (on) { sidenav.style.width = '0'; content.style.marginLeft = '0'; }
-                            else { sidenav.style.width = '170px'; content.style.marginLeft = '170px'; }
+
+                        const toggleSidebar = () => {
+                            collapsed = !collapsed;
+
+                            if (collapsed) {
+                                sidenav.classList.add('collapsed');
+                                content.classList.add('expanded');
+                            } else {
+                                sidenav.classList.remove('collapsed');
+                                content.classList.remove('expanded');
+                            }
                         };
-                        toggle.addEventListener('click', () => { collapsed = !collapsed; apply(collapsed); });
-                        apply(false);
+
+                        toggle.addEventListener('click', toggleSidebar);
+
+                        // Initialize sidebar state
+                        sidenav.classList.remove('collapsed');
+                        content.classList.remove('expanded');
                     }
                 });
             </script>

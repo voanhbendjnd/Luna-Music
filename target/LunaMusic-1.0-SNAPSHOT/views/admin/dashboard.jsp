@@ -15,7 +15,7 @@
 
     <style>
         body {
-            background-color: black
+            background-color: rgb(250, 246, 246)
         }
     </style>
 </head>
