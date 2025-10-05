@@ -54,15 +54,17 @@
                                                 <td>
                                                     <c:out value="${u.gender}" />
                                                 </td>
-                                    <td>
-                                        <span class="badge bg-info">
-                                            <c:choose>
-                                                <c:when test="${u.role != null && u.role.id == 1}">Admin</c:when>
-                                                <c:when test="${u.role != null && u.role.id == 2}">User</c:when>
-                                                <c:otherwise>Unknown</c:otherwise>
-                                            </c:choose>
-                                        </span>
-                                    </td>
+                                                <td>
+                                                    <span class="badge bg-info">
+                                                        <c:choose>
+                                                            <c:when test="${u.role != null && u.role.id == 1}">Admin
+                                                            </c:when>
+                                                            <c:when test="${u.role != null && u.role.id == 2}">User
+                                                            </c:when>
+                                                            <c:otherwise>Unknown</c:otherwise>
+                                                        </c:choose>
+                                                    </span>
+                                                </td>
                                                 <td>
                                                     <span
                                                         class="badge ${u.active ? 'bg-success' : 'bg-secondary'}">${u.active
@@ -145,14 +147,13 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-                </form>
             </div>
-        </div>
         </div>
 
         <!-- EDIT MODAL -->
@@ -248,17 +249,33 @@
 
             // Debug form submission for create user
             document.addEventListener('DOMContentLoaded', function () {
-                const createForm = document.querySelector('form[action*="/admin"]');
-                if (createForm && createForm.querySelector('input[name="action"][value="create"]')) {
+                console.log('DOM loaded, looking for create form...');
+                
+                // Find all forms
+                const allForms = document.querySelectorAll('form');
+                console.log('Found forms:', allForms.length);
+                
+                // Find create form specifically
+                const createForm = document.querySelector('form[action*="/admin"] input[name="action"][value="create"]')?.closest('form');
+                console.log('Create form found:', createForm);
+                
+                if (createForm) {
+                    console.log('Setting up create form listener...');
+                    
                     createForm.addEventListener('submit', function (e) {
-                        const name = this.querySelector('input[name="name"]').value.trim();
-                        const email = this.querySelector('input[name="email"]').value.trim();
-                        const password = this.querySelector('input[name="password"]').value.trim();
-                        const gender = this.querySelector('select[name="gender"]').value;
-                        const role = this.querySelector('select[name="role"]').value;
-                        const active = this.querySelector('input[name="active"]').checked;
-
+                        console.log('Form submit event triggered!');
+                        e.preventDefault(); // Prevent default first for debugging
+                        
+                        const name = this.querySelector('input[name="name"]')?.value?.trim() || '';
+                        const email = this.querySelector('input[name="email"]')?.value?.trim() || '';
+                        const password = this.querySelector('input[name="password"]')?.value?.trim() || '';
+                        const gender = this.querySelector('select[name="gender"]')?.value || '';
+                        const role = this.querySelector('select[name="role"]')?.value || '';
+                        const active = this.querySelector('input[name="active"]')?.checked || false;
+                        
                         console.log('=== CREATE USER DEBUG ===');
+                        console.log('Form action:', this.action);
+                        console.log('Form method:', this.method);
                         console.log('Name:', name);
                         console.log('Email:', email);
                         console.log('Password:', password ? '***' : 'EMPTY');
@@ -266,20 +283,44 @@
                         console.log('Role:', role);
                         console.log('Active:', active);
                         console.log('========================');
-
-                        if (!name || !email || !password || !gender || !role) {
-                            e.preventDefault();
-                            alert('Please fill in all required fields:\n- Name: ' + (name ? '✓' : '✗') +
-                                '\n- Email: ' + (email ? '✓' : '✗') +
-                                '\n- Password: ' + (password ? '✓' : '✗') +
-                                '\n- Gender: ' + (gender ? '✓' : '✗') +
-                                '\n- Role: ' + (role ? '✓' : '✗'));
+                        
+                        // Manual validation
+                        const errors = [];
+                        if (!name) errors.push('Name is required');
+                        if (!email) errors.push('Email is required');
+                        if (!password) errors.push('Password is required');
+                        if (!gender) errors.push('Gender is required');
+                        if (!role) errors.push('Role is required');
+                        
+                        if (errors.length > 0) {
+                            alert('Please fix the following errors:\n' + errors.join('\n'));
                             return false;
                         }
-
+                        
                         console.log('Form validation passed - submitting...');
+                        
+                        // Show confirmation before submit
+                        if (confirm('Are you sure you want to create this user?')) {
+                            // Submit the form manually
+                            console.log('Submitting form...');
+                            this.submit();
+                        } else {
+                            console.log('Form submission cancelled');
+                        }
                     });
+                } else {
+                    console.log('Create form not found!');
                 }
+                
+                // Also check for Save button clicks
+                const saveButtons = document.querySelectorAll('button[type="submit"]');
+                console.log('Save buttons found:', saveButtons.length);
+                
+                saveButtons.forEach((btn, index) => {
+                    btn.addEventListener('click', function(e) {
+                        console.log('Save button clicked:', index, this);
+                    });
+                });
             });
 
             // Modal population
