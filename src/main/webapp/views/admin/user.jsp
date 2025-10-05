@@ -54,15 +54,15 @@
                                                 <td>
                                                     <c:out value="${u.gender}" />
                                                 </td>
-                                    <td>
-                                        <span class="badge bg-info">
-                                            <c:choose>
-                                                <c:when test="${u.role == 1}">Admin</c:when>
-                                                <c:when test="${u.role == 2}">User</c:when>
-                                                <c:otherwise>Unknown</c:otherwise>
-                                            </c:choose>
-                                        </span>
-                                    </td>
+                                                <td>
+                                                    <span class="badge bg-info">
+                                                        <c:choose>
+                                                            <c:when test="${u.role == 1}">Admin</c:when>
+                                                            <c:when test="${u.role == 2}">User</c:when>
+                                                            <c:otherwise>Unknown</c:otherwise>
+                                                        </c:choose>
+                                                    </span>
+                                                </td>
                                                 <td>
                                                     <span
                                                         class="badge ${u.active ? 'bg-success' : 'bg-secondary'}">${u.active
@@ -246,22 +246,38 @@
                 }
             });
 
-            // Simple form validation for create user
-            document.addEventListener('DOMContentLoaded', function() {
+            // Debug form submission for create user
+            document.addEventListener('DOMContentLoaded', function () {
                 const createForm = document.querySelector('form[action*="/admin"]');
                 if (createForm && createForm.querySelector('input[name="action"][value="create"]')) {
-                    createForm.addEventListener('submit', function(e) {
+                    createForm.addEventListener('submit', function (e) {
                         const name = this.querySelector('input[name="name"]').value.trim();
                         const email = this.querySelector('input[name="email"]').value.trim();
                         const password = this.querySelector('input[name="password"]').value.trim();
                         const gender = this.querySelector('select[name="gender"]').value;
                         const role = this.querySelector('select[name="role"]').value;
+                        const active = this.querySelector('input[name="active"]').checked;
+                        
+                        console.log('=== CREATE USER DEBUG ===');
+                        console.log('Name:', name);
+                        console.log('Email:', email);
+                        console.log('Password:', password ? '***' : 'EMPTY');
+                        console.log('Gender:', gender);
+                        console.log('Role:', role);
+                        console.log('Active:', active);
+                        console.log('========================');
                         
                         if (!name || !email || !password || !gender || !role) {
                             e.preventDefault();
-                            alert('Please fill in all required fields');
+                            alert('Please fill in all required fields:\n- Name: ' + (name ? '✓' : '✗') + 
+                                  '\n- Email: ' + (email ? '✓' : '✗') + 
+                                  '\n- Password: ' + (password ? '✓' : '✗') + 
+                                  '\n- Gender: ' + (gender ? '✓' : '✗') + 
+                                  '\n- Role: ' + (role ? '✓' : '✗'));
                             return false;
                         }
+                        
+                        console.log('Form validation passed - submitting...');
                     });
                 }
             });
