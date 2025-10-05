@@ -4,7 +4,8 @@
             <div class="row mx-0">
                 <div class="col-12 px-0">
                     <div class="card mb-4 border-0 shadow-sm">
-                        <div class="card-header d-flex justify-content-between align-items-center bg-white border-bottom">
+                        <div
+                            class="card-header d-flex justify-content-between align-items-center bg-white border-bottom">
                             <div>
                                 <i class="fas fa-table me-1"></i>
                                 User Management
@@ -118,7 +119,7 @@
                                 <div class="col-md-6">
                                     <label class="form-label">Gender</label>
                                     <select class="form-select" name="gender">
-                                        <option value="">--</option>
+                                        <option value="">Select gender</option>
                                         <option value="MALE">Male</option>
                                         <option value="FEMALE">Female</option>
                                         <option value="OTHER">Other</option>
@@ -126,7 +127,7 @@
                                 </div>
                                 <div class="col-md-6 d-flex align-items-end">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="active" id="createActive">
+                                        <input class="form-check-input" type="checkbox" name="active" id="createActive" checked>
                                         <label class="form-check-label" for="createActive">Active</label>
                                     </div>
                                 </div>
@@ -243,6 +244,66 @@
                 }
             });
 
+            // Debug and validate form submission
+            document.addEventListener('DOMContentLoaded', function() {
+                const createForm = document.querySelector('form[action*="/admin"]');
+                if (createForm && createForm.querySelector('input[name="action"][value="create"]')) {
+                    createForm.addEventListener('submit', function(e) {
+                        console.log('Create form submitted');
+                        
+                        // Get form values
+                        const name = this.querySelector('input[name="name"]').value.trim();
+                        const email = this.querySelector('input[name="email"]').value.trim();
+                        const password = this.querySelector('input[name="password"]').value.trim();
+                        const gender = this.querySelector('select[name="gender"]').value;
+                        const role = this.querySelector('select[name="role"]').value;
+                        const active = this.querySelector('input[name="active"]').checked;
+                        
+                        console.log('Form values:', {
+                            name: name,
+                            email: email,
+                            password: password ? '***' : 'empty',
+                            gender: gender,
+                            role: role,
+                            active: active
+                        });
+                        
+                        // Validation
+                        if (!name) {
+                            e.preventDefault();
+                            alert('Please enter a name');
+                            return false;
+                        }
+                        
+                        if (!email) {
+                            e.preventDefault();
+                            alert('Please enter an email');
+                            return false;
+                        }
+                        
+                        if (!password) {
+                            e.preventDefault();
+                            alert('Please enter a password');
+                            return false;
+                        }
+                        
+                        if (!gender) {
+                            e.preventDefault();
+                            alert('Please select a gender');
+                            return false;
+                        }
+                        
+                        if (!role) {
+                            e.preventDefault();
+                            alert('Please select a role');
+                            return false;
+                        }
+                        
+                        console.log('Form validation passed');
+                    });
+                }
+            });
+
             // Modal population
             document.addEventListener('DOMContentLoaded', function () {
                 const editModal = document.getElementById('editModal');
@@ -279,51 +340,51 @@
                 padding-left: 0 !important;
                 padding-right: 0 !important;
             }
-            
+
             .row.mx-0 {
                 margin-left: 0 !important;
                 margin-right: 0 !important;
             }
-            
+
             .col-12.px-0 {
                 padding-left: 0 !important;
                 padding-right: 0 !important;
             }
-            
+
             .card.border-0 {
                 border: none !important;
             }
-            
+
             .table-responsive {
                 overflow-x: auto;
             }
-            
+
             .table {
                 width: 100% !important;
                 margin-bottom: 0 !important;
             }
-            
+
             /* Ensure table takes full width */
             #datatablesSimple {
                 width: 100% !important;
                 min-width: 100% !important;
             }
-            
+
             /* Header styling */
             .card-header {
                 padding: 1rem 1.5rem;
             }
-            
+
             /* Users section styling */
             .bg-light {
                 background-color: #f8f9fa !important;
             }
-            
+
             /* Button group styling */
             .btn-group .btn {
                 border-radius: 0.375rem;
             }
-            
+
             .btn-group .btn:not(:last-child) {
                 margin-right: 0.25rem;
             }
