@@ -181,7 +181,7 @@ public class UserDAO extends DatabaseConfig {
         user.setName(rs.getString("name"));
         user.setPassword(rs.getString("password"));
         user.setUpdatedBy(rs.getString("updatedBy"));
-        
+
         // Handle role_id - create a simple Role object with just the ID
         Long roleId = rs.getLong("role_id");
         if (!rs.wasNull() && roleId != null) {
@@ -189,7 +189,7 @@ public class UserDAO extends DatabaseConfig {
             role.setId(roleId);
             user.setRole(role);
         }
-        
+
         return user;
     }
 }

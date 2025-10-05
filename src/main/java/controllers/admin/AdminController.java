@@ -104,7 +104,7 @@ public class AdminController extends HttpServlet {
             } catch (Exception ignored) {
             }
         }
-        
+
         // Handle role parameter
         String roleIdStr = request.getParameter("role");
         if (roleIdStr != null && !roleIdStr.isBlank()) {
@@ -116,7 +116,7 @@ public class AdminController extends HttpServlet {
             } catch (NumberFormatException ignored) {
             }
         }
-        
+
         u.setCreatedBy("admin");
         u.setUpdatedBy("admin");
         return u;

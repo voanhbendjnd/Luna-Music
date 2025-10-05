@@ -250,29 +250,29 @@
             // Debug form submission for create user
             document.addEventListener('DOMContentLoaded', function () {
                 console.log('DOM loaded, looking for create form...');
-                
+
                 // Find all forms
                 const allForms = document.querySelectorAll('form');
                 console.log('Found forms:', allForms.length);
-                
+
                 // Find create form specifically
                 const createForm = document.querySelector('form[action*="/admin"] input[name="action"][value="create"]')?.closest('form');
                 console.log('Create form found:', createForm);
-                
+
                 if (createForm) {
                     console.log('Setting up create form listener...');
-                    
+
                     createForm.addEventListener('submit', function (e) {
                         console.log('Form submit event triggered!');
                         e.preventDefault(); // Prevent default first for debugging
-                        
+
                         const name = this.querySelector('input[name="name"]')?.value?.trim() || '';
                         const email = this.querySelector('input[name="email"]')?.value?.trim() || '';
                         const password = this.querySelector('input[name="password"]')?.value?.trim() || '';
                         const gender = this.querySelector('select[name="gender"]')?.value || '';
                         const role = this.querySelector('select[name="role"]')?.value || '';
                         const active = this.querySelector('input[name="active"]')?.checked || false;
-                        
+
                         console.log('=== CREATE USER DEBUG ===');
                         console.log('Form action:', this.action);
                         console.log('Form method:', this.method);
@@ -283,7 +283,7 @@
                         console.log('Role:', role);
                         console.log('Active:', active);
                         console.log('========================');
-                        
+
                         // Manual validation
                         const errors = [];
                         if (!name) errors.push('Name is required');
@@ -291,14 +291,14 @@
                         if (!password) errors.push('Password is required');
                         if (!gender) errors.push('Gender is required');
                         if (!role) errors.push('Role is required');
-                        
+
                         if (errors.length > 0) {
                             alert('Please fix the following errors:\n' + errors.join('\n'));
                             return false;
                         }
-                        
+
                         console.log('Form validation passed - submitting...');
-                        
+
                         // Show confirmation before submit
                         if (confirm('Are you sure you want to create this user?')) {
                             // Submit the form manually
@@ -311,13 +311,13 @@
                 } else {
                     console.log('Create form not found!');
                 }
-                
+
                 // Also check for Save button clicks
                 const saveButtons = document.querySelectorAll('button[type="submit"]');
                 console.log('Save buttons found:', saveButtons.length);
-                
+
                 saveButtons.forEach((btn, index) => {
-                    btn.addEventListener('click', function(e) {
+                    btn.addEventListener('click', function (e) {
                         console.log('Save button clicked:', index, this);
                     });
                 });
