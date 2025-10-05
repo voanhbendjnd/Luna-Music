@@ -27,6 +27,7 @@
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Gender</th>
+                                <th>Role</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -47,13 +48,16 @@
                                         <c:out value="${u.gender}" />
                                     </td>
                                     <td>
+                                        <span class="badge bg-info"><c:out value="${u.role.name}" /></span>
+                                    </td>
+                                    <td>
                                         <span class="badge ${u.active ? 'bg-success' : 'bg-secondary'}">${u.active ?
                                             'Active' : 'Inactive'}</span>
                                     </td>
                                     <td>
                                         <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal"
                                             data-bs-target="#editModal" data-id="${u.id}" data-name="${u.name}"
-                                            data-email="${u.email}" data-gender="${u.gender}" data-avatar="${u.avatar}"
+                                            data-email="${u.email}" data-gender="${u.gender}" data-role="${u.role}"
                                             data-active="${u.active}">Edit</button>
                                         <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
                                             data-bs-target="#deleteModal" data-id="${u.id}"
@@ -90,10 +94,6 @@
                                 <label class="form-label">Password</label>
                                 <input required type="password" name="password" class="form-control" />
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Avatar URL</label>
-                                <input name="avatar" class="form-control" />
-                            </div>
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label class="form-label">Gender</label>
@@ -110,15 +110,25 @@
                                         <label class="form-check-label" for="createActive">Active</label>
                                     </div>
                                 </div>
+                                <div class="col-md-12">
+                                    <label class="form-label">Role</label>
+                                    <select class="form-select" name="role">
+                                        <option value="">-- Select Role --</option>
+                                        <c:forEach var="role" items="${requestScope.roles}">
+                                            <option value="${role.id}">${role.name}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                    </form>
                 </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+                </form>
             </div>
+        </div>
         </div>
 
         <!-- EDIT MODAL -->
@@ -145,10 +155,6 @@
                                 <label class="form-label">Password</label>
                                 <input type="password" name="password" id="editPassword" class="form-control" />
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Avatar URL</label>
-                                <input name="avatar" id="editAvatar" class="form-control" />
-                            </div>
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label class="form-label">Gender</label>
@@ -164,6 +170,15 @@
                                         <input class="form-check-input" type="checkbox" name="active" id="editActive">
                                         <label class="form-check-label" for="editActive">Active</label>
                                     </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label">Role</label>
+                                    <select class="form-select" name="role" id="editRole">
+                                        <option value="">-- Select Role --</option>
+                                        <c:forEach var="role" items="${requestScope.roles}">
+                                            <option value="${role.id}">${role.name}</option>
+                                        </c:forEach>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -218,9 +233,10 @@
                         document.getElementById('editName').value = btn.getAttribute('data-name');
                         document.getElementById('editEmail').value = btn.getAttribute('data-email');
                         document.getElementById('editPassword').value = '';
-                        document.getElementById('editAvatar').value = btn.getAttribute('data-avatar') || '';
                         const gender = btn.getAttribute('data-gender') || '';
                         document.getElementById('editGender').value = gender;
+                        const role = btn.getAttribute('data-role') || '';
+                        document.getElementById('editRole').value = role;
                         const active = btn.getAttribute('data-active') === 'true';
                         document.getElementById('editActive').checked = active;
                     });
