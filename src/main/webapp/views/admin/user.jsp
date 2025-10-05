@@ -54,15 +54,15 @@
                                                 <td>
                                                     <c:out value="${u.gender}" />
                                                 </td>
-                                                <td>
-                                                    <span class="badge bg-info">
-                                                        <c:choose>
-                                                            <c:when test="${u.role == 1}">Admin</c:when>
-                                                            <c:when test="${u.role == 2}">User</c:when>
-                                                            <c:otherwise>Unknown</c:otherwise>
-                                                        </c:choose>
-                                                    </span>
-                                                </td>
+                                    <td>
+                                        <span class="badge bg-info">
+                                            <c:choose>
+                                                <c:when test="${u.role != null && u.role.id == 1}">Admin</c:when>
+                                                <c:when test="${u.role != null && u.role.id == 2}">User</c:when>
+                                                <c:otherwise>Unknown</c:otherwise>
+                                            </c:choose>
+                                        </span>
+                                    </td>
                                                 <td>
                                                     <span
                                                         class="badge ${u.active ? 'bg-success' : 'bg-secondary'}">${u.active
@@ -257,7 +257,7 @@
                         const gender = this.querySelector('select[name="gender"]').value;
                         const role = this.querySelector('select[name="role"]').value;
                         const active = this.querySelector('input[name="active"]').checked;
-                        
+
                         console.log('=== CREATE USER DEBUG ===');
                         console.log('Name:', name);
                         console.log('Email:', email);
@@ -266,17 +266,17 @@
                         console.log('Role:', role);
                         console.log('Active:', active);
                         console.log('========================');
-                        
+
                         if (!name || !email || !password || !gender || !role) {
                             e.preventDefault();
-                            alert('Please fill in all required fields:\n- Name: ' + (name ? '✓' : '✗') + 
-                                  '\n- Email: ' + (email ? '✓' : '✗') + 
-                                  '\n- Password: ' + (password ? '✓' : '✗') + 
-                                  '\n- Gender: ' + (gender ? '✓' : '✗') + 
-                                  '\n- Role: ' + (role ? '✓' : '✗'));
+                            alert('Please fill in all required fields:\n- Name: ' + (name ? '✓' : '✗') +
+                                '\n- Email: ' + (email ? '✓' : '✗') +
+                                '\n- Password: ' + (password ? '✓' : '✗') +
+                                '\n- Gender: ' + (gender ? '✓' : '✗') +
+                                '\n- Role: ' + (role ? '✓' : '✗'));
                             return false;
                         }
-                        
+
                         console.log('Form validation passed - submitting...');
                     });
                 }
