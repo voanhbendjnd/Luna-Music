@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import DALs.UserDAO;
 import domain.entity.User;
+import domain.entity.Role;
 import constant.GenderEnum;
 
 /**
@@ -103,6 +104,19 @@ public class AdminController extends HttpServlet {
             } catch (Exception ignored) {
             }
         }
+        
+        // Handle role parameter
+        String roleIdStr = request.getParameter("role");
+        if (roleIdStr != null && !roleIdStr.isBlank()) {
+            try {
+                Long roleId = Long.parseLong(roleIdStr);
+                Role role = new Role();
+                role.setId(roleId);
+                u.setRole(role);
+            } catch (NumberFormatException ignored) {
+            }
+        }
+        
         u.setCreatedBy("admin");
         u.setUpdatedBy("admin");
         return u;
