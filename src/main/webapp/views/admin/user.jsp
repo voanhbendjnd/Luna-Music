@@ -1,91 +1,95 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card mb-4">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <div>
-                        <i class="fas fa-table me-1"></i>
-                        User Management
-                    </div>
-                    <form class="d-flex" method="get" action="${pageContext.request.contextPath}/admin">
-                        <input type="hidden" name="action" value="list" />
-                        <input type="hidden" name="type" value="users" />
-                        <input class="form-control" type="search" name="q"
-                            value="${requestScope.q == null ? '' : requestScope.q}" placeholder="Search by name/email" />
-                        <button class="btn btn-primary ms-2" type="submit">Search</button>
-                    </form>
-                </div>
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="card-title mb-0">Users</h5>
-                        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createModal">
-                            <i class="fas fa-plus me-1"></i>Add User
-                        </button>
-                    </div>
-                    <div class="table-responsive">
-                        <table id="datatablesSimple" class="table table-striped table-hover align-middle w-100">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Gender</th>
-                                    <th>Role</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <c:forEach var="u" items="${requestScope.users}">
-                                    <tr>
-                                        <td>
-                                            <c:out value="${u.id}" />
-                                        </td>
-                                        <td>
-                                            <c:out value="${u.name}" />
-                                        </td>
-                                        <td>
-                                            <c:out value="${u.email}" />
-                                        </td>
-                                        <td>
-                                            <c:out value="${u.gender}" />
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-info">
-                                                <c:out value="${u.role.name}" />
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span class="badge ${u.active ? 'bg-success' : 'bg-secondary'}">${u.active ?
-                                                'Active' : 'Inactive'}</span>
-                                        </td>
-                                        <td>
-                                            <div class="btn-group" role="group">
-                                                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#editModal" data-id="${u.id}" data-name="${u.name}"
-                                                    data-email="${u.email}" data-gender="${u.gender}" data-role="${u.role.id}"
-                                                    data-active="${u.active}">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
-                                                    data-bs-target="#deleteModal" data-id="${u.id}"
-                                                    data-name="${u.name}">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </c:forEach>
-                            </tbody>
-                        </table>
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+        <div class="container-fluid px-0">
+            <div class="row mx-0">
+                <div class="col-12 px-0">
+                    <div class="card mb-4 border-0 shadow-sm">
+                        <div class="card-header d-flex justify-content-between align-items-center bg-white border-bottom">
+                            <div>
+                                <i class="fas fa-table me-1"></i>
+                                User Management
+                            </div>
+                            <form class="d-flex" method="get" action="${pageContext.request.contextPath}/admin">
+                                <input type="hidden" name="action" value="list" />
+                                <input type="hidden" name="type" value="users" />
+                                <input class="form-control" type="search" name="q"
+                                    value="${requestScope.q == null ? '' : requestScope.q}"
+                                    placeholder="Search by name/email" />
+                                <button class="btn btn-primary ms-2" type="submit">Search</button>
+                            </form>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="d-flex justify-content-between align-items-center p-3 bg-light border-bottom">
+                                <h5 class="card-title mb-0 fw-bold">Users</h5>
+                                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createModal">
+                                    <i class="fas fa-plus me-1"></i>Add User
+                                </button>
+                            </div>
+                            <div class="table-responsive">
+                                <table id="datatablesSimple" class="table table-striped table-hover align-middle mb-0">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Gender</th>
+                                            <th>Role</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <c:forEach var="u" items="${requestScope.users}">
+                                            <tr>
+                                                <td>
+                                                    <c:out value="${u.id}" />
+                                                </td>
+                                                <td>
+                                                    <c:out value="${u.name}" />
+                                                </td>
+                                                <td>
+                                                    <c:out value="${u.email}" />
+                                                </td>
+                                                <td>
+                                                    <c:out value="${u.gender}" />
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-info">
+                                                        <c:out value="${u.role.name}" />
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span
+                                                        class="badge ${u.active ? 'bg-success' : 'bg-secondary'}">${u.active
+                                                        ?
+                                                        'Active' : 'Inactive'}</span>
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group" role="group">
+                                                        <button class="btn btn-sm btn-outline-primary"
+                                                            data-bs-toggle="modal" data-bs-target="#editModal"
+                                                            data-id="${u.id}" data-name="${u.name}"
+                                                            data-email="${u.email}" data-gender="${u.gender}"
+                                                            data-role="${u.role.id}" data-active="${u.active}">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                        <button class="btn btn-sm btn-outline-danger"
+                                                            data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                                            data-id="${u.id}" data-name="${u.name}">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
         <!-- CREATE MODAL -->
         <div class="modal fade" id="createModal" tabindex="-1" aria-hidden="true">
@@ -268,3 +272,59 @@
                 }
             });
         </script>
+
+        <style>
+            /* Custom styles for full-width table */
+            .container-fluid.px-0 {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+            
+            .row.mx-0 {
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+            }
+            
+            .col-12.px-0 {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+            
+            .card.border-0 {
+                border: none !important;
+            }
+            
+            .table-responsive {
+                overflow-x: auto;
+            }
+            
+            .table {
+                width: 100% !important;
+                margin-bottom: 0 !important;
+            }
+            
+            /* Ensure table takes full width */
+            #datatablesSimple {
+                width: 100% !important;
+                min-width: 100% !important;
+            }
+            
+            /* Header styling */
+            .card-header {
+                padding: 1rem 1.5rem;
+            }
+            
+            /* Users section styling */
+            .bg-light {
+                background-color: #f8f9fa !important;
+            }
+            
+            /* Button group styling */
+            .btn-group .btn {
+                border-radius: 0.375rem;
+            }
+            
+            .btn-group .btn:not(:last-child) {
+                margin-right: 0.25rem;
+            }
+        </style>
