@@ -74,7 +74,7 @@
 
         <!-- Copyright Section -->
         <div class="footer-copyright">
-            <p class="copyright-text">© <%= java.time.Year.now() %> Luna Music AB</p>
+            <p class="copyright-text"> <%= java.time.Year.now() %> Luna Music</p>
         </div>
     </div>
 </footer>

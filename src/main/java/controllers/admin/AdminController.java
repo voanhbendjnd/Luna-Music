@@ -27,7 +27,7 @@ public class AdminController extends HttpServlet {
         if (action == null || action.isBlank() || action.equals("list")) {
             String type = request.getParameter("type");
             if (type == null || type.isBlank())
-                type = "users";
+                type = "dashboard";
             if ("dashboard".equalsIgnoreCase(type)) {
                 request.setAttribute("viewPath", "/views/admin/dashboard.jsp");
             } else if ("users".equalsIgnoreCase(type)) {
@@ -37,6 +37,13 @@ public class AdminController extends HttpServlet {
                 request.setAttribute("users", users);
                 request.setAttribute("q", q == null ? "" : q);
                 request.setAttribute("viewPath", "/views/admin/user.jsp");
+            } else if ("songs".equalsIgnoreCase(type)) {
+                String q = request.getParameter("q");
+                var dao = new UserDAO();
+                var users = dao.findAll(q);
+                request.setAttribute("users", users);
+                request.setAttribute("q", q == null ? "" : q);
+                request.setAttribute("viewPath", "/views/admin/song.jsp");
             } else {
                 request.setAttribute("viewTitle", type);
                 request.setAttribute("viewPath", "/views/admin/table/placeholder.jsp");

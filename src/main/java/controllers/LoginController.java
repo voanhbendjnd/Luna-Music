@@ -38,10 +38,10 @@ public class LoginController extends HttpServlet {
             Cookie cookie = new Cookie("name", encodedUsername);
             cookie.setMaxAge(60 * 60); // 1 hour
             response.addCookie(cookie);
-            response.sendRedirect(request.getContextPath() + "/views/home.jsp");
+            response.sendRedirect(request.getContextPath() + "/views/layouts/defaultLayout.jsp");
         } else {
             request.setAttribute("loginError", "Username or password incorrect!.");
-            request.getRequestDispatcher("/views/login.jsp").forward(request, response);
+            request.getRequestDispatcher("/views/layouts/defaultLayout.jsp").forward(request, response);
         }
 
     }
