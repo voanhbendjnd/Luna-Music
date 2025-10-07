@@ -1,5 +1,5 @@
 -- Script để test database và tạo lại bảng SongArtists nếu cần
-USE LunaMusic;
+USE LunaMusicPro;
 
 -- Kiểm tra xem bảng SongArtists có tồn tại không
 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='SongArtists' AND xtype='U')

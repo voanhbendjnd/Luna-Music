@@ -193,9 +193,10 @@ public class AdminController extends HttpServlet {
 
     private User buildUserFromRequest(HttpServletRequest request) {
         User u = new User();
+        u.setName(request.getParameter("name"));
         u.setEmail(request.getParameter("email"));
         u.setPassword(request.getParameter("password"));
-        u.setAvatar(request.getParameter("avatar"));
+        // u.setAvatar(request.getParameter("avatar"));
         u.setActive(
                 "on".equals(request.getParameter("active")) || "true".equalsIgnoreCase(request.getParameter("active")));
         String gender = request.getParameter("gender");

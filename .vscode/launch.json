@@ -1,0 +1,26 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Launch Luna Music with Tomcat",
+            "request": "launch",
+            "mainClass": "org.apache.catalina.startup.Bootstrap",
+            "projectName": "LunaMusic",
+            "args": [
+                "start"
+            ],
+            "vmArgs": [
+                "-Dcatalina.home=${workspaceFolder}/target/tomcat",
+                "-Dcatalina.base=${workspaceFolder}/target/tomcat",
+                "-Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager",
+                "-Djava.util.logging.config.file=${workspaceFolder}/target/tomcat/conf/logging.properties"
+            ],
+            "classPaths": [
+                "${workspaceFolder}/target/tomcat/bin/bootstrap.jar",
+                "${workspaceFolder}/target/tomcat/bin/tomcat-juli.jar"
+            ],
+            "preLaunchTask": "build-and-deploy"
+        }
+    ]
+}

@@ -32,7 +32,7 @@ public class UserDAO extends DatabaseConfig {
                 String gender = rs.getString("gender");
                 GenderEnum g = GenderEnum.valueOf(gender.toUpperCase());
                 user.setActive(rs.getBoolean("active"));
-                user.setAvatar(rs.getString("avatar"));
+                // user.setAvatar(rs.getString("avatar")); // Avatar field removed from database
                 Timestamp createdAtStr = rs.getTimestamp("createdAt");
                 Instant createdAt = createdAtStr.toInstant();
                 user.setCreatedAt(createdAt);
@@ -59,7 +59,7 @@ public class UserDAO extends DatabaseConfig {
 
     public java.util.List<User> findAll(String keyword) {
         java.util.List<User> users = new java.util.ArrayList<>();
-        String base = "SELECT id, name, email, password, avatar, active, gender, role_id, createdAt, updatedAt, createdBy, updatedBy FROM Users";
+        String base = "SELECT id, name, email, password, active, gender, role_id, createdAt, updatedAt, createdBy, updatedBy FROM Users";
         String where = (keyword != null && !keyword.isBlank()) ? " WHERE name LIKE ? OR email LIKE ?" : "";
         String sql = base + where + " ORDER BY id DESC";
         try {
@@ -81,7 +81,7 @@ public class UserDAO extends DatabaseConfig {
     }
 
     public User findById(long id) {
-        String sql = "SELECT id, name, email, password, avatar, active, gender, role_id, createdAt, updatedAt, createdBy, updatedBy FROM Users WHERE id = ?";
+        String sql = "SELECT id, name, email, password, active, gender, role_id, createdAt, updatedAt, createdBy, updatedBy FROM Users WHERE id = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setLong(1, id);
@@ -96,24 +96,23 @@ public class UserDAO extends DatabaseConfig {
     }
 
     public boolean create(User u) {
-        String sql = "INSERT INTO Users(name, email, password, avatar, active, gender, createdAt, updatedAt, createdBy, updatedBy, role_id) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO Users(name, email, password, active, gender, createdAt, updatedAt, createdBy, updatedBy, role_id) VALUES(?,?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, u.getName());
             ps.setString(2, u.getEmail());
             ps.setString(3, u.getPassword());
-            ps.setString(4, u.getAvatar());
-            ps.setBoolean(5, u.isActive());
-            ps.setString(6, u.getGender() != null ? u.getGender().name() : null);
+            ps.setBoolean(4, u.isActive());
+            ps.setString(5, u.getGender() != null ? u.getGender().name() : null);
+            ps.setTimestamp(6, java.sql.Timestamp.from(java.time.Instant.now()));
             ps.setTimestamp(7, java.sql.Timestamp.from(java.time.Instant.now()));
-            ps.setTimestamp(8, java.sql.Timestamp.from(java.time.Instant.now()));
-            ps.setString(9, u.getCreatedBy());
-            ps.setString(10, u.getUpdatedBy());
+            ps.setString(8, u.getCreatedBy());
+            ps.setString(9, u.getUpdatedBy());
             // Handle role - set to null if role is null or role id is null
             if (u.getRole() != null && u.getRole().getId() != null) {
-                ps.setLong(11, u.getRole().getId());
+                ps.setLong(10, u.getRole().getId());
             } else {
-                ps.setNull(11, java.sql.Types.INTEGER);
+                ps.setNull(10, java.sql.Types.INTEGER);
             }
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -124,24 +123,23 @@ public class UserDAO extends DatabaseConfig {
     }
 
     public boolean update(User u) {
-        String sql = "UPDATE Users SET name=?, email=?, password=?, avatar=?, active=?, gender=?, role_id=?, updatedAt=?, updatedBy=? WHERE id=?";
+        String sql = "UPDATE Users SET name=?, email=?, password=?, active=?, gender=?, role_id=?, updatedAt=?, updatedBy=? WHERE id=?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, u.getName());
             ps.setString(2, u.getEmail());
             ps.setString(3, u.getPassword());
-            ps.setString(4, u.getAvatar());
-            ps.setBoolean(5, u.isActive());
-            ps.setString(6, u.getGender() != null ? u.getGender().name() : null);
+            ps.setBoolean(4, u.isActive());
+            ps.setString(5, u.getGender() != null ? u.getGender().name() : null);
             // Handle role - set to null if role is null or role id is null
             if (u.getRole() != null && u.getRole().getId() != null) {
-                ps.setLong(7, u.getRole().getId());
+                ps.setLong(6, u.getRole().getId());
             } else {
-                ps.setNull(7, java.sql.Types.INTEGER);
+                ps.setNull(6, java.sql.Types.INTEGER);
             }
-            ps.setTimestamp(8, java.sql.Timestamp.from(java.time.Instant.now()));
-            ps.setString(9, u.getUpdatedBy());
-            ps.setLong(10, u.getId());
+            ps.setTimestamp(7, java.sql.Timestamp.from(java.time.Instant.now()));
+            ps.setString(8, u.getUpdatedBy());
+            ps.setLong(9, u.getId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             System.out.println("Error updating user: " + e.getMessage());
@@ -166,7 +164,6 @@ public class UserDAO extends DatabaseConfig {
         User user = new User();
         String gender = rs.getString("gender");
         user.setActive(rs.getBoolean("active"));
-        user.setAvatar(rs.getString("avatar"));
         java.sql.Timestamp createdAtStr = rs.getTimestamp("createdAt");
         if (createdAtStr != null)
             user.setCreatedAt(createdAtStr.toInstant());

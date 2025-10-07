@@ -1,9 +1,9 @@
 ﻿-- tạo theo từng bước
 -- bươc 1
-create database LunaMusic;
+create database LunaMusicPro;
 
 -- bước 2
-use LunaMusic;
+use LunaMusicPro;
 create table Roles(
 	id INT IDENTITY(1,1) PRIMARY KEY,
 	name nvarchar(50) not null unique,
@@ -34,7 +34,7 @@ create table Users(
     
     -- Ràng buộc kiểm tra cho giới tính (Mô phỏng ENUM)
     CONSTRAINT CK_User_Gender
-        CHECK (gender IS NULL OR gender IN ('MALE', 'FEMALE', 'OTHER', 'PREFER_NOT_TO_SAY'))
+        CHECK (gender IS NULL OR gender IN ('MALE', 'FEMALE', 'OTHER'))
 )
 CREATE TABLE Artists (
     id INT IDENTITY(1,1) PRIMARY KEY,

@@ -188,6 +188,7 @@
                                         <option value="MALE">Male</option>
                                         <option value="FEMALE">Female</option>
                                         <option value="OTHER">Other</option>
+                                        <option value="PREFER_NOT_TO_SAY">Prefer not to say</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6 d-flex align-items-end">
