@@ -1,0 +1,346 @@
+/* Admin Layout Styles - Luna Music */
+
+/* ===== TOP NAVBAR ===== */
+.sb-topnav {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%) !important;
+    border-bottom: 1px solid #404040 !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 1040 !important;
+    height: 56px !important;
+}
+
+.sb-topnav .navbar-brand {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    font-size: 1.25rem !important;
+    text-decoration: none !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+}
+
+.sb-topnav .navbar-brand:hover {
+    color: #ff6b6b !important;
+    text-decoration: none !important;
+}
+
+.sb-topnav .navbar-brand::before {
+    content: "🎵";
+    font-size: 1.5rem;
+}
+
+/* Sidebar Toggle Button */
+#sidebarToggle {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 8px !important;
+    padding: 8px 12px !important;
+    transition: all 0.3s ease !important;
+}
+
+#sidebarToggle:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    transform: scale(1.05) !important;
+}
+
+#sidebarToggle:focus {
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2) !important;
+}
+
+/* ===== LAYOUT CONTAINER ===== */
+#layoutSidenav {
+    display: flex !important;
+    margin-top: 56px !important;
+    /* Account for fixed navbar */
+    min-height: calc(100vh - 56px) !important;
+}
+
+/* ===== SIDEBAR ===== */
+#layoutSidenav_nav {
+    flex-shrink: 0 !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    z-index: 1030 !important;
+}
+
+#sidenavAccordion {
+    background: linear-gradient(180deg, #1a1a1a 0%, #2d2d2d 100%) !important;
+    height: calc(100vh - 56px) !important;
+    position: fixed !important;
+    width: 225px !important;
+    overflow-y: auto !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    transform: translateX(0) !important;
+    border-right: 1px solid #404040 !important;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3) !important;
+}
+
+#sidenavAccordion.collapsed {
+    transform: translateX(-100%) !important;
+    width: 0 !important;
+}
+
+/* Sidebar Menu Items */
+.sb-sidenav-menu .nav-link {
+    color: rgba(255, 255, 255, 0.7) !important;
+    padding: 0.875rem 1.25rem !important;
+    border-radius: 0 !important;
+    transition: all 0.3s ease !important;
+    border-left: 3px solid transparent !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    position: relative !important;
+    width: 100% !important;
+    text-decoration: none !important;
+}
+
+.sb-sidenav-menu .nav-link:hover {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-left-color: #ff6b6b !important;
+    text-decoration: none !important;
+}
+
+.sb-sidenav-menu .nav-link.active {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-left-color: #ff6b6b !important;
+    font-weight: 600 !important;
+}
+
+.sb-sidenav-menu .nav-link.active:hover {
+    background: rgba(255, 255, 255, 0.25) !important;
+}
+
+.sb-sidenav-menu .nav-link .sb-nav-link-icon {
+    margin-right: 0 !important;
+    width: 20px !important;
+    text-align: center !important;
+    font-size: 1.1rem !important;
+    flex-shrink: 0 !important;
+}
+
+/* Ensure full width hover effect */
+.sb-sidenav-menu .nav {
+    width: 100% !important;
+}
+
+.sb-sidenav-menu .nav>.nav-link {
+    margin: 0 !important;
+    border-radius: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* Sidebar Headings */
+.sb-sidenav-menu-heading {
+    padding: 1rem 1.25rem 0.5rem !important;
+    font-size: 0.75rem !important;
+    color: rgba(255, 255, 255, 0.5) !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    margin-top: 1rem !important;
+}
+
+.sb-sidenav-menu-heading:first-child {
+    margin-top: 0 !important;
+}
+
+/* Sidebar Footer */
+.sb-sidenav-footer {
+    background: rgba(0, 0, 0, 0.2) !important;
+    border-top: 1px solid #404040 !important;
+    padding: 1rem !important;
+    margin-top: auto !important;
+}
+
+.sb-sidenav-footer .small {
+    color: rgba(255, 255, 255, 0.6) !important;
+    font-size: 0.75rem !important;
+    margin-bottom: 0.25rem !important;
+}
+
+.sb-sidenav-footer div:last-child {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+}
+
+/* ===== MAIN CONTENT ===== */
+#layoutSidenav_content {
+    flex-grow: 1 !important;
+    margin-left: 225px !important;
+    padding: 0 !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    background: #f8f9fa !important;
+    min-height: calc(100vh - 56px) !important;
+}
+
+#layoutSidenav_content.expanded {
+    margin-left: 0 !important;
+}
+
+/* Content Container */
+.content-container {
+    padding: 2rem !important;
+    max-width: 1400px !important;
+    margin: 0 auto !important;
+}
+
+/* Page Header */
+.page-header {
+    background: #ffffff !important;
+    border-radius: 12px !important;
+    padding: 2rem !important;
+    margin-bottom: 2rem !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08) !important;
+    border: 1px solid #e9ecef !important;
+}
+
+.page-title {
+    color: #2d2d2d !important;
+    font-size: 2rem !important;
+    font-weight: 700 !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.page-subtitle {
+    color: #6c757d !important;
+    font-size: 1rem !important;
+    margin-bottom: 0 !important;
+}
+
+/* Cards */
+.card {
+    border: 1px solid #e9ecef !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08) !important;
+    transition: all 0.3s ease !important;
+}
+
+.card:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12) !important;
+    transform: translateY(-2px) !important;
+}
+
+.card-header {
+    background: #ffffff !important;
+    border-bottom: 1px solid #e9ecef !important;
+    border-radius: 12px 12px 0 0 !important;
+    padding: 1.25rem !important;
+}
+
+.card-title {
+    color: #2d2d2d !important;
+    font-weight: 600 !important;
+    margin-bottom: 0 !important;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    #sidenavAccordion {
+        width: 280px !important;
+    }
+
+    #layoutSidenav_content {
+        margin-left: 0 !important;
+    }
+
+    .content-container {
+        padding: 1rem !important;
+    }
+
+    .page-header {
+        padding: 1.5rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .page-title {
+        font-size: 1.5rem !important;
+    }
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.sb-sidenav-menu .nav-link {
+    animation: slideInLeft 0.3s ease forwards;
+}
+
+.card {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+/* ===== SCROLLBAR STYLING ===== */
+#sidenavAccordion::-webkit-scrollbar {
+    width: 6px;
+}
+
+#sidenavAccordion::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+#sidenavAccordion::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+
+#sidenavAccordion::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* ===== LOADING STATES ===== */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #ff6b6b;
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
