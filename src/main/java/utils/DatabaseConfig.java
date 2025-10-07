@@ -10,7 +10,7 @@ public class DatabaseConfig {
     public DatabaseConfig() {
         try {
             String url = "jdbc:sqlserver://localhost:1433;"
-                    + "databaseName=LunaMusic;"
+                    + "databaseName=LunaMusicPro;"
                     + "user=sa;"
                     + "password=1607;"
                     + "encrypt=true;"
