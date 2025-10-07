@@ -2,6 +2,8 @@ package DALs;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import domain.entity.Role;
 import utils.DatabaseConfig;
@@ -45,5 +47,21 @@ public class RoleDAO extends DatabaseConfig {
             return null;
         }
         return null;
+    }
+
+    public List<Role> findAll() {
+        List<Role> roles = new ArrayList<>();
+        String sql = "SELECT id, name, description, active, createdAt, updatedAt, createdBy, updatedBy FROM Roles WHERE active = 1 ORDER BY name ASC";
+        try {
+            var ps = connection.prepareStatement(sql);
+            var rs = ps.executeQuery();
+            while (rs.next()) {
+                roles.add(mapRowToRole(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error finding roles: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return roles;
     }
 }

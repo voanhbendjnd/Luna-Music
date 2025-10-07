@@ -12,6 +12,7 @@ public class Song {
     private Long id;
     private String title;
     private String filePath;
+    private String coverImage; // Cover image path for the song
     private Integer duration; // Duration in seconds
     private Integer playCount;
     private Album album;
@@ -23,12 +24,13 @@ public class Song {
     public Song() {
     }
 
-    public Song(Long id, String title, String filePath, Integer duration, Integer playCount,
+    public Song(Long id, String title, String filePath, String coverImage, Integer duration, Integer playCount,
             Album album, Genre genre,
             Instant createdAt, Instant updatedAt, List<SongArtist> songArtists) {
         this.id = id;
         this.title = title;
         this.filePath = filePath;
+        this.coverImage = coverImage;
         this.duration = duration;
         this.playCount = playCount;
         this.album = album;
@@ -60,6 +62,14 @@ public class Song {
 
     public void setFilePath(String filePath) {
         this.filePath = filePath;
+    }
+
+    public String getCoverImage() {
+        return coverImage;
+    }
+
+    public void setCoverImage(String coverImage) {
+        this.coverImage = coverImage;
     }
 
     public Integer getDuration() {
@@ -137,6 +147,7 @@ public class Song {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", filePath='" + filePath + '\'' +
+                ", coverImage='" + coverImage + '\'' +
                 ", duration=" + duration +
                 ", playCount=" + playCount +
                 ", album=" + album +

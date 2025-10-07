@@ -95,6 +95,21 @@ public class UserDAO extends DatabaseConfig {
         return null;
     }
 
+    public User findByEmail(String email) {
+        String sql = "SELECT id, name, email, password, active, gender, role_id, createdAt, updatedAt, createdBy, updatedBy FROM Users WHERE email = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next())
+                return mapRowToUser(rs);
+        } catch (SQLException e) {
+            System.out.println("Error finding user by email: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public boolean create(User u) {
         String sql = "INSERT INTO Users(name, email, password, active, gender, createdAt, updatedAt, createdBy, updatedBy, role_id) VALUES(?,?,?,?,?,?,?,?,?,?)";
         try {
@@ -179,12 +194,26 @@ public class UserDAO extends DatabaseConfig {
         user.setPassword(rs.getString("password"));
         user.setUpdatedBy(rs.getString("updatedBy"));
 
-        // Handle role_id - create a simple Role object with just the ID
+        // Handle role_id - load full role information
         Long roleId = rs.getLong("role_id");
         if (!rs.wasNull() && roleId != null) {
-            domain.entity.Role role = new domain.entity.Role();
-            role.setId(roleId);
-            user.setRole(role);
+            try {
+                var roleDAO = new DALs.RoleDAO();
+                domain.entity.Role role = roleDAO.findById(roleId);
+                if (role != null) {
+                    user.setRole(role);
+                } else {
+                    // Fallback: create role with just ID if not found
+                    domain.entity.Role fallbackRole = new domain.entity.Role();
+                    fallbackRole.setId(roleId);
+                    user.setRole(fallbackRole);
+                }
+            } catch (Exception e) {
+                // Fallback: create role with just ID if error
+                domain.entity.Role fallbackRole = new domain.entity.Role();
+                fallbackRole.setId(roleId);
+                user.setRole(fallbackRole);
+            }
         }
 
         return user;

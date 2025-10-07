@@ -26,6 +26,22 @@
                                     <i class="fas fa-plus me-1"></i>Add User
                                 </button>
                             </div>
+
+                            <!-- Success/Error Messages -->
+                            <c:if test="${not empty requestScope.success}">
+                                <div class="alert alert-success alert-dismissible fade show m-3" role="alert">
+                                    <i class="fas fa-check-circle me-2"></i>${requestScope.success}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                                </div>
+                            </c:if>
+                            <c:if test="${not empty requestScope.error}">
+                                <div class="alert alert-danger alert-dismissible fade show m-3" role="alert">
+                                    <i class="fas fa-exclamation-circle me-2"></i>${requestScope.error}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                                </div>
+                            </c:if>
                             <div class="table-responsive">
                                 <table id="datatablesSimple" class="table table-striped table-hover align-middle mb-0">
                                     <thead class="table-dark">
@@ -57,11 +73,10 @@
                                                 <td>
                                                     <span class="badge bg-info">
                                                         <c:choose>
-                                                            <c:when test="${u.role != null && u.role.id == 1}">Admin
+                                                            <c:when test="${u.role != null && not empty u.role.name}">
+                                                                <c:out value="${u.role.name}" />
                                                             </c:when>
-                                                            <c:when test="${u.role != null && u.role.id == 2}">User
-                                                            </c:when>
-                                                            <c:otherwise>Unknown</c:otherwise>
+                                                            <c:otherwise>No Role</c:otherwise>
                                                         </c:choose>
                                                     </span>
                                                 </td>
@@ -77,7 +92,8 @@
                                                             data-bs-toggle="modal" data-bs-target="#editModal"
                                                             data-id="${u.id}" data-name="${u.name}"
                                                             data-email="${u.email}" data-gender="${u.gender}"
-                                                            data-role="${u.role}" data-active="${u.active}">
+                                                            data-role="${u.role != null ? u.role.id : ''}"
+                                                            data-active="${u.active}">
                                                             <i class="fas fa-edit"></i>
                                                         </button>
                                                         <button class="btn btn-sm btn-outline-danger"
@@ -141,8 +157,9 @@
                                     <label class="form-label">Role</label>
                                     <select class="form-select" name="role">
                                         <option value="">-- Select Role --</option>
-                                        <option value="1">Admin</option>
-                                        <option value="2">User</option>
+                                        <c:forEach var="role" items="${requestScope.roles}">
+                                            <option value="${role.id}">${role.name}</option>
+                                        </c:forEach>
                                     </select>
                                 </div>
                             </div>
@@ -184,11 +201,10 @@
                                 <div class="col-md-6">
                                     <label class="form-label">Gender</label>
                                     <select class="form-select" name="gender" id="editGender">
-                                        <option value="">--</option>
+                                        <option value="">-Select Gender-</option>
                                         <option value="MALE">Male</option>
                                         <option value="FEMALE">Female</option>
                                         <option value="OTHER">Other</option>
-                                        <option value="PREFER_NOT_TO_SAY">Prefer not to say</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6 d-flex align-items-end">
@@ -201,8 +217,9 @@
                                     <label class="form-label">Role</label>
                                     <select class="form-select" name="role" id="editRole">
                                         <option value="">-- Select Role --</option>
-                                        <option value="1">Admin</option>
-                                        <option value="2">User</option>
+                                        <c:forEach var="role" items="${requestScope.roles}">
+                                            <option value="${role.id}">${role.name}</option>
+                                        </c:forEach>
                                     </select>
                                 </div>
                             </div>
@@ -248,81 +265,59 @@
                 }
             });
 
-            // Debug form submission for create user
-            document.addEventListener('DOMContentLoaded', function () {
-                console.log('DOM loaded, looking for create form...');
 
-                // Find all forms
-                const allForms = document.querySelectorAll('form');
-                console.log('Found forms:', allForms.length);
+            // Find create form specifically
+            const createForm = document.querySelector('form[action*="/admin"] input[name="action"][value="create"]')?.closest('form');
 
-                // Find create form specifically
-                const createForm = document.querySelector('form[action*="/admin"] input[name="action"][value="create"]')?.closest('form');
-                console.log('Create form found:', createForm);
+            // Form validation only - similar to other entities
+            if (createForm) {
+                createForm.addEventListener('submit', function (e) {
+                    const name = this.querySelector('input[name="name"]')?.value?.trim() || '';
+                    const email = this.querySelector('input[name="email"]')?.value?.trim() || '';
+                    const password = this.querySelector('input[name="password"]')?.value?.trim() || '';
+                    const gender = this.querySelector('select[name="gender"]')?.value || '';
+                    const role = this.querySelector('select[name="role"]')?.value || '';
 
-                if (createForm) {
-                    console.log('Setting up create form listener...');
+                    // Client-side validation
+                    if (!name) {
+                        e.preventDefault();
+                        alert('Please enter user name');
+                        return;
+                    }
+                    if (!email) {
+                        e.preventDefault();
+                        alert('Please enter email');
+                        return;
+                    }
+                    if (!password) {
+                        e.preventDefault();
+                        alert('Please enter password');
+                        return;
+                    }
+                    if (!gender) {
+                        e.preventDefault();
+                        alert('Please select gender');
+                        return;
+                    }
+                    if (!role) {
+                        e.preventDefault();
+                        alert('Please select role');
+                        return;
+                    }
 
-                    createForm.addEventListener('submit', function (e) {
-                        console.log('Form submit event triggered!');
-                        e.preventDefault(); // Prevent default first for debugging
+                    // Show loading state like other entities
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Saving...';
+                    submitBtn.disabled = true;
 
-                        const name = this.querySelector('input[name="name"]')?.value?.trim() || '';
-                        const email = this.querySelector('input[name="email"]')?.value?.trim() || '';
-                        const password = this.querySelector('input[name="password"]')?.value?.trim() || '';
-                        const gender = this.querySelector('select[name="gender"]')?.value || '';
-                        const role = this.querySelector('select[name="role"]')?.value || '';
-                        const active = this.querySelector('input[name="active"]')?.checked || false;
-
-                        console.log('=== CREATE USER DEBUG ===');
-                        console.log('Form action:', this.action);
-                        console.log('Form method:', this.method);
-                        console.log('Name:', name);
-                        console.log('Email:', email);
-                        console.log('Password:', password ? '***' : 'EMPTY');
-                        console.log('Gender:', gender);
-                        console.log('Role:', role);
-                        console.log('Active:', active);
-                        console.log('========================');
-
-                        // Manual validation
-                        const errors = [];
-                        if (!name) errors.push('Name is required');
-                        if (!email) errors.push('Email is required');
-                        if (!password) errors.push('Password is required');
-                        if (!gender) errors.push('Gender is required');
-                        if (!role) errors.push('Role is required');
-
-                        if (errors.length > 0) {
-                            alert('Please fix the following errors:\n' + errors.join('\n'));
-                            return false;
-                        }
-
-                        console.log('Form validation passed - submitting...');
-
-                        // Show confirmation before submit
-                        if (confirm('Are you sure you want to create this user?')) {
-                            // Submit the form manually
-                            console.log('Submitting form...');
-                            this.submit();
-                        } else {
-                            console.log('Form submission cancelled');
-                        }
-                    });
-                } else {
-                    console.log('Create form not found!');
-                }
-
-                // Also check for Save button clicks
-                const saveButtons = document.querySelectorAll('button[type="submit"]');
-                console.log('Save buttons found:', saveButtons.length);
-
-                saveButtons.forEach((btn, index) => {
-                    btn.addEventListener('click', function (e) {
-                        console.log('Save button clicked:', index, this);
-                    });
+                    // Re-enable button if form submission fails
+                    setTimeout(() => {
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                    }, 10000);
                 });
-            });
+            }
 
             // Modal population
             document.addEventListener('DOMContentLoaded', function () {

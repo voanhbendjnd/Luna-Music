@@ -28,7 +28,8 @@ public class SongDAO extends DatabaseConfig {
      */
     public List<Song> findAll(String keyword) {
         List<Song> songs = new ArrayList<>();
-        String base = "SELECT s.id, s.title, s.file_path, s.duration, s.play_count, s.album_id, s.genre_id, " +
+        String base = "SELECT s.id, s.title, s.file_path, s.coverImage, s.duration, s.play_count, s.album_id, s.genre_id, "
+                +
                 "s.createdAt, s.updatedAt, " +
                 "a.id as album_id, a.title as album_title, a.cover_image_path, " +
                 "g.id as genre_id, g.name as genre_name " +
@@ -66,7 +67,8 @@ public class SongDAO extends DatabaseConfig {
      * Find song by ID
      */
     public Song findById(long id) {
-        String sql = "SELECT s.id, s.title, s.file_path, s.duration, s.play_count, s.album_id, s.genre_id, " +
+        String sql = "SELECT s.id, s.title, s.file_path, s.coverImage, s.duration, s.play_count, s.album_id, s.genre_id, "
+                +
                 "s.createdAt, s.updatedAt, " +
                 "a.id as album_id, a.title as album_title, a.cover_image_path, " +
                 "g.id as genre_id, g.name as genre_name " +
@@ -96,34 +98,35 @@ public class SongDAO extends DatabaseConfig {
      * Create new song
      */
     public boolean create(Song song) {
-        String sql = "INSERT INTO Songs(title, file_path, duration, play_count, album_id, genre_id, createdAt, updatedAt) "
+        String sql = "INSERT INTO Songs(title, file_path, coverImage, duration, play_count, album_id, genre_id, createdAt, updatedAt) "
                 +
-                "VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+                "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, song.getTitle());
             ps.setString(2, song.getFilePath());
-            ps.setObject(3, song.getDuration(), Types.INTEGER);
-            ps.setObject(4, song.getPlayCount(), Types.INTEGER);
+            ps.setString(3, song.getCoverImage());
+            ps.setObject(4, song.getDuration(), Types.INTEGER);
+            ps.setObject(5, song.getPlayCount(), Types.INTEGER);
 
             // Handle album_id
             if (song.getAlbum() != null && song.getAlbum().getId() != null) {
-                ps.setLong(5, song.getAlbum().getId());
-            } else {
-                ps.setNull(5, Types.INTEGER);
-            }
-
-            // Handle genre_id
-            if (song.getGenre() != null && song.getGenre().getId() != null) {
-                ps.setLong(6, song.getGenre().getId());
+                ps.setLong(6, song.getAlbum().getId());
             } else {
                 ps.setNull(6, Types.INTEGER);
             }
 
+            // Handle genre_id
+            if (song.getGenre() != null && song.getGenre().getId() != null) {
+                ps.setLong(7, song.getGenre().getId());
+            } else {
+                ps.setNull(7, Types.INTEGER);
+            }
+
             Instant now = Instant.now();
-            ps.setTimestamp(7, Timestamp.from(now));
             ps.setTimestamp(8, Timestamp.from(now));
+            ps.setTimestamp(9, Timestamp.from(now));
 
             int result = ps.executeUpdate();
             if (result > 0) {
@@ -145,31 +148,32 @@ public class SongDAO extends DatabaseConfig {
      * Update existing song
      */
     public boolean update(Song song) {
-        String sql = "UPDATE Songs SET title=?, file_path=?, duration=?, play_count=?, album_id=?, genre_id=?, updatedAt=? WHERE id=?";
+        String sql = "UPDATE Songs SET title=?, file_path=?, coverImage=?, duration=?, play_count=?, album_id=?, genre_id=?, updatedAt=? WHERE id=?";
 
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, song.getTitle());
             ps.setString(2, song.getFilePath());
-            ps.setObject(3, song.getDuration(), Types.INTEGER);
-            ps.setObject(4, song.getPlayCount(), Types.INTEGER);
+            ps.setString(3, song.getCoverImage());
+            ps.setObject(4, song.getDuration(), Types.INTEGER);
+            ps.setObject(5, song.getPlayCount(), Types.INTEGER);
 
             // Handle album_id
             if (song.getAlbum() != null && song.getAlbum().getId() != null) {
-                ps.setLong(5, song.getAlbum().getId());
-            } else {
-                ps.setNull(5, Types.INTEGER);
-            }
-
-            // Handle genre_id
-            if (song.getGenre() != null && song.getGenre().getId() != null) {
-                ps.setLong(6, song.getGenre().getId());
+                ps.setLong(6, song.getAlbum().getId());
             } else {
                 ps.setNull(6, Types.INTEGER);
             }
 
-            ps.setTimestamp(7, Timestamp.from(Instant.now()));
-            ps.setLong(8, song.getId());
+            // Handle genre_id
+            if (song.getGenre() != null && song.getGenre().getId() != null) {
+                ps.setLong(7, song.getGenre().getId());
+            } else {
+                ps.setNull(7, Types.INTEGER);
+            }
+
+            ps.setTimestamp(8, Timestamp.from(Instant.now()));
+            ps.setLong(9, song.getId());
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -200,7 +204,8 @@ public class SongDAO extends DatabaseConfig {
      */
     public List<Song> findByArtistId(long artistId) {
         List<Song> songs = new ArrayList<>();
-        String sql = "SELECT s.id, s.title, s.file_path, s.duration, s.play_count, s.album_id, s.genre_id, " +
+        String sql = "SELECT s.id, s.title, s.file_path, s.coverImage, s.duration, s.play_count, s.album_id, s.genre_id, "
+                +
                 "s.createdAt, s.updatedAt, " +
                 "a.id as album_id, a.title as album_title, a.cover_image_path, " +
                 "g.id as genre_id, g.name as genre_name " +
@@ -232,7 +237,8 @@ public class SongDAO extends DatabaseConfig {
      */
     public List<Song> findByAlbumId(long albumId) {
         List<Song> songs = new ArrayList<>();
-        String sql = "SELECT s.id, s.title, s.file_path, s.duration, s.play_count, s.album_id, s.genre_id, " +
+        String sql = "SELECT s.id, s.title, s.file_path, s.coverImage, s.duration, s.play_count, s.album_id, s.genre_id, "
+                +
                 "s.createdAt, s.updatedAt, " +
                 "a.id as album_id, a.title as album_title, a.cover_image_path, " +
                 "g.id as genre_id, g.name as genre_name " +
@@ -263,7 +269,8 @@ public class SongDAO extends DatabaseConfig {
      */
     public List<Song> findByGenreId(long genreId) {
         List<Song> songs = new ArrayList<>();
-        String sql = "SELECT s.id, s.title, s.file_path, s.duration, s.play_count, s.album_id, s.genre_id, " +
+        String sql = "SELECT s.id, s.title, s.file_path, s.coverImage, s.duration, s.play_count, s.album_id, s.genre_id, "
+                +
                 "s.createdAt, s.updatedAt, " +
                 "a.id as album_id, a.title as album_title, a.cover_image_path, " +
                 "g.id as genre_id, g.name as genre_name " +
@@ -313,6 +320,7 @@ public class SongDAO extends DatabaseConfig {
         song.setId(rs.getLong("id"));
         song.setTitle(rs.getString("title"));
         song.setFilePath(rs.getString("file_path"));
+        song.setCoverImage(rs.getString("coverImage"));
         song.setDuration(rs.getObject("duration", Integer.class));
         song.setPlayCount(rs.getObject("play_count", Integer.class));
 

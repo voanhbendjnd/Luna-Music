@@ -192,3 +192,6 @@ VALUES
 -- cho m thì hệ thống sẽ không biêt m là ai và không phân quyền truy cập các api riêng được, url admin thì chỉ có admin truy cập được
 -- về quan hệ, m là người dùng, thì m chỉ  có thể có 1 quyền duy nhất, ví dụ m là khách thì m chỉ có thể là role user thông thường không thể là m có role vừa là user vừa là admin, vì admin là 
 -- full quyền, nên người dùng chỉ có 1 quyền, còn 1 role thì có thể có nhiều người dùng
+
+ALTER TABLE Songs
+ADD coverImage VARCHAR(500);

@@ -53,10 +53,9 @@
                                                     </td>
                                                     <td>
                                                         <div class="d-flex align-items-center">
-                                                            <c:if
-                                                                test="${not empty song.album and not empty song.album.coverImagePath}">
-                                                                <img src="${pageContext.request.contextPath}${song.album.coverImagePath}"
-                                                                    alt="Album Cover" class="rounded me-2"
+                                                            <c:if test="${not empty song.coverImage}">
+                                                                <img src="${pageContext.request.contextPath}${song.coverImage}"
+                                                                    alt="Song Cover" class="rounded me-2"
                                                                     style="width: 40px; height: 40px; object-fit: cover;">
                                                             </c:if>
                                                             <div>
@@ -136,6 +135,8 @@
                                                                 data-id="${song.id}" data-title="${song.title}"
                                                                 data-album-id="${song.album != null ? song.album.id : ''}"
                                                                 data-genre-id="${song.genre != null ? song.genre.id : ''}"
+                                                                data-duration-id="${song.duration}"
+                                                                data-cover-image-path="${song.coverImage}"
                                                                 data-artist-ids="<c:forEach var='songArtist' items='${song.songArtists}' varStatus='status'>${songArtist.artist.id}<c:if test='${not status.last}'>,</c:if></c:forEach>">
                                                                 <i class="fas fa-edit"></i>
                                                             </button>
@@ -221,13 +222,22 @@
                                                 accept=".mp3,.m4a,.wav" required />
                                             <small class="form-text text-muted">Supported formats: MP3, M4A, WAV</small>
                                         </div>
-
-                                        <div class="mb-3">
-                                            <label class="form-label">Cover Image</label>
-                                            <input type="file" name="coverImage" class="form-control"
-                                                accept=".jpg,.jpeg,.png,.gif" />
-                                            <small class="form-text text-muted">Optional: JPG, PNG, GIF</small>
+                                        <div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Cover Image</label>
+                                                <input type="file" name="coverImage" class="form-control"
+                                                    accept=".jpg,.jpeg,.png,.gif" />
+                                                <small class="form-text text-muted">Optional: JPG, PNG, GIF</small>
+                                            </div>
+                                            <div class="mb-3">
+                                                <div class="image-preview-container">
+                                                    <img id="createImagePreview" src="" alt="Preview"
+                                                        class="img-thumbnail d-none"
+                                                        style="max-width: 250px; max-height: 250px;">
+                                                </div>
+                                            </div>
                                         </div>
+
 
                                         <div class="mb-3">
                                             <label class="form-label">Duration (seconds)</label>
@@ -324,14 +334,27 @@
                                                 accept=".mp3,.m4a,.wav" />
                                             <small class="form-text text-muted">Leave empty to keep current file</small>
                                         </div>
-
-                                        <div class="mb-3">
-                                            <label class="form-label">Cover Image</label>
-                                            <input type="file" name="coverImage" class="form-control"
-                                                accept=".jpg,.jpeg,.png,.gif" />
-                                            <small class="form-text text-muted">Leave empty to keep current
-                                                image</small>
+                                        <div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Cover Image</label>
+                                                <input type="file" name="coverImage" class="form-control"
+                                                    accept=".jpg,.jpeg,.png,.gif" />
+                                                <small class="form-text text-muted">Leave empty to keep current
+                                                    image</small>
+                                            </div>
+                                            <div class="mb-3">
+                                                <div class="image-preview-container">
+                                                    <img id="editImagePreview" src="" alt="Current Image"
+                                                        class="img-thumbnail"
+                                                        style="max-width: 250px; max-height: 250px; display: none;">
+                                                    <div id="noCurrentImageLabel" class="text-muted"
+                                                        style="display: block;">
+                                                        <i class="fas fa-image me-2"></i>No current image
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
+
 
                                         <div class="mb-3">
                                             <label class="form-label">Duration (seconds)</label>
@@ -437,6 +460,72 @@
                             }
                         });
                     });
+                    // Image preview functionality
+                    document.addEventListener('DOMContentLoaded', function () {
+                        // Create modal image preview
+                        const createImageInput = document.querySelector('#createModal input[name="coverImage"]');
+                        const createImagePreview = document.getElementById('createImagePreview');
+
+                        if (createImageInput && createImagePreview) {
+                            createImageInput.addEventListener('change', function () {
+                                const file = this.files[0];
+                                if (file) {
+                                    const reader = new FileReader();
+                                    reader.onload = function (e) {
+                                        createImagePreview.src = e.target.result;
+                                        createImagePreview.classList.remove('d-none');
+                                    };
+                                    reader.readAsDataURL(file);
+                                } else {
+                                    createImagePreview.classList.add('d-none');
+                                }
+                            });
+                        }
+
+                        // Edit modal image preview
+                        const editImageInput = document.querySelector('#editModal input[name="coverImage"]');
+                        const editImagePreview = document.getElementById('editImagePreview');
+
+                        if (editImageInput && editImagePreview) {
+                            editImageInput.addEventListener('change', function () {
+                                const file = this.files[0];
+                                const noCurrentImageLabel = document.getElementById('noCurrentImageLabel');
+                                if (file) {
+                                    const reader = new FileReader();
+                                    reader.onload = function (e) {
+                                        editImagePreview.src = e.target.result;
+                                        editImagePreview.style.display = 'block';
+                                        if (noCurrentImageLabel) {
+                                            noCurrentImageLabel.style.display = 'none';
+                                        }
+                                    };
+                                    reader.readAsDataURL(file);
+                                } else {
+                                    // Reset to current image or show "No current image"
+                                    const editModal = document.getElementById('editModal');
+                                    if (editModal) {
+                                        const modalBtn = editModal.querySelector('[data-bs-target="#editModal"]');
+                                        if (modalBtn) {
+                                            const currentImagePath = modalBtn.getAttribute('data-cover-image-path');
+                                            if (currentImagePath && currentImagePath.trim() !== '') {
+                                                editImagePreview.src = '${pageContext.request.contextPath}' + currentImagePath;
+                                                editImagePreview.style.display = 'block';
+                                                if (noCurrentImageLabel) {
+                                                    noCurrentImageLabel.style.display = 'none';
+                                                }
+                                            } else {
+                                                editImagePreview.src = '';
+                                                editImagePreview.style.display = 'none';
+                                                if (noCurrentImageLabel) {
+                                                    noCurrentImageLabel.style.display = 'block';
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
 
                     // Image file validation
                     const imageInputs = document.querySelectorAll('input[name="coverImage"]');
@@ -491,6 +580,12 @@
                         editModal.addEventListener('show.bs.modal', function (event) {
                             const btn = event.relatedTarget;
 
+                            // Reset file input
+                            const editImageInput = document.querySelector('#editModal input[name="coverImage"]');
+                            if (editImageInput) {
+                                editImageInput.value = '';
+                            }
+
                             // Set basic fields
                             document.getElementById('editId').value = btn.getAttribute('data-id');
                             document.getElementById('editTitle').value = btn.getAttribute('data-title');
@@ -506,6 +601,27 @@
                             if (genreId) {
                                 document.getElementById('editGenreId').value = genreId;
                             }
+                            // Set current image
+                            const imagePath = btn.getAttribute('data-cover-image-path');
+                            console.log('Image path from data attribute:', imagePath);
+                            const editImagePreview = document.getElementById('editImagePreview');
+                            const noCurrentImageLabel = document.getElementById('noCurrentImageLabel');
+                            if (editImagePreview && noCurrentImageLabel) {
+                                if (imagePath && imagePath.trim() !== '') {
+                                    const fullImagePath = '${pageContext.request.contextPath}' + imagePath;
+                                    console.log('Full image path:', fullImagePath);
+                                    editImagePreview.src = fullImagePath;
+                                    editImagePreview.style.display = 'block';
+                                    noCurrentImageLabel.style.display = 'none';
+                                } else {
+                                    editImagePreview.src = '';
+                                    editImagePreview.style.display = 'none';
+                                    noCurrentImageLabel.style.display = 'block';
+                                }
+                            }
+
+                            // Set duration
+                            document.getElementById('editDuration').value = btn.getAttribute('data-duration-id');
 
                             // Set artists (multiple selection)
                             const artistIds = btn.getAttribute('data-artist-ids');

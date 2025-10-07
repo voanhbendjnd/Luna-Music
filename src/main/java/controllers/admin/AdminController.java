@@ -25,6 +25,7 @@ import DALs.ArtistDAO;
 import DALs.AlbumDAO;
 import DALs.GenreDAO;
 import DALs.SongArtistDAO;
+import DALs.RoleDAO;
 import domain.entity.User;
 import domain.entity.Song;
 import domain.entity.Artist;
@@ -66,8 +67,11 @@ public class AdminController extends HttpServlet {
             } else if ("users".equalsIgnoreCase(type)) {
                 String q = request.getParameter("q");
                 var dao = new UserDAO();
+                var roleDAO = new RoleDAO();
                 var users = dao.findAll(q);
+                var roles = roleDAO.findAll();
                 request.setAttribute("users", users);
+                request.setAttribute("roles", roles);
                 request.setAttribute("q", q == null ? "" : q);
                 request.setAttribute("viewPath", "/views/admin/user.jsp");
             } else if ("songs".equalsIgnoreCase(type)) {
@@ -167,27 +171,109 @@ public class AdminController extends HttpServlet {
 
         // Handle User operations (existing code)
         var dao = new UserDAO();
-        if ("create".equals(action)) {
-            User u = buildUserFromRequest(request);
-            dao.create(u);
-            response.sendRedirect(request.getContextPath() + "/admin?action=list&type=users");
-            return;
-        }
-        if ("update".equals(action)) {
-            User u = buildUserFromRequest(request);
-            String idStr = request.getParameter("id");
-            if (idStr != null && !idStr.isBlank())
-                u.setId(Long.parseLong(idStr));
-            dao.update(u);
-            response.sendRedirect(request.getContextPath() + "/admin?action=list&type=users");
-            return;
-        }
-        if ("delete".equals(action)) {
-            String idStr = request.getParameter("id");
-            if (idStr != null && !idStr.isBlank())
-                dao.delete(Long.parseLong(idStr));
-            response.sendRedirect(request.getContextPath() + "/admin?action=list&type=users");
-            return;
+        try {
+            if ("create".equals(action)) {
+                User u = buildUserFromRequest(request);
+
+                // Check if email already exists
+                User existingUser = dao.findByEmail(u.getEmail());
+                if (existingUser != null) {
+                    // Load users data and show error message on the same page
+                    String q = request.getParameter("q");
+                    var roleDAO = new RoleDAO();
+                    var users = dao.findAll(q);
+                    var roles = roleDAO.findAll();
+                    request.setAttribute("users", users);
+                    request.setAttribute("roles", roles);
+                    request.setAttribute("q", q == null ? "" : q);
+                    request.setAttribute("error", "Email already exists! Please use a different email.");
+                    request.setAttribute("viewPath", "/views/admin/user.jsp");
+                    request.getRequestDispatcher("/views/admin/tables.jsp").forward(request, response);
+                    return;
+                }
+
+                boolean success = dao.create(u);
+                if (success) {
+                    request.setAttribute("success", "User created successfully!");
+                    response.sendRedirect(request.getContextPath() + "/admin?action=list&type=users");
+                } else {
+                    // Load users data and show error message on the same page
+                    String q = request.getParameter("q");
+                    var roleDAO = new RoleDAO();
+                    var users = dao.findAll(q);
+                    var roles = roleDAO.findAll();
+                    request.setAttribute("users", users);
+                    request.setAttribute("roles", roles);
+                    request.setAttribute("q", q == null ? "" : q);
+                    request.setAttribute("error", "Failed to create user. Please try again.");
+                    request.setAttribute("viewPath", "/views/admin/user.jsp");
+                    request.getRequestDispatcher("/views/admin/tables.jsp").forward(request, response);
+                }
+                return;
+            }
+            if ("update".equals(action)) {
+                User u = buildUserFromRequest(request);
+                String idStr = request.getParameter("id");
+                if (idStr != null && !idStr.isBlank()) {
+                    u.setId(Long.parseLong(idStr));
+
+                    // Check if email already exists for another user
+                    User existingUser = dao.findByEmail(u.getEmail());
+                    if (existingUser != null && !existingUser.getId().equals(u.getId())) {
+                        // Load users data and show error message on the same page
+                        String q = request.getParameter("q");
+                        var roleDAO = new RoleDAO();
+                        var users = dao.findAll(q);
+                        var roles = roleDAO.findAll();
+                        request.setAttribute("users", users);
+                        request.setAttribute("roles", roles);
+                        request.setAttribute("q", q == null ? "" : q);
+                        request.setAttribute("error", "Email already exists! Please use a different email.");
+                        request.setAttribute("viewPath", "/views/admin/user.jsp");
+                        request.getRequestDispatcher("/views/admin/tables.jsp").forward(request, response);
+                        return;
+                    }
+                }
+
+                boolean success = dao.update(u);
+                if (success) {
+                    request.setAttribute("success", "User updated successfully!");
+                    response.sendRedirect(request.getContextPath() + "/admin?action=list&type=users");
+                } else {
+                    // Load users data and show error message on the same page
+                    String q = request.getParameter("q");
+                    var roleDAO = new RoleDAO();
+                    var users = dao.findAll(q);
+                    var roles = roleDAO.findAll();
+                    request.setAttribute("users", users);
+                    request.setAttribute("roles", roles);
+                    request.setAttribute("q", q == null ? "" : q);
+                    request.setAttribute("error", "Failed to update user. Please try again.");
+                    request.setAttribute("viewPath", "/views/admin/user.jsp");
+                    request.getRequestDispatcher("/views/admin/tables.jsp").forward(request, response);
+                }
+                return;
+            }
+            if ("delete".equals(action)) {
+                String idStr = request.getParameter("id");
+                if (idStr != null && !idStr.isBlank())
+                    dao.delete(Long.parseLong(idStr));
+                response.sendRedirect(request.getContextPath() + "/admin?action=list&type=users");
+                return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Load users data and show error message on the same page
+            String q = request.getParameter("q");
+            var roleDAO = new RoleDAO();
+            var users = dao.findAll(q);
+            var roles = roleDAO.findAll();
+            request.setAttribute("users", users);
+            request.setAttribute("roles", roles);
+            request.setAttribute("q", q == null ? "" : q);
+            request.setAttribute("error", "Operation failed: " + e.getMessage());
+            request.setAttribute("viewPath", "/views/admin/user.jsp");
+            request.getRequestDispatcher("/views/admin/tables.jsp").forward(request, response);
         }
     }
 
@@ -340,10 +426,10 @@ public class AdminController extends HttpServlet {
             song.setFilePath("/uploads/" + AUDIO_DIR + "/" + audioFilePath);
         }
 
-        // Handle cover image upload (for album if specified)
+        // Handle cover image upload (for song)
         String coverImagePath = handleFileUpload(request, "coverImage", IMAGE_DIR, ALLOWED_IMAGE_EXTENSIONS);
-        if (coverImagePath != null && song.getAlbum() != null) {
-            song.getAlbum().setCoverImagePath("/uploads/" + IMAGE_DIR + "/" + coverImagePath);
+        if (coverImagePath != null) {
+            song.setCoverImage("/uploads/" + IMAGE_DIR + "/" + coverImagePath);
         }
 
         return song;
