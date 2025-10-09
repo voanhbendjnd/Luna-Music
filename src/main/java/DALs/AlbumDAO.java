@@ -21,13 +21,6 @@ public class AlbumDAO extends DatabaseConfig {
     }
 
     /**
-     * Find all albums
-     */
-    public List<Album> findAll() {
-        return findAll(null);
-    }
-
-    /**
      * Find all albums with optional keyword search
      */
     public List<Album> findAll(String keyword) {
@@ -64,28 +57,18 @@ public class AlbumDAO extends DatabaseConfig {
      */
     public Album findById(long id) {
         String sql = "SELECT a.id, a.title, a.artist_id, a.release_year, a.cover_image_path, a.createdAt, " +
-                "ar.id as artist_id, ar.name as artist_name, ar.bio as artist_bio, ar.image_path as artist_image_path, "
+                "ar.id as artist_id, ar.name as artist_name, ar.bio as artist_bio, ar.image_path as artist_image_path "
                 +
-                "COUNT(s.id) as song_count, " +
-                "CASE WHEN COUNT(s.id) > 0 THEN " +
-                "  CONCAT(SUM(s.duration) / 60, ' min ', SUM(s.duration) % 60, ' sec') " +
-                "ELSE '0 min 0 sec' END as total_duration " +
                 "FROM Albums a " +
                 "JOIN Artists ar ON a.artist_id = ar.id " +
-                "LEFT JOIN Songs s ON a.id = s.album_id " +
-                "WHERE a.id = ? " +
-                "GROUP BY a.id, a.title, a.artist_id, a.release_year, a.cover_image_path, a.createdAt, " +
-                "ar.id, ar.name, ar.bio, ar.image_path";
+                "WHERE a.id = ?";
 
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                Album album = mapRowToAlbum(rs);
-                album.setSongCount(rs.getInt("song_count"));
-                album.setTotalDuration(rs.getString("total_duration"));
-                return album;
+                return mapRowToAlbum(rs);
             }
         } catch (SQLException e) {
             System.out.println("Error finding album by id: " + e.getMessage());

@@ -20,13 +20,6 @@ public class ArtistDAO extends DatabaseConfig {
     }
 
     /**
-     * Find all artists
-     */
-    public List<Artist> findAll() {
-        return findAll(null);
-    }
-
-    /**
      * Find all artists with optional keyword search
      */
     public List<Artist> findAll(String keyword) {

@@ -8,8 +8,6 @@
                 <meta charset="UTF-8">
                 <title>${pageTitle}</title>
                 <link href="${pageContext.request.contextPath}/assets/css/bootstrap.min.css" rel="stylesheet">
-                <link href="${pageContext.request.contextPath}/assets/css/modal.css" rel="stylesheet">
-                <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
             </head>
 
             <body>
@@ -26,7 +24,6 @@
 
 
                             <script src="${pageContext.request.contextPath}/assets/js/bootstrap.bundle.min.js"></script>
-                            <script src="${pageContext.request.contextPath}/assets/js/modal.js"></script>
 
             </body>
 
