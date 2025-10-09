@@ -14,6 +14,8 @@ public class Album {
     private Integer releaseYear;
     private String coverImagePath;
     private Instant createdAt;
+    private Integer songCount;
+    private String totalDuration;
     // Relationships
     private List<Song> songs;
     private Artist artist;
@@ -86,6 +88,22 @@ public class Album {
 
     public void setSongs(List<Song> songs) {
         this.songs = songs;
+    }
+
+    public Integer getSongCount() {
+        return songCount;
+    }
+
+    public void setSongCount(Integer songCount) {
+        this.songCount = songCount;
+    }
+
+    public String getTotalDuration() {
+        return totalDuration;
+    }
+
+    public void setTotalDuration(String totalDuration) {
+        this.totalDuration = totalDuration;
     }
 
     @Override

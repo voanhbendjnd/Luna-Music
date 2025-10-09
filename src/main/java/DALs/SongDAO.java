@@ -30,7 +30,7 @@ public class SongDAO extends DatabaseConfig {
         List<Song> songs = new ArrayList<>();
         String base = "SELECT s.id, s.title, s.file_path, s.coverImage, s.duration, s.play_count, s.album_id, s.genre_id, "
                 +
-                "s.createdAt, s.updatedAt, " +
+                "s.createdAt, s.updatedAt, s.lyric, " +
                 "a.id as album_id, a.title as album_title, a.cover_image_path, " +
                 "g.id as genre_id, g.name as genre_name " +
                 "FROM Songs s " +
@@ -69,7 +69,7 @@ public class SongDAO extends DatabaseConfig {
     public Song findById(long id) {
         String sql = "SELECT s.id, s.title, s.file_path, s.coverImage, s.duration, s.play_count, s.album_id, s.genre_id, "
                 +
-                "s.createdAt, s.updatedAt, " +
+                "s.createdAt, s.updatedAt, s.lyric, " +
                 "a.id as album_id, a.title as album_title, a.cover_image_path, " +
                 "g.id as genre_id, g.name as genre_name " +
                 "FROM Songs s " +
@@ -98,9 +98,9 @@ public class SongDAO extends DatabaseConfig {
      * Create new song
      */
     public boolean create(Song song) {
-        String sql = "INSERT INTO Songs(title, file_path, coverImage, duration, play_count, album_id, genre_id, createdAt, updatedAt) "
+        String sql = "INSERT INTO Songs(title, file_path, coverImage, duration, play_count, album_id, genre_id, createdAt, updatedAt, lyric) "
                 +
-                "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -127,6 +127,7 @@ public class SongDAO extends DatabaseConfig {
             Instant now = Instant.now();
             ps.setTimestamp(8, Timestamp.from(now));
             ps.setTimestamp(9, Timestamp.from(now));
+            ps.setString(10, song.getLyric());
 
             int result = ps.executeUpdate();
             if (result > 0) {
@@ -148,7 +149,7 @@ public class SongDAO extends DatabaseConfig {
      * Update existing song
      */
     public boolean update(Song song) {
-        String sql = "UPDATE Songs SET title=?, file_path=?, coverImage=?, duration=?, play_count=?, album_id=?, genre_id=?, updatedAt=? WHERE id=?";
+        String sql = "UPDATE Songs SET title=?, file_path=?, coverImage=?, duration=?, play_count=?, album_id=?, genre_id=?, updatedAt=?, lyric=? WHERE id=?";
 
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -173,7 +174,8 @@ public class SongDAO extends DatabaseConfig {
             }
 
             ps.setTimestamp(8, Timestamp.from(Instant.now()));
-            ps.setLong(9, song.getId());
+            ps.setString(9, song.getLyric());
+            ps.setLong(10, song.getId());
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -206,7 +208,7 @@ public class SongDAO extends DatabaseConfig {
         List<Song> songs = new ArrayList<>();
         String sql = "SELECT s.id, s.title, s.file_path, s.coverImage, s.duration, s.play_count, s.album_id, s.genre_id, "
                 +
-                "s.createdAt, s.updatedAt, " +
+                "s.createdAt, s.updatedAt, s.lyric, " +
                 "a.id as album_id, a.title as album_title, a.cover_image_path, " +
                 "g.id as genre_id, g.name as genre_name " +
                 "FROM Songs s " +
@@ -239,7 +241,7 @@ public class SongDAO extends DatabaseConfig {
         List<Song> songs = new ArrayList<>();
         String sql = "SELECT s.id, s.title, s.file_path, s.coverImage, s.duration, s.play_count, s.album_id, s.genre_id, "
                 +
-                "s.createdAt, s.updatedAt, " +
+                "s.createdAt, s.updatedAt, s.lyric, " +
                 "a.id as album_id, a.title as album_title, a.cover_image_path, " +
                 "g.id as genre_id, g.name as genre_name " +
                 "FROM Songs s " +
@@ -271,7 +273,7 @@ public class SongDAO extends DatabaseConfig {
         List<Song> songs = new ArrayList<>();
         String sql = "SELECT s.id, s.title, s.file_path, s.coverImage, s.duration, s.play_count, s.album_id, s.genre_id, "
                 +
-                "s.createdAt, s.updatedAt, " +
+                "s.createdAt, s.updatedAt, s.lyric, " +
                 "a.id as album_id, a.title as album_title, a.cover_image_path, " +
                 "g.id as genre_id, g.name as genre_name " +
                 "FROM Songs s " +
@@ -323,6 +325,7 @@ public class SongDAO extends DatabaseConfig {
         song.setCoverImage(rs.getString("coverImage"));
         song.setDuration(rs.getObject("duration", Integer.class));
         song.setPlayCount(rs.getObject("play_count", Integer.class));
+        song.setLyric(rs.getString("lyric"));
 
         // Map timestamps
         Timestamp createdAt = rs.getTimestamp("createdAt");

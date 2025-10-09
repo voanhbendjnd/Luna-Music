@@ -194,4 +194,4 @@ VALUES
 -- full quyền, nên người dùng chỉ có 1 quyền, còn 1 role thì có thể có nhiều người dùng
 
 ALTER TABLE Songs
-ADD coverImage VARCHAR(500);
+ADD lyric NVARCHAR(255);

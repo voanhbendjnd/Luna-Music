@@ -27,6 +27,22 @@
         <servlet-name>AdminController</servlet-name>
         <servlet-class>controllers.admin.AdminController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SongController</servlet-name>
+        <servlet-class>controllers.api.SongController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ArtistController</servlet-name>
+        <servlet-class>controllers.api.ArtistController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AlbumController</servlet-name>
+        <servlet-class>controllers.api.AlbumController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>TestController</servlet-name>
+        <servlet-class>controllers.TestController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>HomeController</servlet-name>
         <url-pattern>/</url-pattern>
@@ -60,14 +76,25 @@
         <servlet-name>AdminController</servlet-name>
         <url-pattern>/admin</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SongController</servlet-name>
+        <url-pattern>/api/song/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ArtistController</servlet-name>
+        <url-pattern>/api/artist/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AlbumController</servlet-name>
+        <url-pattern>/api/album/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TestController</servlet-name>
+        <url-pattern>/test</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
         </session-timeout>
     </session-config>
-    <welcome-file-list>
-        <welcome-file>views/layouts/defaultLayout.jsp</welcome-file>
-        <welcome-file>index.html</welcome-file>
-        <welcome-file>index.jsp</welcome-file>
-    </welcome-file-list>
 </web-app>
