@@ -147,7 +147,7 @@ public class AdminController extends HttpServlet {
 
         // Handle Song operations
         if ("songs".equalsIgnoreCase(type)) {
-            handleSongOperations(request, response, action);
+            handleSongOperationsUpdate(request, response, action);
             return;
         }
 
@@ -308,6 +308,153 @@ public class AdminController extends HttpServlet {
         u.setCreatedBy("admin");
         u.setUpdatedBy("admin");
         return u;
+    }
+
+    /**
+     * Handle Song CRUD operations
+     */
+    private void handleSongOperationsUpdate(HttpServletRequest request, HttpServletResponse response, String action)
+            throws ServletException, IOException {
+        var songDAO = new SongDAO();
+        var songArtistDAO = new SongArtistDAO();
+
+        try {
+            if ("create".equals(action)) {
+                Song song = buildSongFromRequest(request);
+                if (songDAO.create(song)) {
+                    // Handle artist relationships
+                    String[] artistIds = request.getParameterValues("artistIds");
+                    if (artistIds != null && artistIds.length > 0) {
+                        List<Long> artistIdList = new ArrayList<>();
+                        for (String artistId : artistIds) {
+                            if (artistId != null && !artistId.trim().isEmpty()) {
+                                artistIdList.add(Long.parseLong(artistId));
+                            }
+                        }
+                        songArtistDAO.createMultiple(song.getId(), artistIdList);
+                    }
+                }
+                response.sendRedirect(request.getContextPath() + "/admin?action=list&type=songs");
+
+            } else if ("update".equals(action)) {
+                String idStr = request.getParameter("id");
+                if (idStr != null && !idStr.isBlank()) {
+                    Song song = buildSongFromRequest(request);
+                    song.setId(Long.parseLong(idStr));
+                    // find song
+                    var currentSong = songDAO.findById(Long.parseLong(idStr));
+                    if (currentSong != null) {
+                        var checkAudio = false;
+                        var checkImage = false;
+                        // Handle file uploads
+                        String audioFilePath = handleFileUpload(request, "audioFile", AUDIO_DIR,
+                                ALLOWED_AUDIO_EXTENSIONS);
+                        if (audioFilePath != null) {
+                            checkAudio = true;
+                            currentSong.setFilePath("/uploads/" + AUDIO_DIR + "/" + audioFilePath);
+                        }
+                        // Handle cover image upload (for song)
+                        String coverImagePath = handleFileUpload(request, "coverImage", IMAGE_DIR,
+                                ALLOWED_IMAGE_EXTENSIONS);
+                        if (coverImagePath != null) {
+                            checkImage = true;
+                            currentSong.setCoverImage("/uploads/" + IMAGE_DIR + "/" + coverImagePath);
+                        }
+                        currentSong.setTitle(request.getParameter("title"));
+
+                        // Handle duration
+                        String durationStr = request.getParameter("duration");
+                        if (durationStr != null && !durationStr.trim().isEmpty() && checkAudio) {
+                            try {
+                                currentSong.setDuration(Integer.parseInt(durationStr));
+                            } catch (NumberFormatException e) {
+                                // Keep duration as null if parsing fails
+                            }
+                        }
+
+                        // Set default play count
+                        song.setPlayCount(0);
+
+                        // Handle album
+                        String albumIdStr = request.getParameter("albumId");
+                        if (albumIdStr != null && !albumIdStr.trim().isEmpty()) {
+                            try {
+                                var albumDAO = new AlbumDAO();
+                                var album = albumDAO.findById(Long.parseLong(albumIdStr));
+                                currentSong.setAlbum(album);
+                            } catch (NumberFormatException e) {
+                                // Keep album as null if parsing fails
+                            }
+                        }
+
+                        // Handle genre
+                        String genreIdStr = request.getParameter("genreId");
+                        if (genreIdStr != null && !genreIdStr.trim().isEmpty()) {
+                            try {
+                                var genreDAO = new GenreDAO();
+                                Genre genre = genreDAO.findById(Long.parseLong(genreIdStr));
+                                currentSong.setGenre(genre);
+                            } catch (NumberFormatException e) {
+                                // Keep genre as null if parsing fails
+                            }
+                        }
+                        var updateSuccess = false;
+                        if (!checkImage && !checkAudio) {
+                            updateSuccess = songDAO.updateNoAudioAndImage(currentSong);
+                        } else if (checkAudio && !checkImage) {
+                            updateSuccess = songDAO.updateNoImage(currentSong);
+                        } else if (checkImage && !checkAudio) {
+                            updateSuccess = songDAO.updateNoAudio(currentSong);
+                        } else if (checkAudio && checkImage) {
+                            updateSuccess = songDAO.update(currentSong);
+                        }
+                        if (updateSuccess) {
+                            String[] artistIds = request.getParameterValues("artistIds");
+                            List<Long> artistIdList = new ArrayList<>();
+                            if (artistIds != null) {
+                                for (String artistId : artistIds) {
+                                    if (artistId != null && !artistId.trim().isEmpty()) {
+                                        artistIdList.add(Long.parseLong(artistId));
+                                    }
+                                }
+                            }
+                            songArtistDAO.updateSongArtists(song.getId(), artistIdList);
+                        }
+                    }
+                    //
+
+                    // if (songDAO.update(song)) {
+                    // // Update artist relationships
+                    // String[] artistIds = request.getParameterValues("artistIds");
+                    // List<Long> artistIdList = new ArrayList<>();
+                    // if (artistIds != null) {
+                    // for (String artistId : artistIds) {
+                    // if (artistId != null && !artistId.trim().isEmpty()) {
+                    // artistIdList.add(Long.parseLong(artistId));
+                    // }
+                    // }
+                    // }
+                    // songArtistDAO.updateSongArtists(song.getId(), artistIdList);
+                    // }
+                }
+                response.sendRedirect(request.getContextPath() + "/admin?action=list&type=songs");
+
+            } else if ("delete".equals(action)) {
+                String idStr = request.getParameter("id");
+                if (idStr != null && !idStr.isBlank()) {
+                    long songId = Long.parseLong(idStr);
+                    // Delete song-artist relationships first
+                    songArtistDAO.deleteBySongId(songId);
+                    // Then delete the song
+                    songDAO.delete(songId);
+                }
+                response.sendRedirect(request.getContextPath() + "/admin?action=list&type=songs");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendRedirect(request.getContextPath() + "/admin?action=list&type=songs&error=" +
+                    java.net.URLEncoder.encode("Operation failed: " + e.getMessage(), "UTF-8"));
+        }
     }
 
     /**
