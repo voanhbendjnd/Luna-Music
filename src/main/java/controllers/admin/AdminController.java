@@ -700,9 +700,43 @@ public class AdminController extends HttpServlet {
             } else if ("update".equals(action)) {
                 String idStr = request.getParameter("id");
                 if (idStr != null && !idStr.isBlank()) {
-                    Album album = buildAlbumFromRequest(request);
-                    album.setId(Long.parseLong(idStr));
-                    albumDAO.update(album);
+                    var check = false;
+                    String coverImagePath = handleFileUpload(request, "coverImage", IMAGE_DIR, ALLOWED_IMAGE_EXTENSIONS);
+                    if (coverImagePath != null) {
+                        check = true;
+                        Album album = buildAlbumFromRequest(request);
+                        album.setId(Long.parseLong(idStr));
+                        albumDAO.update(album);
+                    }
+                    else{
+                        var album = albumDAO.findById(Long.parseLong(idStr));
+                        if(album  != null){
+                            album.setTitle(request.getParameter("title"));
+
+                            // Handle release year
+                            String releaseYearStr = request.getParameter("releaseYear");
+                            if (releaseYearStr != null && !releaseYearStr.trim().isEmpty()) {
+                                try {
+                                    album.setReleaseYear(Integer.parseInt(releaseYearStr));
+                                } catch (NumberFormatException e) {
+                                    // Keep release year as null if parsing fails
+                                }
+                            }
+
+                            // Handle artist
+                            String artistIdStr = request.getParameter("artistId");
+                            if (artistIdStr != null && !artistIdStr.trim().isEmpty()) {
+                                    var artDAO = new ArtistDAO();
+                                    var artist =  artDAO.findById(Long.parseLong(artistIdStr));
+                                    if(artist != null){
+                                        album.setArtist(artist);
+                                    }
+                            }
+                            albumDAO.updateNoImage(album);
+                        }
+
+                    }
+
                 }
                 response.sendRedirect(request.getContextPath() + "/admin?action=list&type=albums");
 
