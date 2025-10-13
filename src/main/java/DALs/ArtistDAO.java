@@ -125,6 +125,26 @@ public class ArtistDAO extends DatabaseConfig {
     }
 
     /**
+     * Update existing artist
+     */
+    public boolean updateNoImage(Artist artist) {
+        String sql = "UPDATE Artists SET name=?, bio=?, updatedAt=? WHERE id=?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, artist.getName());
+            ps.setString(2, artist.getBio());
+            ps.setTimestamp(3, Timestamp.from(Instant.now()));
+            ps.setLong(4, artist.getId());
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Error updating artist: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
      * Delete artist by ID
      */
     public boolean delete(long id) {

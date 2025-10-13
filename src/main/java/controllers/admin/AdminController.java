@@ -664,9 +664,19 @@ public class AdminController extends HttpServlet {
             } else if ("update".equals(action)) {
                 String idStr = request.getParameter("id");
                 if (idStr != null && !idStr.isBlank()) {
-                    Artist artist = buildArtistFromRequest(request);
-                    artist.setId(Long.parseLong(idStr));
-                    artistDAO.update(artist);
+                    // Handle image upload
+                    String imagePath = handleFileUpload(request, "imageFile", IMAGE_DIR, ALLOWED_IMAGE_EXTENSIONS);
+                    if (imagePath != null) {
+                        Artist artist = buildArtistFromRequest(request);
+                        artist.setId(Long.parseLong(idStr));
+                        artistDAO.update(artist);
+                    }
+                    else{
+                        Artist artist = buildArtistFromRequest(request);
+                        artist.setId(Long.parseLong(idStr));
+                        artistDAO.updateNoImage(artist);
+                    }
+
                 }
                 response.sendRedirect(request.getContextPath() + "/admin?action=list&type=artists");
 
