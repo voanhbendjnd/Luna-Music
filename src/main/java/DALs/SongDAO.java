@@ -184,6 +184,117 @@ public class SongDAO extends DatabaseConfig {
     }
 
     /**
+     * Update existing song
+     */
+    public boolean updateNoImage(Song song) {
+        String sql = "UPDATE Songs SET title=?, file_path=?, duration=?, play_count=?, album_id=?, genre_id=?, updatedAt=? WHERE id=?";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, song.getTitle());
+            ps.setString(2, song.getFilePath());
+            ps.setObject(3, song.getDuration(), Types.INTEGER);
+            ps.setObject(4, song.getPlayCount(), Types.INTEGER);
+
+            // Handle album_id
+            if (song.getAlbum() != null && song.getAlbum().getId() != null) {
+                ps.setLong(5, song.getAlbum().getId());
+            } else {
+                ps.setNull(5, Types.INTEGER);
+            }
+
+            // Handle genre_id
+            if (song.getGenre() != null && song.getGenre().getId() != null) {
+                ps.setLong(6, song.getGenre().getId());
+            } else {
+                ps.setNull(6, Types.INTEGER);
+            }
+
+            ps.setTimestamp(7, Timestamp.from(Instant.now()));
+            ps.setLong(8, song.getId());
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Error updating song: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * Update existing song
+     */
+    public boolean updateNoAudioAndImage(Song song) {
+        String sql = "UPDATE Songs SET title=?, play_count=?, album_id=?, genre_id=?, updatedAt=? WHERE id=?";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, song.getTitle());
+            ps.setObject(2, song.getPlayCount(), Types.INTEGER);
+
+            // Handle album_id
+            if (song.getAlbum() != null && song.getAlbum().getId() != null) {
+                ps.setLong(3, song.getAlbum().getId());
+            } else {
+                ps.setNull(3, Types.INTEGER);
+            }
+
+            // Handle genre_id
+            if (song.getGenre() != null && song.getGenre().getId() != null) {
+                ps.setLong(4, song.getGenre().getId());
+            } else {
+                ps.setNull(4, Types.INTEGER);
+            }
+
+            ps.setTimestamp(5, Timestamp.from(Instant.now()));
+            ps.setLong(6, song.getId());
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Error updating song: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * Update existing song
+     */
+    public boolean updateNoAudio(Song song) {
+        String sql = "UPDATE Songs SET title=?, coverImage=?, play_count=?, album_id=?, genre_id=?, updatedAt=? WHERE id=?";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, song.getTitle());
+            ps.setString(2, song.getCoverImage());
+            ps.setObject(3, song.getPlayCount(), Types.INTEGER);
+
+            // Handle album_id
+            if (song.getAlbum() != null && song.getAlbum().getId() != null) {
+                ps.setLong(4, song.getAlbum().getId());
+            } else {
+                ps.setNull(4, Types.INTEGER);
+            }
+
+            // Handle genre_id
+            if (song.getGenre() != null && song.getGenre().getId() != null) {
+                ps.setLong(5, song.getGenre().getId());
+            } else {
+                ps.setNull(5, Types.INTEGER);
+            }
+
+            ps.setTimestamp(6, Timestamp.from(Instant.now()));
+            ps.setLong(7, song.getId());
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Error updating song: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
      * Delete song by ID
      */
     public boolean delete(long id) {

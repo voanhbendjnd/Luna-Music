@@ -153,6 +153,25 @@ public class AlbumDAO extends DatabaseConfig {
         }
         return false;
     }
+    /**
+     * Update existing album
+     */
+    public boolean updateNoImage(Album album) {
+        String sql = "UPDATE Albums SET title=?, artist_id=?, release_year=? WHERE id=?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, album.getTitle());
+            ps.setLong(2, album.getArtist().getId());
+            ps.setObject(3, album.getReleaseYear(), Types.INTEGER);
+            ps.setLong(4, album.getId());
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Error updating album: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     /**
      * Delete album by ID
