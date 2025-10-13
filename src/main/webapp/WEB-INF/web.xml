@@ -27,9 +27,25 @@
         <servlet-name>AdminController</servlet-name>
         <servlet-class>controllers.admin.AdminController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RootRedirect</servlet-name>
+        <servlet-class>controllers.RootRedirectController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SongDetailController</servlet-name>
+        <servlet-class>controllers.SongDetailController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>HomeController</servlet-name>
+        <url-pattern>/home</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RootRedirect</servlet-name>
         <url-pattern>/</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SongDetailController</servlet-name>
+        <url-pattern>/song-detail</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>LoginController</servlet-name>
@@ -66,8 +82,8 @@
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>views/layouts/defaultLayout.jsp</welcome-file>
         <welcome-file>index.html</welcome-file>
         <welcome-file>index.jsp</welcome-file>
+        <welcome-file>views/layouts/defaultLayout.jsp</welcome-file>
     </welcome-file-list>
 </web-app>

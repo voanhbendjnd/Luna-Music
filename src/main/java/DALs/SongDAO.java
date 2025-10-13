@@ -505,4 +505,43 @@ public class SongDAO extends DatabaseConfig {
         }
         return songArtists;
     }
+
+    /**
+     * Find related songs (same album or same artist)
+     */
+    public List<Song> findRelatedSongs(Long songId, int limit) {
+        List<Song> relatedSongs = new ArrayList<>();
+        String sql = "SELECT DISTINCT s.id, s.title, s.duration, s.coverImage, s.play_count, s.album_id, s.genre_id, " +
+                "s.createdAt, s.updatedAt " +
+                "FROM Songs s " +
+                "INNER JOIN SongArtist sa ON s.id = sa.song_id " +
+                "WHERE sa.artist_id IN ( " +
+                "    SELECT sa2.artist_id FROM SongArtist sa2 WHERE sa2.song_id = ? " +
+                ") AND s.id != ? " +
+                "UNION " +
+                "SELECT DISTINCT s.id, s.title, s.duration, s.coverImage, s.play_count, s.album_id, s.genre_id, " +
+                "s.createdAt, s.updatedAt " +
+                "FROM Songs s " +
+                "WHERE s.album_id = (SELECT album_id FROM Songs WHERE id = ?) AND s.id != ? " +
+                "ORDER BY play_count DESC";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setLong(1, songId);
+            ps.setLong(2, songId);
+            ps.setLong(3, songId);
+            ps.setLong(4, songId);
+
+            ResultSet rs = ps.executeQuery();
+            int count = 0;
+            while (rs.next() && count < limit) {
+                relatedSongs.add(mapRowToSong(rs));
+                count++;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error finding related songs: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return relatedSongs;
+    }
 }
