@@ -454,8 +454,28 @@
                                 }
 
                                 // Auto-detect duration if possible
-                                if (this.name === 'audioFile' && this.closest('#createModal')) {
-                                    detectAudioDuration(file, this.closest('form').querySelector('input[name="duration"]'));
+                                if (this.name === 'audioFile') {
+                                    // Detect duration for both create and edit forms
+                                    const form = this.closest('form');
+                                    const durationInput = form.querySelector('input[name="duration"]') || form.querySelector('#editDuration');
+
+                                    if (file && file.size > 0) {
+                                        // khi người dùng chon audio mới
+                                        detectAudioDuration(file, durationInput);
+                                    } else {
+                                        // khi người dùng xóa audio cũ
+                                        if (form.id === 'editModal' || form.closest('#editModal')) {
+                                            const originalDuration = form.querySelector('#editDuration').getAttribute('data-original-duration');
+                                            if (originalDuration && durationInput) {
+                                                durationInput.value = originalDuration;
+                                            }
+                                        } else {
+                                            // khi người dùng chon audio mới
+                                            if (durationInput) {
+                                                durationInput.value = '';
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         });
@@ -554,19 +574,33 @@
 
                 // Audio duration detection
                 function detectAudioDuration(file, durationInput) {
+                    if (!file || !durationInput) return;
+
                     const audio = new Audio();
                     const url = URL.createObjectURL(file);
 
+                    // Show loading indicator
+                    durationInput.placeholder = 'Detecting duration...';
+                    durationInput.disabled = true;
+
                     audio.addEventListener('loadedmetadata', function () {
                         const duration = Math.round(audio.duration);
-                        if (durationInput && duration > 0) {
+                        if (duration > 0) {
                             durationInput.value = duration;
+                            durationInput.placeholder = '';
+                            console.log('Audio duration detected: ' + duration + ' seconds');
+                        } else {
+                            durationInput.placeholder = 'Duration not detected';
+                            console.log('Could not detect valid audio duration');
                         }
+                        durationInput.disabled = false;
                         URL.revokeObjectURL(url);
                     });
 
                     audio.addEventListener('error', function () {
                         console.log('Could not detect audio duration');
+                        durationInput.placeholder = 'Duration not detected';
+                        durationInput.disabled = false;
                         URL.revokeObjectURL(url);
                     });
 
@@ -620,8 +654,16 @@
                                 }
                             }
 
-                            // Set duration
-                            document.getElementById('editDuration').value = btn.getAttribute('data-duration-id');
+
+                            // Lấy duration từ database
+                            const durationValue = btn.getAttribute('data-duration-id'); // VD: "180"
+
+                            // Set vào input
+                            const editDurationInput = document.getElementById('editDuration');
+                            editDurationInput.value = durationValue;                    // duration = 180
+
+                            // LƯU original duration để backup
+                            editDurationInput.setAttribute('data-original-duration', durationValue); // data-original-duration = "180"
 
                             // Set artists (multiple selection)
                             const artistIds = btn.getAttribute('data-artist-ids');
@@ -634,6 +676,33 @@
                             }
                         });
                     }
+
+                    // Reset edit form when modal is hidden
+                    editModal.addEventListener('hidden.bs.modal', function () {
+                        // Reset file inputs
+                        const audioInput = editModal.querySelector('input[name="audioFile"]');
+                        const imageInput = editModal.querySelector('input[name="coverImage"]');
+                        if (audioInput) audioInput.value = '';
+                        if (imageInput) imageInput.value = '';
+
+                        // Reset duration to original value
+                        const durationInput = document.getElementById('editDuration');
+                        const originalDuration = durationInput.getAttribute('data-original-duration');
+                        if (originalDuration) {
+                            durationInput.value = originalDuration;
+                            durationInput.placeholder = '';
+                            durationInput.disabled = false;
+                        }
+
+                        // Reset image preview
+                        const editImagePreview = document.getElementById('editImagePreview');
+                        const noCurrentImageLabel = document.getElementById('noCurrentImageLabel');
+                        if (editImagePreview && noCurrentImageLabel) {
+                            editImagePreview.src = '';
+                            editImagePreview.style.display = 'none';
+                            noCurrentImageLabel.style.display = 'block';
+                        }
+                    });
 
                     // Delete modal population
                     const deleteModal = document.getElementById('deleteModal');
