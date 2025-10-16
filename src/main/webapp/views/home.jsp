@@ -155,76 +155,7 @@
                 <meta name="context-path" content="${pageContext.request.contextPath}">
 
                 <script src="${pageContext.request.contextPath}/assets/js/bootstrap.bundle.min.js"></script>
-
-                <script>
-                    // Get context path for navigation
-                    const currentContextPath = "${pageContext.request.contextPath}";
-
-                    console.log('Home.js inline loaded. Context path:', currentContextPath);
-
-                    /**
-                     * Play song functionality
-                     * @param {number} songId - The song ID
-                     */
-                    function playSong(songId) {
-                        console.log("Playing song:", songId);
-                        console.log("Current context path:", currentContextPath);
-                        console.log("Full URL will be:", currentContextPath + "/song-detail?id=" + songId);
-
-                        // Navigate to song detail page
-                        window.location.href = currentContextPath + "/song-detail?id=" + songId;
-                    }
-
-                    /**
-                     * Navigate to artist page
-                     * @param {number} artistId - The artist ID
-                     */
-                    function viewArtist(artistId) {
-                        console.log("Viewing artist:", artistId);
-                        window.location.href = currentContextPath + "/artist?id=" + artistId;
-                    }
-
-                    /**
-                     * Navigate to album page
-                     * @param {number} albumId - The album ID
-                     */
-                    function viewAlbum(albumId) {
-                        console.log("Viewing album:", albumId);
-                        window.location.href = currentContextPath + "/album?id=" + albumId;
-                    }
-
-                    // Export functions for global use
-                    window.playSong = playSong;
-                    window.viewArtist = viewArtist;
-                    window.viewAlbum = viewAlbum;
-
-                    // Debug: Log that functions are available
-                    console.log("Functions available:", {
-                        viewArtist: typeof window.viewArtist,
-                        viewAlbum: typeof window.viewAlbum,
-                        playSong: typeof window.playSong
-                    });
-
-                    // Initialize when DOM is loaded
-                    document.addEventListener("DOMContentLoaded", function () {
-                        console.log('DOM loaded. Functions ready to use.');
-
-                        // Test click events on song cards
-                        document.querySelectorAll('.album-card[data-song-id]').forEach(function (card, index) {
-                            console.log('Found song card', index, 'with data-song-id:', card.getAttribute('data-song-id'));
-
-                            // Add click event listener as backup
-                            card.addEventListener('click', function (e) {
-                                console.log('Song card clicked via event listener');
-                                const songId = card.getAttribute('data-song-id');
-                                if (songId) {
-                                    console.log('Playing song via event listener:', songId);
-                                    playSong(parseInt(songId));
-                                }
-                            });
-                        });
-                    });
-                </script>
+                <script src="${pageContext.request.contextPath}/assets/js/home.js"></script>
             </body>
 
 </html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Onclick</title>
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .horizontal-scroll {
+            display: flex;
+            overflow-x: auto;
+            gap: 20px;
+            padding: 10px 0;
+            cursor: grab;
+        }
+
+        .artist-card,
+        .album-card {
+            flex: 0 0 200px;
+            text-align: center;
+            cursor: pointer;
+            padding: 10px;
+            border: 1px solid #333;
+            border-radius: 8px;
+        }
+
+        .artist-card:hover,
+        .album-card:hover {
+            background-color: #333;
+        }
+
+        .test-result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #333;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Test Onclick Functionality</h1>
+
+    <div class="horizontal-scroll">
+        <div class="artist-card" onclick="testClick('Artist 1')">
+            <div>Artist 1</div>
+            <div>Click me!</div>
+        </div>
+        <div class="album-card" onclick="testClick('Album 1')">
+            <div>Album 1</div>
+            <div>Click me!</div>
+        </div>
+        <div class="artist-card" onclick="testClick('Artist 2')">
+            <div>Artist 2</div>
+            <div>Click me!</div>
+        </div>
+        <div class="album-card" onclick="testClick('Album 2')">
+            <div>Album 2</div>
+            <div>Click me!</div>
+        </div>
+    </div>
+
+    <div class="test-result" id="testResult">
+        Click on any card above to test onclick functionality...
+    </div>
+
+    <script>
+        function testClick(item) {
+            const result = document.getElementById('testResult');
+            result.innerHTML = `✅ Onclick works! You clicked: ${item}`;
+            result.style.backgroundColor = '#1db954';
+            console.log('Onclick triggered for:', item);
+        }
+
+        // Test the same scroll functionality as in home.js
+        document.addEventListener("DOMContentLoaded", function () {
+            const horizontalScrolls = document.querySelectorAll('.horizontal-scroll');
+
+            horizontalScrolls.forEach(function (scrollContainer) {
+                let isDown = false;
+                let startX;
+                let scrollLeft;
+                let startTime;
+
+                scrollContainer.addEventListener("mousedown", function (e) {
+                    // Don't start drag if clicking on cards
+                    if (e.target.closest('.artist-card, .album-card')) {
+                        return; // Let the card handle the click
+                    }
+
+                    isDown = true;
+                    scrollContainer.classList.add("active");
+                    startX = e.pageX - scrollContainer.offsetLeft;
+                    scrollLeft = scrollContainer.scrollLeft;
+                    startTime = Date.now();
+                    e.preventDefault();
+                });
+
+                scrollContainer.addEventListener("mouseleave", function () {
+                    isDown = false;
+                    scrollContainer.classList.remove("active");
+                });
+
+                scrollContainer.addEventListener("mouseup", function (e) {
+                    isDown = false;
+                    scrollContainer.classList.remove("active");
+                });
+
+                scrollContainer.addEventListener("mousemove", function (e) {
+                    if (!isDown) return;
+                    e.preventDefault();
+                    const x = e.pageX - scrollContainer.offsetLeft;
+                    const walk = (x - startX) * 2;
+                    scrollContainer.scrollLeft = scrollLeft - walk;
+                });
+
+                scrollContainer.addEventListener("wheel", function (e) {
+                    if (e.deltaY !== 0) {
+                        e.preventDefault();
+                        scrollContainer.scrollLeft += e.deltaY;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

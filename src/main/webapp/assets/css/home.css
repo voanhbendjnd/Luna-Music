@@ -33,6 +33,11 @@ body {
     padding: 10px 0;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .horizontal-scroll::-webkit-scrollbar {
@@ -219,6 +224,13 @@ body {
 /* Smooth scroll behavior */
 .horizontal-scroll {
     scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+}
+
+.artist-card,
+.album-card {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
 }
 
 /* Focus styles for accessibility */
@@ -288,6 +300,19 @@ img.loading {
 .horizontal-scroll.active .artist-card,
 .horizontal-scroll.active .album-card {
     pointer-events: none;
+    user-select: none;
+}
+
+/* Improve card interaction */
+.artist-card,
+.album-card {
+    position: relative;
+    z-index: 1;
+}
+
+.horizontal-scroll:not(.active) .artist-card,
+.horizontal-scroll:not(.active) .album-card {
+    pointer-events: auto;
 }
 
 /* Smooth transitions */
@@ -302,8 +327,22 @@ img.loading {
     color: #1db954;
 }
 
+/* Desktop hover improvements */
+@media (hover: hover) {
+    .horizontal-scroll:hover {
+        cursor: grab;
+    }
+
+    .horizontal-scroll:active {
+        cursor: grabbing;
+    }
+}
+
 /* Mobile touch improvements */
 @media (hover: none) {
+    .horizontal-scroll {
+        cursor: default;
+    }
 
     .artist-card:hover,
     .album-card:hover {
