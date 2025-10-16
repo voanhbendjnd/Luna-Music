@@ -3,6 +3,7 @@ controllers\RegisterController.class
 domain\entity\Genre.class
 DALs\UserDAO.class
 domain\entity\Song.class
+controllers\FileServlet.class
 domain\entity\Artist.class
 domain\entity\Album.class
 DALs\SongArtistDAO.class

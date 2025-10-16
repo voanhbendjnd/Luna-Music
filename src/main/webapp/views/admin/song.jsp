@@ -136,6 +136,7 @@
                                                                 data-album-id="${song.album != null ? song.album.id : ''}"
                                                                 data-genre-id="${song.genre != null ? song.genre.id : ''}"
                                                                 data-duration-id="${song.duration}"
+                                                                data-lyric="${song.lyric}"
                                                                 data-cover-image-path="${song.coverImage}"
                                                                 data-artist-ids="<c:forEach var='songArtist' items='${song.songArtists}' varStatus='status'>${songArtist.artist.id}<c:if test='${not status.last}'>,</c:if></c:forEach>">
                                                                 <i class="fas fa-edit"></i>
@@ -248,13 +249,9 @@
                                         </div>
 
                                         <div class="mb-3">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="isDownloadable"
-                                                    id="createDownloadable" checked>
-                                                <label class="form-check-label" for="createDownloadable">
-                                                    Allow Download
-                                                </label>
-                                            </div>
+                                            <label class="form-label">Lyric</label>
+                                            <textarea required name="lyric" class="form-control"
+                                                placeholder="Enter lyric"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -325,6 +322,11 @@
                                                 </c:forEach>
                                             </select>
                                         </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Lyric</label>
+                                            <textarea required name="lyric" id="editLyric" class="form-control"
+                                                placeholder="Enter lyric"></textarea>
+                                        </div>
                                     </div>
 
                                     <div class="col-md-6">
@@ -362,15 +364,7 @@
                                                 class="form-control" />
                                         </div>
 
-                                        <div class="mb-3">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="isDownloadable"
-                                                    id="editDownloadable">
-                                                <label class="form-check-label" for="editDownloadable">
-                                                    Allow Download
-                                                </label>
-                                            </div>
-                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -623,7 +617,8 @@
                             // Set basic fields
                             document.getElementById('editId').value = btn.getAttribute('data-id');
                             document.getElementById('editTitle').value = btn.getAttribute('data-title');
-
+                            // Set lyric
+                            document.getElementById('editLyric').value = btn.getAttribute('data-lyric');
                             // Set album
                             const albumId = btn.getAttribute('data-album-id');
                             if (albumId) {

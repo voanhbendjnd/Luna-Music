@@ -194,4 +194,43 @@ VALUES
 -- full quyền, nên người dùng chỉ có 1 quyền, còn 1 role thì có thể có nhiều người dùng
 
 ALTER TABLE Songs
-ADD lyric NVARCHAR(255);
+ADD lyric NVARCHAR(MAX);
+-- 9. Bảng Playlists (Danh sách phát)
+  CREATE TABLE Playlists (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    name NVARCHAR(255) NOT NULL,
+    -- Khóa ngoại trỏ đến chủ sở hữu Playlist
+    user_id INT NOT NULL, 
+    description NVARCHAR(MAX) NULL,
+    createdAt DATETIME DEFAULT GETDATE(),
+    updatedAt DATETIME DEFAULT GETDATE(),
+
+    -- Mối quan hệ 1:N với Users
+    -- LƯU Ý: Thay thế 'Users' bằng tên bảng người dùng thực tế của bạn
+    CONSTRAINT FK_Playlist_User FOREIGN KEY (user_id)
+        REFERENCES Users(id) 
+        ON DELETE CASCADE -- Nếu User bị xóa, tất cả Playlists của họ cũng bị xóa
+);
+GO
+
+---------------------------------------------------
+-- 10. Bảng PlaylistSongs (Bảng liên kết N:N)
+---------------------------------------------------
+CREATE TABLE PlaylistSongs (
+    playlist_id INT NOT NULL,
+    song_id INT NOT NULL,
+    added_at DATETIME DEFAULT GETDATE(),
+    
+    PRIMARY KEY (playlist_id, song_id), -- Khóa chính kép
+
+    -- Khóa ngoại trỏ đến Playlists
+    CONSTRAINT FK_PlaylistSong_Playlist FOREIGN KEY (playlist_id)
+        REFERENCES Playlists(id)
+        ON DELETE CASCADE, -- Nếu Playlist bị xóa, các liên kết bài hát cũng bị xóa
+
+    -- Khóa ngoại trỏ đến Songs
+    CONSTRAINT FK_PlaylistSong_Song FOREIGN KEY (song_id)
+        REFERENCES Songs(id)
+        ON DELETE CASCADE -- Nếu Bài hát bị xóa, nó sẽ bị xóa khỏi tất cả Playlists
+);
+GO

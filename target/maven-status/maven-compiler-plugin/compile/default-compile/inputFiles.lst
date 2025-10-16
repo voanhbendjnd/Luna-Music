@@ -5,10 +5,12 @@ C:\Users\PC\Documents\FALL25\PRJ301\ProjectFinal\Luna-Music\src\main\java\DALs\G
 C:\Users\PC\Documents\FALL25\PRJ301\ProjectFinal\Luna-Music\src\main\java\domain\entity\Album.java
 C:\Users\PC\Documents\FALL25\PRJ301\ProjectFinal\Luna-Music\src\main\java\domain\entity\User.java
 C:\Users\PC\Documents\FALL25\PRJ301\ProjectFinal\Luna-Music\src\main\java\controllers\HomeController.java
+C:\Users\PC\Documents\FALL25\PRJ301\ProjectFinal\Luna-Music\src\main\java\controllers\SongDetailController.java
 C:\Users\PC\Documents\FALL25\PRJ301\ProjectFinal\Luna-Music\src\main\java\controllers\admin\AdminController.java
 C:\Users\PC\Documents\FALL25\PRJ301\ProjectFinal\Luna-Music\src\main\java\DALs\ArtistDAO.java
 C:\Users\PC\Documents\FALL25\PRJ301\ProjectFinal\Luna-Music\src\main\java\domain\entity\Artist.java
 C:\Users\PC\Documents\FALL25\PRJ301\ProjectFinal\Luna-Music\src\main\java\constant\GenderEnum.java
+C:\Users\PC\Documents\FALL25\PRJ301\ProjectFinal\Luna-Music\src\main\java\controllers\RootRedirectController.java
 C:\Users\PC\Documents\FALL25\PRJ301\ProjectFinal\Luna-Music\src\main\java\DALs\RoleDAO.java
 C:\Users\PC\Documents\FALL25\PRJ301\ProjectFinal\Luna-Music\src\main\java\controllers\RegisterController.java
 C:\Users\PC\Documents\FALL25\PRJ301\ProjectFinal\Luna-Music\src\main\java\domain\entity\Role.java

@@ -5,7 +5,6 @@
 package controllers.admin;
 
 import java.io.IOException;
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -44,8 +43,8 @@ import constant.GenderEnum;
 )
 public class AdminController extends HttpServlet {
 
-    // File upload directories
-    private static final String UPLOAD_DIR = "uploads";
+    // File upload directories - Fixed paths on local machine
+    private static final String BASE_UPLOAD_PATH = "C:\\Users\\PC\\Documents\\FALL25\\upload";
     private static final String AUDIO_DIR = "music";
     private static final String IMAGE_DIR = "images";
 
@@ -361,6 +360,7 @@ public class AdminController extends HttpServlet {
                             currentSong.setCoverImage("/uploads/" + IMAGE_DIR + "/" + coverImagePath);
                         }
                         currentSong.setTitle(request.getParameter("title"));
+                        currentSong.setLyric(request.getParameter("lyric"));
 
                         // Handle duration
                         String durationStr = request.getParameter("duration");
@@ -529,7 +529,7 @@ public class AdminController extends HttpServlet {
     private Song buildSongFromRequest(HttpServletRequest request) throws IOException, ServletException {
         Song song = new Song();
         song.setTitle(request.getParameter("title"));
-
+        song.setLyric(request.getParameter("lyric"));
         // Handle duration
         String durationStr = request.getParameter("duration");
         if (durationStr != null && !durationStr.trim().isEmpty()) {
@@ -584,37 +584,40 @@ public class AdminController extends HttpServlet {
 
     /**
      * Handle file upload and return the saved filename
+     * partName ex: audioFile, coverImage
+     * subDir ex: music, images
+     * allowedExtensions ex: mp3, m4a, wav, jpg, jpeg, png, gif
      */
     private String handleFileUpload(HttpServletRequest request, String partName, String subDir,
             List<String> allowedExtensions) throws IOException, ServletException {
+        // get file part ex: audioFile, coverImage
         Part filePart = request.getPart(partName);
         if (filePart == null || filePart.getSize() == 0) {
             return null;
         }
-
+        // get file name ex: filename.mp3, filename.jpg
         String fileName = getFileName(filePart);
         if (fileName == null || fileName.isEmpty()) {
             return null;
         }
 
-        // Validate file extension
+        // Validate file extension ex: mp3, jpg
         String fileExtension = getFileExtension(fileName);
         if (!allowedExtensions.contains(fileExtension.toLowerCase())) {
             throw new ServletException("Invalid file type. Allowed: " + allowedExtensions);
         }
 
-        // Create upload directory if it doesn't exist
-        String uploadPath = getServletContext().getRealPath("") + File.separator + UPLOAD_DIR + File.separator + subDir;
-        File uploadDir = new File(uploadPath);
-        if (!uploadDir.exists()) {
-            uploadDir.mkdirs();
-        }
+        // Create upload directory if it doesn't exist - using fixed local path ex:
+        // C:/Users/PC/Documents/FALL25/upload/music
+        Path uploadDir = Paths.get(BASE_UPLOAD_PATH, subDir);
+        Files.createDirectories(uploadDir);
 
-        // Generate unique filename
+        // Generate unique filename ex: 1734105600000_filename.mp3
         String uniqueFileName = System.currentTimeMillis() + "_" + fileName;
-        Path filePath = Paths.get(uploadPath + File.separator + uniqueFileName);
+        Path filePath = uploadDir.resolve(uniqueFileName);
 
-        // Save file
+        // Save file ex:
+        // C:\Users\PC\Documents\FALL25/upload\music\1734105600000_filename.mp3
         Files.copy(filePart.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
         return uniqueFileName;
@@ -670,8 +673,7 @@ public class AdminController extends HttpServlet {
                         Artist artist = buildArtistFromRequest(request);
                         artist.setId(Long.parseLong(idStr));
                         artistDAO.update(artist);
-                    }
-                    else{
+                    } else {
                         Artist artist = buildArtistFromRequest(request);
                         artist.setId(Long.parseLong(idStr));
                         artistDAO.updateNoImage(artist);
@@ -711,16 +713,16 @@ public class AdminController extends HttpServlet {
                 String idStr = request.getParameter("id");
                 if (idStr != null && !idStr.isBlank()) {
                     var check = false;
-                    String coverImagePath = handleFileUpload(request, "coverImage", IMAGE_DIR, ALLOWED_IMAGE_EXTENSIONS);
+                    String coverImagePath = handleFileUpload(request, "coverImage", IMAGE_DIR,
+                            ALLOWED_IMAGE_EXTENSIONS);
                     if (coverImagePath != null) {
                         check = true;
                         Album album = buildAlbumFromRequest(request);
                         album.setId(Long.parseLong(idStr));
                         albumDAO.update(album);
-                    }
-                    else{
+                    } else {
                         var album = albumDAO.findById(Long.parseLong(idStr));
-                        if(album  != null){
+                        if (album != null) {
                             album.setTitle(request.getParameter("title"));
 
                             // Handle release year
@@ -736,11 +738,11 @@ public class AdminController extends HttpServlet {
                             // Handle artist
                             String artistIdStr = request.getParameter("artistId");
                             if (artistIdStr != null && !artistIdStr.trim().isEmpty()) {
-                                    var artDAO = new ArtistDAO();
-                                    var artist =  artDAO.findById(Long.parseLong(artistIdStr));
-                                    if(artist != null){
-                                        album.setArtist(artist);
-                                    }
+                                var artDAO = new ArtistDAO();
+                                var artist = artDAO.findById(Long.parseLong(artistIdStr));
+                                if (artist != null) {
+                                    album.setArtist(artist);
+                                }
                             }
                             albumDAO.updateNoImage(album);
                         }
