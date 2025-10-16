@@ -10,12 +10,18 @@ body {
     background-color: #000000;
     color: #ffffff;
     overflow-x: hidden;
+    overflow-y: auto;
+    /* Ensure vertical scrolling is enabled */
+    padding-bottom: 120px;
+    /* Ensure body has bottom padding for player bar */
 }
 
 .spotify-player {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    padding-bottom: 150px;
+    /* Additional padding for player bar */
 }
 
 /* Top Section - Song Details with Red Gradient */
@@ -210,8 +216,12 @@ body {
     background-color: #121212;
     padding: 0 32px 32px;
     flex: 1;
-    padding-bottom: 120px;
-    /* Add extra bottom padding to account for fixed player bar */
+    padding-bottom: 200px;
+    /* Increased padding to ensure full visibility */
+    min-height: 400px;
+    /* Ensure minimum height for content */
+    margin-bottom: 100px;
+    /* Additional margin for safety */
 }
 
 .recommended-container {
@@ -239,6 +249,8 @@ body {
     display: flex;
     flex-direction: column;
     gap: 16px;
+    margin-bottom: 50px;
+    /* Additional margin for recommended songs */
 }
 
 .recommended-song {
@@ -406,8 +418,10 @@ body {
     .controls-section,
     .recommended-section {
         padding: 24px 16px;
-        padding-bottom: 120px;
-        /* Maintain bottom spacing on mobile */
+        padding-bottom: 200px;
+        /* Increased bottom spacing on mobile */
+        margin-bottom: 100px;
+        /* Additional margin for mobile */
     }
 
     .player-content {

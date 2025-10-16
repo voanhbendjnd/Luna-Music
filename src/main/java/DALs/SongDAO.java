@@ -582,6 +582,7 @@ public class SongDAO extends DatabaseConfig {
                 song.setCreatedAt(createdAt.toInstant());
                 String lyric = rs.getString("lyric") != null ? rs.getString("lyric") : "";
                 song.setLyric(lyric);
+                System.out.println(song.getTitle());
                 relatedSongs.add(song);
             }
         } catch (SQLException e) {
