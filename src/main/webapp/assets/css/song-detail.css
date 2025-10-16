@@ -210,6 +210,8 @@ body {
     background-color: #121212;
     padding: 0 32px 32px;
     flex: 1;
+    padding-bottom: 120px;
+    /* Add extra bottom padding to account for fixed player bar */
 }
 
 .recommended-container {
@@ -404,6 +406,8 @@ body {
     .controls-section,
     .recommended-section {
         padding: 24px 16px;
+        padding-bottom: 120px;
+        /* Maintain bottom spacing on mobile */
     }
 
     .player-content {

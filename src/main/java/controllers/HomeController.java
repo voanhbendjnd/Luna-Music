@@ -29,11 +29,6 @@ public class HomeController extends HttpServlet {
             // Get popular songs (limit to 20)
             var songDAO = new SongDAO();
             List<Song> songs = songDAO.findAll(null);
-            System.out.println("HomeController: Found " + songs.size() + " songs from database");
-            if (songs.size() > 0) {
-                System.out.println("HomeController: First song: " + songs.get(0).getTitle() + " (ID: "
-                        + songs.get(0).getId() + ")");
-            }
             if (songs.size() > 20) {
                 songs = songs.subList(0, 20);
             }

@@ -19,13 +19,14 @@ public class Song {
     private Genre genre;
     private Instant createdAt;
     private Instant updatedAt;
+    private String lyric;
     private List<SongArtist> songArtists;
 
     public Song() {
     }
 
     public Song(Long id, String title, String filePath, String coverImage, Integer duration, Integer playCount,
-            Album album, Genre genre,
+            Album album, Genre genre, String lyric,
             Instant createdAt, Instant updatedAt, List<SongArtist> songArtists) {
         this.id = id;
         this.title = title;
@@ -38,6 +39,7 @@ public class Song {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.songArtists = songArtists;
+        this.lyric = lyric;
     }
 
     public Long getId() {
@@ -128,6 +130,14 @@ public class Song {
         this.updatedAt = updatedAt;
     }
 
+    public String getLyric() {
+        return lyric;
+    }
+
+    public void setLyric(String lyric) {
+        this.lyric = lyric;
+    }
+
     /**
      * Helper method to format duration from seconds to MM:SS format
      * 
@@ -139,21 +149,5 @@ public class Song {
         int minutes = duration / 60;
         int seconds = duration % 60;
         return String.format("%02d:%02d", minutes, seconds);
-    }
-
-    @Override
-    public String toString() {
-        return "Song{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", filePath='" + filePath + '\'' +
-                ", coverImage='" + coverImage + '\'' +
-                ", duration=" + duration +
-                ", playCount=" + playCount +
-                ", album=" + album +
-                ", genre=" + genre +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
     }
 }

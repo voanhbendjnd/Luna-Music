@@ -35,6 +35,10 @@
         <servlet-name>SongDetailController</servlet-name>
         <servlet-class>controllers.SongDetailController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>FileServlet</servlet-name>
+        <servlet-class>controllers.FileServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>HomeController</servlet-name>
         <url-pattern>/home</url-pattern>
@@ -61,7 +65,7 @@
         <url-pattern>/music/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>default</servlet-name>
+        <servlet-name>FileServlet</servlet-name>
         <url-pattern>/uploads/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>

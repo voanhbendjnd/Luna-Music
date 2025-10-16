@@ -40,9 +40,11 @@ public class SongDetailController extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/home");
                 return;
             }
+            // Get albumID by songsID
+            var albumId = songDAO.findAlbumBySongID(songId);
 
             // Get related songs (same album or same artist)
-            List<Song> relatedSongs = songDAO.findRelatedSongs(songId, 5);
+            List<Song> relatedSongs = songDAO.findRelatedSongs(songId, 5, albumId);
 
             // Get album details if available
             AlbumDAO albumDAO = new AlbumDAO();

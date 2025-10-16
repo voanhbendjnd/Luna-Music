@@ -107,7 +107,7 @@
                                 <c:choose>
                                     <c:when test="${not empty relatedSongs}">
                                         <c:forEach var="relatedSong" items="${relatedSongs}" varStatus="status">
-                                            <c:if test="${status.index < 2}">
+                                            <c:if test="${status.index < 5}">
                                                 <div class="recommended-song"
                                                     onclick="playRelatedSong(${relatedSong.id})">
                                                     <img src="${pageContext.request.contextPath}${relatedSong.coverImage}"

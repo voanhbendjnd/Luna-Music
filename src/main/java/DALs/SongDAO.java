@@ -28,7 +28,7 @@ public class SongDAO extends DatabaseConfig {
      */
     public List<Song> findAll(String keyword) {
         List<Song> songs = new ArrayList<>();
-        String base = "SELECT s.id, s.title, s.file_path, s.coverImage, s.duration, s.play_count, s.album_id, s.genre_id, "
+        String base = "SELECT s.id, s.title, s.file_path, s.coverImage, s.duration, s.play_count, s.album_id, s.genre_id, s.lyric, "
                 +
                 "s.createdAt, s.updatedAt, " +
                 "a.id as album_id, a.title as album_title, a.cover_image_path, " +
@@ -56,6 +56,7 @@ public class SongDAO extends DatabaseConfig {
                 song.setSongArtists(findSongArtistsBySongId(song.getId()));
                 songs.add(song);
             }
+            System.out.println(sql);
         } catch (SQLException e) {
             System.out.println("Error finding songs: " + e.getMessage());
             e.printStackTrace();
@@ -67,7 +68,7 @@ public class SongDAO extends DatabaseConfig {
      * Find song by ID
      */
     public Song findById(long id) {
-        String sql = "SELECT s.id, s.title, s.file_path, s.coverImage, s.duration, s.play_count, s.album_id, s.genre_id, "
+        String sql = "SELECT s.id, s.title, s.file_path, s.coverImage, s.duration, s.play_count, s.album_id, s.genre_id, s.lyric, "
                 +
                 "s.createdAt, s.updatedAt, " +
                 "a.id as album_id, a.title as album_title, a.cover_image_path, " +
@@ -85,6 +86,7 @@ public class SongDAO extends DatabaseConfig {
                 Song song = mapRowToSong(rs);
                 // Load song artists
                 song.setSongArtists(findSongArtistsBySongId(song.getId()));
+                System.out.println(sql);
                 return song;
             }
         } catch (SQLException e) {
@@ -98,9 +100,9 @@ public class SongDAO extends DatabaseConfig {
      * Create new song
      */
     public boolean create(Song song) {
-        String sql = "INSERT INTO Songs(title, file_path, coverImage, duration, play_count, album_id, genre_id, createdAt, updatedAt) "
+        String sql = "INSERT INTO Songs(title, file_path, coverImage, duration, play_count, album_id, genre_id, createdAt, updatedAt, lyric) "
                 +
-                "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -127,6 +129,7 @@ public class SongDAO extends DatabaseConfig {
             Instant now = Instant.now();
             ps.setTimestamp(8, Timestamp.from(now));
             ps.setTimestamp(9, Timestamp.from(now));
+            ps.setString(10, song.getLyric());
 
             int result = ps.executeUpdate();
             if (result > 0) {
@@ -135,6 +138,7 @@ public class SongDAO extends DatabaseConfig {
                 if (generatedKeys.next()) {
                     song.setId(generatedKeys.getLong(1));
                 }
+                System.out.println(sql);
                 return true;
             }
         } catch (SQLException e) {
@@ -148,7 +152,7 @@ public class SongDAO extends DatabaseConfig {
      * Update existing song
      */
     public boolean update(Song song) {
-        String sql = "UPDATE Songs SET title=?, file_path=?, coverImage=?, duration=?, play_count=?, album_id=?, genre_id=?, updatedAt=? WHERE id=?";
+        String sql = "UPDATE Songs SET title=?, file_path=?, coverImage=?, duration=?, play_count=?, album_id=?, genre_id=?, updatedAt=?, lyric=? WHERE id=?";
 
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -173,9 +177,11 @@ public class SongDAO extends DatabaseConfig {
             }
 
             ps.setTimestamp(8, Timestamp.from(Instant.now()));
-            ps.setLong(9, song.getId());
-
+            ps.setString(9, song.getLyric());
+            ps.setLong(10, song.getId());
+            System.out.println(sql);
             return ps.executeUpdate() > 0;
+
         } catch (SQLException e) {
             System.out.println("Error updating song: " + e.getMessage());
             e.printStackTrace();
@@ -187,7 +193,7 @@ public class SongDAO extends DatabaseConfig {
      * Update existing song
      */
     public boolean updateNoImage(Song song) {
-        String sql = "UPDATE Songs SET title=?, file_path=?, duration=?, play_count=?, album_id=?, genre_id=?, updatedAt=? WHERE id=?";
+        String sql = "UPDATE Songs SET title=?, file_path=?, duration=?, play_count=?, album_id=?, genre_id=?, updatedAt=?, lyric=? WHERE id=?";
 
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -211,7 +217,8 @@ public class SongDAO extends DatabaseConfig {
             }
 
             ps.setTimestamp(7, Timestamp.from(Instant.now()));
-            ps.setLong(8, song.getId());
+            ps.setString(8, song.getLyric());
+            ps.setLong(9, song.getId());
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -225,7 +232,7 @@ public class SongDAO extends DatabaseConfig {
      * Update existing song
      */
     public boolean updateNoAudioAndImage(Song song) {
-        String sql = "UPDATE Songs SET title=?, play_count=?, album_id=?, genre_id=?, updatedAt=? WHERE id=?";
+        String sql = "UPDATE Songs SET title=?, play_count=?, album_id=?, genre_id=?, updatedAt=?, lyric=? WHERE id=?";
 
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -247,7 +254,8 @@ public class SongDAO extends DatabaseConfig {
             }
 
             ps.setTimestamp(5, Timestamp.from(Instant.now()));
-            ps.setLong(6, song.getId());
+            ps.setString(6, song.getLyric());
+            ps.setLong(7, song.getId());
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -261,7 +269,7 @@ public class SongDAO extends DatabaseConfig {
      * Update existing song
      */
     public boolean updateNoAudio(Song song) {
-        String sql = "UPDATE Songs SET title=?, coverImage=?, play_count=?, album_id=?, genre_id=?, updatedAt=? WHERE id=?";
+        String sql = "UPDATE Songs SET title=?, coverImage=?, play_count=?, album_id=?, genre_id=?, updatedAt=?, lyric=? WHERE id=?";
 
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -284,7 +292,8 @@ public class SongDAO extends DatabaseConfig {
             }
 
             ps.setTimestamp(6, Timestamp.from(Instant.now()));
-            ps.setLong(7, song.getId());
+            ps.setString(7, song.getLyric());
+            ps.setLong(8, song.getId());
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -434,6 +443,7 @@ public class SongDAO extends DatabaseConfig {
         song.setCoverImage(rs.getString("coverImage"));
         song.setDuration(rs.getObject("duration", Integer.class));
         song.setPlayCount(rs.getObject("play_count", Integer.class));
+        song.setLyric(rs.getString("lyric") != null ? rs.getString("lyric") : "");
 
         // Map timestamps
         Timestamp createdAt = rs.getTimestamp("createdAt");
@@ -506,10 +516,29 @@ public class SongDAO extends DatabaseConfig {
         return songArtists;
     }
 
+    public Long findAlbumBySongID(Long id){
+        var query = "select a.id from Songs s inner join Albums a on s.album_id =  a.id where s.id = ?";
+        var albumId = 0L;
+        try{
+            var ps = connection.prepareStatement(query);
+            ps.setLong(1, id);
+            var rs = ps.executeQuery();
+            if(rs.next()){
+                System.out.println(query);
+               albumId = rs.getLong("id");
+
+            }
+            return albumId;
+        }
+        catch(SQLException ex){
+            return  null;
+        }
+    }
+
     /**
      * Find related songs (same album or same artist)
      */
-    public List<Song> findRelatedSongs(Long songId, int limit) {
+    public List<Song> findRelatedSongs(Long songId, int limit, Long albumId) {
         List<Song> relatedSongs = new ArrayList<>();
         String sql = "SELECT DISTINCT s.id, s.title, s.duration, s.coverImage, s.play_count, s.album_id, s.genre_id, " +
                 "s.createdAt, s.updatedAt " +
@@ -524,19 +553,36 @@ public class SongDAO extends DatabaseConfig {
                 "FROM Songs s " +
                 "WHERE s.album_id = (SELECT album_id FROM Songs WHERE id = ?) AND s.id != ? " +
                 "ORDER BY play_count DESC";
-
+        var query = "select s.id, s.coverImage, s.lyric, s.title, s.createdAt, s.duration, s.play_count, s.file_path from Songs s inner join Albums a on a.id = s.album_id where s.id <> ? and a.id = ?";
         try {
-            PreparedStatement ps = connection.prepareStatement(sql);
+            PreparedStatement ps = connection.prepareStatement(query);
+//            ps.setLong(1, songId);
+//            ps.setLong(2, songId);
+//            ps.setLong(3, songId);
+//            ps.setLong(4, songId);
             ps.setLong(1, songId);
-            ps.setLong(2, songId);
-            ps.setLong(3, songId);
-            ps.setLong(4, songId);
+            ps.setLong(2, albumId);
 
             ResultSet rs = ps.executeQuery();
             int count = 0;
-            while (rs.next() && count < limit) {
-                relatedSongs.add(mapRowToSong(rs));
-                count++;
+//            while (rs.next() && count < limit) {
+//                relatedSongs.add(mapRowToSong(rs));
+//                count++;
+//            }
+            while(rs.next()){
+                var song = new Song();
+                song.setId(rs.getLong("id"));
+                song.setCoverImage(rs.getString("coverImage"));
+                song.setTitle(rs.getString("title"));
+                song.setDuration(rs.getObject("duration", Integer.class));
+                song.setPlayCount(rs.getObject("play_count", Integer.class));
+                song.setFilePath(rs.getString("file_path"));
+                Timestamp createdAt = rs.getTimestamp("createdAt");
+
+                song.setCreatedAt(createdAt.toInstant());
+                String lyric = rs.getString("lyric") != null ? rs.getString("lyric") : "";
+                song.setLyric(lyric);
+                relatedSongs.add(song);
             }
         } catch (SQLException e) {
             System.out.println("Error finding related songs: " + e.getMessage());
