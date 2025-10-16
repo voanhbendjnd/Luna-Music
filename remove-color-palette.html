@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remove Color Palette</title>
+</head>
+
+<body>
+    <h1>Remove Color Palette Script</h1>
+    <p>Mở Developer Console (F12) và chạy script này để xóa thanh color-palette:</p>
+
+    <script>
+        // Script to remove color palette
+        function removeColorPalette() {
+            const palette = document.querySelector('.color-palette');
+            if (palette) {
+                palette.remove();
+                console.log('✅ Color palette đã được xóa!');
+            } else {
+                console.log('ℹ️ Không tìm thấy color palette để xóa.');
+            }
+        }
+
+        // Auto remove on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            removeColorPalette();
+        });
+
+        // Export function for manual use
+        window.removeColorPalette = removeColorPalette;
+
+        console.log('🔧 Script loaded. Run removeColorPalette() to remove color palette manually.');
+    </script>
+
+    <button onclick="removeColorPalette()">Remove Color Palette</button>
+</body>
+
+</html>

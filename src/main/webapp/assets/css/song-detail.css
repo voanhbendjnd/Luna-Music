@@ -24,14 +24,16 @@ body {
     /* Additional padding for player bar */
 }
 
-/* Top Section - Song Details with Red Gradient */
+/* Top Section - Song Details with Dynamic Gradient */
 .song-detail-section {
     background: linear-gradient(180deg, #ff0040 0%, #cc0033 100%);
-    /* background-color: #1ed760; */
+    /* Fallback gradient */
     padding: 40px 32px;
     min-height: 60vh;
     display: flex;
     align-items: center;
+    position: relative;
+    overflow: hidden;
 }
 
 .song-detail-content {

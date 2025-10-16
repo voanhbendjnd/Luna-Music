@@ -516,22 +516,21 @@ public class SongDAO extends DatabaseConfig {
         return songArtists;
     }
 
-    public Long findAlbumBySongID(Long id){
+    public Long findAlbumBySongID(Long id) {
         var query = "select a.id from Songs s inner join Albums a on s.album_id =  a.id where s.id = ?";
         var albumId = 0L;
-        try{
+        try {
             var ps = connection.prepareStatement(query);
             ps.setLong(1, id);
             var rs = ps.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 System.out.println(query);
-               albumId = rs.getLong("id");
+                albumId = rs.getLong("id");
 
             }
             return albumId;
-        }
-        catch(SQLException ex){
-            return  null;
+        } catch (SQLException ex) {
+            return null;
         }
     }
 
@@ -556,20 +555,20 @@ public class SongDAO extends DatabaseConfig {
         var query = "select s.id, s.coverImage, s.lyric, s.title, s.createdAt, s.duration, s.play_count, s.file_path from Songs s inner join Albums a on a.id = s.album_id where s.id <> ? and a.id = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(query);
-//            ps.setLong(1, songId);
-//            ps.setLong(2, songId);
-//            ps.setLong(3, songId);
-//            ps.setLong(4, songId);
+            // ps.setLong(1, songId);
+            // ps.setLong(2, songId);
+            // ps.setLong(3, songId);
+            // ps.setLong(4, songId);
             ps.setLong(1, songId);
             ps.setLong(2, albumId);
 
             ResultSet rs = ps.executeQuery();
             int count = 0;
-//            while (rs.next() && count < limit) {
-//                relatedSongs.add(mapRowToSong(rs));
-//                count++;
-//            }
-            while(rs.next()){
+            // while (rs.next() && count < limit) {
+            // relatedSongs.add(mapRowToSong(rs));
+            // count++;
+            // }
+            while (rs.next()) {
                 var song = new Song();
                 song.setId(rs.getLong("id"));
                 song.setCoverImage(rs.getString("coverImage"));

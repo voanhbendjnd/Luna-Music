@@ -153,6 +153,7 @@ public class AlbumDAO extends DatabaseConfig {
         }
         return false;
     }
+
     /**
      * Update existing album
      */
