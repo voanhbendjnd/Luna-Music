@@ -220,7 +220,7 @@ CREATE TABLE PlaylistSongs (
     playlist_id INT NOT NULL,
     song_id INT NOT NULL,
     added_at DATETIME DEFAULT GETDATE(),
-    
+    coverImage VARCHAR(500) NULL,
     PRIMARY KEY (playlist_id, song_id), -- Khóa chính kép
 
     -- Khóa ngoại trỏ đến Playlists
