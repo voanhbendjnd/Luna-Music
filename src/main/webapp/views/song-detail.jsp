@@ -112,9 +112,7 @@
                                     <button class="control-btn download-btn">
                                         <i class="fas fa-download"></i>
                                     </button>
-                                    <button class="control-btn more-btn">
-                                        <i class="fas fa-ellipsis-h"></i>
-                                    </button>
+
                                 </div>
 
                                 <!-- Artist Information -->
@@ -138,6 +136,18 @@
                         <!-- Recommended Section -->
                         <div class="recommended-section">
                             <div class="recommended-container">
+                                <div class="recommended-header">
+                                    <h3>Lyric song</h3>
+                                    <c:if test="${not empty song.lyric}">
+                                        <div class="lyrics-text">${song.lyric}</div>
+                                    </c:if>
+                                    <c:if test="${empty song.lyric}">
+                                        <div class="no-lyrics">
+                                            <i class="fas fa-music"></i>
+                                            <p>No lyric available</p>
+                                        </div>
+                                    </c:if>
+                                </div>
                                 <div class="recommended-header">
                                     <h3>Recommended</h3>
                                     <p>Based on this song</p>
@@ -242,17 +252,10 @@
                                         <i class="fas fa-step-forward"></i>
                                     </button>
                                     <button class="control-btn repeat-btn">
-                                        <i class="fas fa-redo"></i>
-                                    </button>
-                                </div>
-
-                                <!-- Right Controls -->
-                                <div class="right-controls">
-                                    <button class="control-btn queue-btn">
-                                        <i class="fas fa-list"></i>
-                                    </button>
-                                    <button class="control-btn device-btn">
-                                        <i class="fas fa-desktop"></i>
+                                        <a href="${pageContext.request.contextPath}/song-detail?id=${song.id}"
+                                            style="color: white;">
+                                            <i class="fas fa-redo"></i>
+                                        </a>
                                     </button>
                                 </div>
                             </div>
@@ -281,6 +284,7 @@
                              */
                             function playRelatedSong(songId) {
                                 console.log("Playing related song:", songId);
+                                // Navigate đến song-detail page
                                 window.location.href = currentContextPath + "/song-detail?id=" + songId;
                             }
 

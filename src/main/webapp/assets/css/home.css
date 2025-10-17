@@ -1055,3 +1055,39 @@ img.loading {
         transform: scale(0.95);
     }
 }
+
+/* Show All Button Styles */
+.show-all-btn {
+    background: transparent;
+    border: 1px solid #b3b3b3;
+    color: #b3b3b3;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 16px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    min-width: 80px;
+}
+
+.show-all-btn:hover {
+    background-color: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+    transform: scale(1.05);
+}
+
+.show-all-btn:focus {
+    box-shadow: none;
+    outline: none;
+}
+
+/* Section header styles */
+.section .d-flex {
+    margin-bottom: 20px;
+}
+
+.section-title.mb-0 {
+    margin-bottom: 0 !important;
+}

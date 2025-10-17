@@ -40,11 +40,16 @@ public class SongDetailController extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/home");
                 return;
             }
+            List<Song> relatedSongs;
             // Get albumID by songsID
             var albumId = songDAO.findAlbumBySongID(songId);
+            if (albumId != null && albumId != 0) {
+                relatedSongs = songDAO.findRelatedSongs(songId, 5, albumId);
+            } else {
+                relatedSongs = songDAO.findNoRelatedSongs(songId);
+            }
 
             // Get related songs (same album or same artist)
-            List<Song> relatedSongs = songDAO.findRelatedSongs(songId, 5, albumId);
 
             // Get album details if available
             AlbumDAO albumDAO = new AlbumDAO();
@@ -74,6 +79,36 @@ public class SongDetailController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doGet(request, response);
+        response.setContentType("application/json;charset=UTF-8");
+
+        try {
+            String action = request.getParameter("action");
+
+            if ("updatePlayCount".equals(action)) {
+                String songIdParam = request.getParameter("songId");
+                if (songIdParam != null && !songIdParam.trim().isEmpty()) {
+                    Long songId = Long.parseLong(songIdParam);
+                    SongDAO songDAO = new SongDAO();
+                    boolean success = songDAO.incrementPlayCount(songId);
+
+                    if (success) {
+                        response.getWriter().write("{\"success\": true, \"message\": \"Play count updated\"}");
+                    } else {
+                        response.getWriter()
+                                .write("{\"success\": false, \"message\": \"Failed to update play count\"}");
+                    }
+                } else {
+                    response.getWriter().write("{\"success\": false, \"message\": \"Invalid song ID\"}");
+                }
+            } else {
+                response.getWriter().write("{\"success\": false, \"message\": \"Invalid action\"}");
+            }
+        } catch (NumberFormatException e) {
+            response.getWriter().write("{\"success\": false, \"message\": \"Invalid song ID format\"}");
+        } catch (Exception e) {
+            System.err.println("Error updating play count: " + e.getMessage());
+            e.printStackTrace();
+            response.getWriter().write("{\"success\": false, \"message\": \"Internal server error\"}");
+        }
     }
 }

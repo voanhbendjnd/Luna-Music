@@ -212,9 +212,12 @@ function updatePlayCount() {
     },
     body: "action=updatePlayCount&songId=" + currentSongId,
   })
-    .then((response) => {
-      if (response.ok) {
-        console.log("Play count updated");
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        console.log("Play count updated successfully");
+      } else {
+        console.error("Failed to update play count:", data.message);
       }
     })
     .catch((error) => {

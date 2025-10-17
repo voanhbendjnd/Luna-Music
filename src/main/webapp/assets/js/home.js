@@ -431,9 +431,85 @@ function viewPlaylist(playlistId) {
   window.location.href = url;
 }
 
+// Show All Functions
+function showAllSongs() {
+  // Show all hidden songs in the new songs container
+  const container = document.getElementById("new-songs-container");
+  if (container) {
+    const hiddenCards = container.querySelectorAll(
+      '.album-card[style*="display: none"]'
+    );
+    hiddenCards.forEach((card) => {
+      card.style.display = "block";
+    });
+  }
+
+  // Hide the show all button
+  const showAllBtn = document.querySelector('button[onclick="showAllSongs()"]');
+  if (showAllBtn) {
+    showAllBtn.style.display = "none";
+  }
+}
+
+function showAllArtists() {
+  // Show all hidden artists in the artists container
+  const container = document.getElementById("artists-container");
+  if (container) {
+    const hiddenCards = container.querySelectorAll(
+      '.artist-card[style*="display: none"]'
+    );
+    hiddenCards.forEach((card) => {
+      card.style.display = "block";
+    });
+  }
+
+  // Hide the show all button
+  const showAllBtn = document.querySelector(
+    'button[onclick="showAllArtists()"]'
+  );
+  if (showAllBtn) {
+    showAllBtn.style.display = "none";
+  }
+}
+
+function showAllAlbums() {
+  // Show all albums (no limit applied in JSP, so just hide button)
+  const showAllBtn = document.querySelector(
+    'button[onclick="showAllAlbums()"]'
+  );
+  if (showAllBtn) {
+    showAllBtn.style.display = "none";
+  }
+}
+
+function showAllPopularSongs() {
+  // Show all hidden songs in the popular songs container
+  const container = document.getElementById("popular-songs-container");
+  if (container) {
+    const hiddenCards = container.querySelectorAll(
+      '.album-card[style*="display: none"]'
+    );
+    hiddenCards.forEach((card) => {
+      card.style.display = "block";
+    });
+  }
+
+  // Hide the show all button
+  const showAllBtn = document.querySelector(
+    'button[onclick="showAllPopularSongs()"]'
+  );
+  if (showAllBtn) {
+    showAllBtn.style.display = "none";
+  }
+}
+
 // Export functions for global use
 window.playSong = playSong;
 window.viewArtist = viewArtist;
 window.viewAlbum = viewAlbum;
 window.viewPlaylist = viewPlaylist;
 window.createPlaylist = createPlaylist;
+window.showAllSongs = showAllSongs;
+window.showAllArtists = showAllArtists;
+window.showAllAlbums = showAllAlbums;
+window.showAllPopularSongs = showAllPopularSongs;

@@ -10,7 +10,9 @@ import utils.DatabaseConfig;
 import java.sql.*;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * SongDAO class for CRUD operations on Songs table
@@ -424,6 +426,7 @@ public class SongDAO extends DatabaseConfig {
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setLong(1, songId);
+            System.out.println(sql);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             System.out.println("Error incrementing play count: " + e.getMessage());
@@ -528,7 +531,39 @@ public class SongDAO extends DatabaseConfig {
                 albumId = rs.getLong("id");
 
             }
+            System.out.println(albumId);
             return albumId;
+        } catch (SQLException ex) {
+            return null;
+        }
+    }
+
+    public List<Song> findNoRelatedSongs(Long id) {
+        var query = "select s.id, s.coverImage, s.lyric, s.title, s.createdAt, s.duration, s.play_count, s.file_path from Songs s where s.id <> ?";
+        try {
+            var ps = connection.prepareStatement(query);
+            ps.setLong(1, id);
+            var rs = ps.executeQuery();
+            List<Song> songs = new ArrayList<>();
+            while (rs.next()) {
+                var song = new Song();
+                song.setId(rs.getLong("id"));
+                song.setTitle(rs.getString("title"));
+                song.setCoverImage(rs.getString("coverImage"));
+                String lyric = rs.getString("lyric") != null ? rs.getString("lyric") : "";
+                song.setLyric(lyric);
+                Timestamp createdAt = rs.getTimestamp("createdAt");
+                song.setCreatedAt(createdAt.toInstant());
+                song.setDuration(rs.getObject("duration", Integer.class));
+                song.setPlayCount(rs.getObject("play_count", Integer.class));
+                song.setFilePath(rs.getString("file_path"));
+                songs.add(song);
+            }
+            System.out.println(query);
+
+            Collections.shuffle(songs);
+            return songs.subList(0, 5);
+
         } catch (SQLException ex) {
             return null;
         }
@@ -568,7 +603,7 @@ public class SongDAO extends DatabaseConfig {
             // relatedSongs.add(mapRowToSong(rs));
             // count++;
             // }
-            while (rs.next()) {
+            while (rs.next() && count < limit) {
                 var song = new Song();
                 song.setId(rs.getLong("id"));
                 song.setCoverImage(rs.getString("coverImage"));

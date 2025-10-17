@@ -528,3 +528,45 @@ body {
         transform: rotate(360deg);
     }
 }
+
+/* Lyrics Text Formatting - 10 characters per line */
+.lyrics-text {
+    color: #e0e0e0;
+    font-size: 14px;
+    line-height: 1.8;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 8px;
+    /* Force line break every 10 characters */
+    word-break: break-all;
+    white-space: pre-wrap;
+    max-width: 300px;
+    /* Width for approximately 10 characters */
+}
+
+.no-lyrics {
+    text-align: center;
+    padding: 20px;
+    color: #888888;
+}
+
+.no-lyrics i {
+    font-size: 24px;
+    margin-bottom: 8px;
+    opacity: 0.5;
+}
+
+.no-lyrics p {
+    margin: 0;
+    font-size: 12px;
+}
+
+/* Responsive lyrics */
+@media (max-width: 768px) {
+    .lyrics-text {
+        font-size: 12px;
+        max-width: 150px;
+        padding: 10px;
+    }
+}

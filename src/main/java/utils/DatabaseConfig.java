@@ -17,7 +17,7 @@ public class DatabaseConfig {
                     + "trustServerCertificate=true;";
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             connection = DriverManager.getConnection(url);
-            System.out.println(">>> Success");
+            System.out.println(">>> Connect with Database success <<<");
         } catch (ClassNotFoundException | SQLException ex) {
             System.out.println("Database connection failed: " + ex);
         }

@@ -165,20 +165,25 @@
                         <div class="col-md-9 col-lg-10 bg-dark">
                             <div class="p-4">
                                 <div class="section">
-                                    <h2 class="section-title">New Songs</h2>
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h2 class="section-title mb-0">New Songs</h2>
+                                        <button class="btn btn-outline-light btn-sm show-all-btn"
+                                            onclick="showAllSongs()">
+                                            Show All
+                                        </button>
+                                    </div>
                                     <c:choose>
                                         <c:when test="${not empty requestScope.songs}">
-                                            <div class="horizontal-scroll">
+                                            <div class="horizontal-scroll" id="new-songs-container">
                                                 <c:forEach var="song" items="${requestScope.songs}" varStatus="status">
-                                                    <c:if test="${status.index < 10}">
-                                                        <div class="album-card" onclick="playSong(${song.id})"
-                                                            data-song-id="${song.id}">
-                                                            <img src="${pageContext.request.contextPath}${song.coverImage}"
-                                                                alt="${song.title}" class="album-cover"
-                                                                onerror="this.src='${pageContext.request.contextPath}/assets/img/default-song.png'">
-                                                            <div class="album-title">${song.title}</div>
-                                                        </div>
-                                                    </c:if>
+                                                    <div class="album-card" onclick="playSong(${song.id})"
+                                                        data-song-id="${song.id}" <c:if test="${status.index >= 10}">
+                                                        style="display: none;"</c:if>>
+                                                        <img src="${pageContext.request.contextPath}${song.coverImage}"
+                                                            alt="${song.title}" class="album-cover"
+                                                            onerror="this.src='${pageContext.request.contextPath}/assets/img/default-song.png'">
+                                                        <div class="album-title">${song.title}</div>
+                                                    </div>
                                                 </c:forEach>
                                             </div>
                                         </c:when>
@@ -192,26 +197,31 @@
                                 </div>
                                 <!-- Artists Section -->
                                 <div class="section">
-                                    <h2 class="section-title">Artists</h2>
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h2 class="section-title mb-0">Artists</h2>
+                                        <button class="btn btn-outline-light btn-sm show-all-btn"
+                                            onclick="showAllArtists()">
+                                            Show All
+                                        </button>
+                                    </div>
                                     <c:choose>
                                         <c:when test="${not empty requestScope.artists}">
-                                            <div class="horizontal-scroll">
+                                            <div class="horizontal-scroll" id="artists-container">
                                                 <c:forEach var="artist" items="${requestScope.artists}"
                                                     varStatus="status">
-                                                    <c:if test="${status.index < 10}">
-                                                        <div class="artist-card" onclick="viewArtist(${artist.id})"
-                                                            data-artist-id="${artist.id}">
-                                                            <div class="position-relative mb-2">
-                                                                <img src="${pageContext.request.contextPath}${artist.imagePath}"
-                                                                    alt="${artist.name}"
-                                                                    class="rounded-circle object-fit-cover"
-                                                                    style="width: 120px; height: 120px;"
-                                                                    onerror="this.src='${pageContext.request.contextPath}/assets/img/default-artist.png'">
-                                                            </div>
-                                                            <div class="artist-name">${artist.name}</div>
-                                                            <div class="artist-label">Artist</div>
+                                                    <div class="artist-card" onclick="viewArtist(${artist.id})"
+                                                        data-artist-id="${artist.id}" <c:if
+                                                        test="${status.index >= 10}">style="display: none;"</c:if>>
+                                                        <div class="position-relative mb-2">
+                                                            <img src="${pageContext.request.contextPath}${artist.imagePath}"
+                                                                alt="${artist.name}"
+                                                                class="rounded-circle object-fit-cover"
+                                                                style="width: 120px; height: 120px;"
+                                                                onerror="this.src='${pageContext.request.contextPath}/assets/img/default-artist.png'">
                                                         </div>
-                                                    </c:if>
+                                                        <div class="artist-name">${artist.name}</div>
+                                                        <div class="artist-label">Artist</div>
+                                                    </div>
                                                 </c:forEach>
                                             </div>
                                         </c:when>
@@ -225,7 +235,13 @@
                                 </div>
                                 <!-- Albums Section -->
                                 <div class="mb-5">
-                                    <h2 class="h3 mb-4 text-white fw-bold">Albums</h2>
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h2 class="h3 mb-0 text-white fw-bold">Albums</h2>
+                                        <button class="btn btn-outline-light btn-sm show-all-btn"
+                                            onclick="showAllAlbums()">
+                                            Show All
+                                        </button>
+                                    </div>
                                     <div class="d-flex gap-3 overflow-auto pb-2">
                                         <c:choose>
                                             <c:when test="${not empty requestScope.albums}">
@@ -278,20 +294,25 @@
 
                                 <!-- Songs Section -->
                                 <div class="section">
-                                    <h2 class="section-title">Popular Songs</h2>
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h2 class="section-title mb-0">Popular Songs</h2>
+                                        <button class="btn btn-outline-light btn-sm show-all-btn"
+                                            onclick="showAllPopularSongs()">
+                                            Show All
+                                        </button>
+                                    </div>
                                     <c:choose>
                                         <c:when test="${not empty requestScope.songs}">
-                                            <div class="horizontal-scroll">
+                                            <div class="horizontal-scroll" id="popular-songs-container">
                                                 <c:forEach var="song" items="${requestScope.songs}" varStatus="status">
-                                                    <c:if test="${status.index < 10}">
-                                                        <div class="album-card" onclick="playSong(${song.id})"
-                                                            data-song-id="${song.id}">
-                                                            <img src="${pageContext.request.contextPath}${song.coverImage}"
-                                                                alt="${song.title}" class="album-cover"
-                                                                onerror="this.src='${pageContext.request.contextPath}/assets/img/default-song.png'">
-                                                            <div class="album-title">${song.title}</div>
-                                                        </div>
-                                                    </c:if>
+                                                    <div class="album-card" onclick="playSong(${song.id})"
+                                                        data-song-id="${song.id}" <c:if test="${status.index >= 10}">
+                                                        style="display: none;"</c:if>>
+                                                        <img src="${pageContext.request.contextPath}${song.coverImage}"
+                                                            alt="${song.title}" class="album-cover"
+                                                            onerror="this.src='${pageContext.request.contextPath}/assets/img/default-song.png'">
+                                                        <div class="album-title">${song.title}</div>
+                                                    </div>
                                                 </c:forEach>
                                             </div>
                                         </c:when>
