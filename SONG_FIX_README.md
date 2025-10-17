@@ -1,5 +1,17 @@
 # 🔧 Fix Song Management Issues
 
+PS C:\Users\PC\Documents\FALL25\PRJ301\ProjectFinal\Luna-Music> git merge auth
+Updating 26aeb7b..a282000
+error: Your local changes to the following files would be overwritten by merge:
+target/classes/DALs/RoleDAO.class
+target/classes/DALs/UserDAO.class
+target/classes/controllers/LoginController.class
+target/classes/controllers/RegisterController.class
+target/classes/domain/entity/User.class
+Please commit your changes or stash them before you merge.
+Aborting
+git restore target/
+
 ## 🚨 Vấn đề đã xác định
 
 ### 1. **Database Schema không khớp**

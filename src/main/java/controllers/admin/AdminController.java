@@ -458,72 +458,6 @@ public class AdminController extends HttpServlet {
     }
 
     /**
-     * Handle Song CRUD operations
-     */
-    private void handleSongOperations(HttpServletRequest request, HttpServletResponse response, String action)
-            throws ServletException, IOException {
-        var songDAO = new SongDAO();
-        var songArtistDAO = new SongArtistDAO();
-
-        try {
-            if ("create".equals(action)) {
-                Song song = buildSongFromRequest(request);
-                if (songDAO.create(song)) {
-                    // Handle artist relationships
-                    String[] artistIds = request.getParameterValues("artistIds");
-                    if (artistIds != null && artistIds.length > 0) {
-                        List<Long> artistIdList = new ArrayList<>();
-                        for (String artistId : artistIds) {
-                            if (artistId != null && !artistId.trim().isEmpty()) {
-                                artistIdList.add(Long.parseLong(artistId));
-                            }
-                        }
-                        songArtistDAO.createMultiple(song.getId(), artistIdList);
-                    }
-                }
-                response.sendRedirect(request.getContextPath() + "/admin?action=list&type=songs");
-
-            } else if ("update".equals(action)) {
-                String idStr = request.getParameter("id");
-                if (idStr != null && !idStr.isBlank()) {
-                    Song song = buildSongFromRequest(request);
-                    song.setId(Long.parseLong(idStr));
-
-                    if (songDAO.update(song)) {
-                        // Update artist relationships
-                        String[] artistIds = request.getParameterValues("artistIds");
-                        List<Long> artistIdList = new ArrayList<>();
-                        if (artistIds != null) {
-                            for (String artistId : artistIds) {
-                                if (artistId != null && !artistId.trim().isEmpty()) {
-                                    artistIdList.add(Long.parseLong(artistId));
-                                }
-                            }
-                        }
-                        songArtistDAO.updateSongArtists(song.getId(), artistIdList);
-                    }
-                }
-                response.sendRedirect(request.getContextPath() + "/admin?action=list&type=songs");
-
-            } else if ("delete".equals(action)) {
-                String idStr = request.getParameter("id");
-                if (idStr != null && !idStr.isBlank()) {
-                    long songId = Long.parseLong(idStr);
-                    // Delete song-artist relationships first
-                    songArtistDAO.deleteBySongId(songId);
-                    // Then delete the song
-                    songDAO.delete(songId);
-                }
-                response.sendRedirect(request.getContextPath() + "/admin?action=list&type=songs");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.sendRedirect(request.getContextPath() + "/admin?action=list&type=songs&error=" +
-                    java.net.URLEncoder.encode("Operation failed: " + e.getMessage(), "UTF-8"));
-        }
-    }
-
-    /**
      * Build Song object from request parameters and uploaded files
      */
     private Song buildSongFromRequest(HttpServletRequest request) throws IOException, ServletException {
@@ -712,11 +646,9 @@ public class AdminController extends HttpServlet {
             } else if ("update".equals(action)) {
                 String idStr = request.getParameter("id");
                 if (idStr != null && !idStr.isBlank()) {
-                    var check = false;
                     String coverImagePath = handleFileUpload(request, "coverImage", IMAGE_DIR,
                             ALLOWED_IMAGE_EXTENSIONS);
                     if (coverImagePath != null) {
-                        check = true;
                         Album album = buildAlbumFromRequest(request);
                         album.setId(Long.parseLong(idStr));
                         albumDAO.update(album);

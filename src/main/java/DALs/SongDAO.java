@@ -5,8 +5,6 @@ import domain.entity.Album;
 import domain.entity.Genre;
 import domain.entity.SongArtist;
 import domain.entity.Artist;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import utils.DatabaseConfig;
 
 import java.sql.*;
@@ -14,7 +12,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * SongDAO class for CRUD operations on Songs table
@@ -83,18 +80,18 @@ public class SongDAO extends DatabaseConfig {
             return null;
         }
     }
-    public Long preSong(Long id){
+
+    public Long preSong(Long id) {
         var sql = "select id from Songs where id = ?";
         System.out.println(sql);
-        try{
+        try {
             var ps = connection.prepareStatement(sql);
             ps.setLong(1, id);
             var rs = ps.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 return rs.getLong("id");
             }
-        }
-        catch(SQLException ex){
+        } catch (SQLException ex) {
             return null;
         }
         return null;

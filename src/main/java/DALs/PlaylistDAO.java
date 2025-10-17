@@ -1,7 +1,6 @@
 package DALs;
 
 import domain.entity.Playlist;
-import domain.entity.PlaylistSong;
 import domain.entity.Song;
 import domain.entity.User;
 import utils.DatabaseConfig;

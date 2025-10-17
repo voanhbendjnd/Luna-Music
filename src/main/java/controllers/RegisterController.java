@@ -4,16 +4,12 @@ package controllers;
 import java.io.IOException;
 
 import DALs.UserDAO;
-import domain.entity.User;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import utils.HashPassword;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 /**
@@ -47,7 +43,7 @@ public class RegisterController extends HttpServlet {
         var userDAO = new UserDAO();
         var check = userDAO.Register(name, gender, email, lastPassword, lastSalt);
         if (check) {
-            response.sendRedirect(request.getContextPath()+"/login");
+            response.sendRedirect(request.getContextPath() + "/login");
         } else {
             request.setAttribute("loginError", "Username or password incorrect!.");
             request.getRequestDispatcher("/views/register.jsp").forward(request, response);
