@@ -8,13 +8,10 @@ let currentContextPath = "";
 
 // Initialize when DOM is loaded
 document.addEventListener("DOMContentLoaded", function () {
-  console.log("Home.js loaded. Initializing...");
-
   // Get context path from meta tag
   const contextPathMeta = document.querySelector('meta[name="context-path"]');
   if (contextPathMeta) {
     currentContextPath = contextPathMeta.getAttribute("content");
-    console.log("Context path:", currentContextPath);
   }
 
   // Initialize horizontal scrolling
@@ -124,7 +121,6 @@ function initializeClickEvents() {
       if (songId && !onclick) {
         // Only add backup listener if no onclick attribute
         card.addEventListener("click", function (e) {
-          console.log("Song card clicked (backup):", songId);
           playSong(parseInt(songId));
         });
       }
@@ -137,7 +133,6 @@ function initializeClickEvents() {
     if (!onclick) {
       // Add backup listener for cards without onclick
       card.addEventListener("click", function (e) {
-        console.log("Artist card clicked (backup)");
         // You can add default behavior here if needed
       });
     }
@@ -151,7 +146,6 @@ function initializeClickEvents() {
     if (!onclick && !dataSongId) {
       // Add backup listener for cards without onclick or data-song-id
       card.addEventListener("click", function (e) {
-        console.log("Album card clicked (backup)");
         // You can add default behavior here if needed
       });
     }
@@ -163,13 +157,6 @@ function initializeClickEvents() {
  * @param {number} songId - The song ID
  */
 function playSong(songId) {
-  console.log("Playing song:", songId);
-  console.log("Current context path:", currentContextPath);
-  console.log(
-    "Full URL will be:",
-    currentContextPath + "/song-detail?id=" + songId
-  );
-
   // Navigate to song detail page
   window.location.href = currentContextPath + "/song-detail?id=" + songId;
 }
@@ -179,7 +166,6 @@ function playSong(songId) {
  * @param {number} artistId - The artist ID
  */
 function viewArtist(artistId) {
-  console.log("Viewing artist:", artistId);
   window.location.href = currentContextPath + "/artist?id=" + artistId;
 }
 
@@ -188,7 +174,6 @@ function viewArtist(artistId) {
  * @param {number} albumId - The album ID
  */
 function viewAlbum(albumId) {
-  console.log("Viewing album:", albumId);
   window.location.href = currentContextPath + "/album?id=" + albumId;
 }
 
@@ -210,7 +195,7 @@ function initializePlaylistFunctionality() {
   // Initialize tab navigation
   initializeTabNavigation();
 
-  // Initialize search functionality
+  // Initialize library search
   initializeLibrarySearch();
 }
 
@@ -269,7 +254,7 @@ function initializeLibrarySearch() {
   if (sortBtn) {
     sortBtn.addEventListener("click", function () {
       // TODO: Implement sort functionality
-      alert("Sort functionality coming soon!");
+      // Sort functionality coming soon
     });
   }
 }
@@ -280,18 +265,29 @@ function initializeLibrarySearch() {
 function filterPlaylists(query) {
   const playlistItems = document.querySelectorAll(".playlist-item");
 
-  playlistItems.forEach((item) => {
-    const playlistName = item
-      .querySelector(".playlist-name")
-      .textContent.toLowerCase();
-    const playlistDetails = item
-      .querySelector(".playlist-details")
-      .textContent.toLowerCase();
-
-    if (playlistName.includes(query) || playlistDetails.includes(query)) {
+  if (query === "") {
+    // Show all playlists when search is empty
+    playlistItems.forEach((item) => {
       item.style.display = "flex";
-    } else {
-      item.style.display = "none";
+    });
+    return;
+  }
+
+  let visibleCount = 0;
+  playlistItems.forEach((item) => {
+    const playlistNameElement = item.querySelector(".playlist-name");
+    const playlistDetailsElement = item.querySelector(".playlist-details");
+
+    if (playlistNameElement && playlistDetailsElement) {
+      const playlistName = playlistNameElement.textContent.toLowerCase();
+      const playlistDetails = playlistDetailsElement.textContent.toLowerCase();
+
+      if (playlistName.includes(query) || playlistDetails.includes(query)) {
+        item.style.display = "flex";
+        visibleCount++;
+      } else {
+        item.style.display = "none";
+      }
     }
   });
 }
@@ -308,73 +304,10 @@ function loadPlaylists() {
  * Load playlists for sidebar
  */
 function loadSidebarPlaylists() {
-  const playlistsList = document.getElementById("playlistsList");
-  if (!playlistsList) return;
-
-  // Show loading state
-  playlistsList.innerHTML = `
-    <div class="playlists-loading">
-      <i class="fas fa-spinner fa-spin"></i>
-      <p>Loading playlists...</p>
-        </div>
-    `;
-
-  // Try to fetch playlists from server
-  fetch(`${currentContextPath}/playlist?action=list`)
-    .then((response) => {
-      if (response.ok) {
-        return response.text();
-      }
-      throw new Error("Failed to load playlists");
-    })
-    .then((html) => {
-      // If we get HTML response, it means we need to redirect to login
-      if (html.includes("login")) {
-        showDemoPlaylists();
-      } else {
-        // Parse and display playlists
-        displayPlaylistsFromResponse(html);
-      }
-    })
-    .catch((error) => {
-      console.warn("Error loading playlists:", error);
-      showDemoPlaylists();
-    });
+  // Playlists are already loaded from server-side rendering in JSP
+  // No need to make AJAX call - data is already available in the DOM
+  return;
 }
-
-/**
- * Show demo playlists as fallback
- */
-function showDemoPlaylists() {
-  const playlistsList = document.getElementById("playlistsList");
-  if (!playlistsList) return;
-
-  // Demo playlists data
-  const demoPlaylists = [
-    {
-      id: 1,
-      name: "My Playlist #1",
-      songCount: 12,
-      totalDuration: "45:30",
-    },
-    {
-      id: 2,
-      name: "My Playlist #2",
-      songCount: 8,
-      totalDuration: "32:15",
-    },
-  ];
-
-  // Clear existing content
-  playlistsList.innerHTML = "";
-
-  // Add playlists to the list
-  demoPlaylists.forEach((playlist) => {
-    const playlistItem = createPlaylistItem(playlist);
-    playlistsList.appendChild(playlistItem);
-  });
-}
-
 /**
  * Display playlists from server response
  */
@@ -412,7 +345,6 @@ function createPlaylistItem(playlist) {
  * Create a new playlist
  */
 function createPlaylist() {
-  console.log("Creating new playlist");
   window.location.href = currentContextPath + "/playlist?action=create";
 }
 
@@ -420,12 +352,8 @@ function createPlaylist() {
  * View playlist detail
  */
 function viewPlaylist(playlistId) {
-  console.log("Viewing playlist:", playlistId);
-  console.log("Current context path:", currentContextPath);
-
   // Use the simplest URL pattern that should work
   const url = currentContextPath + "/playlist?id=" + playlistId;
-  console.log("Navigating to:", url);
 
   // Navigate to playlist detail page
   window.location.href = url;

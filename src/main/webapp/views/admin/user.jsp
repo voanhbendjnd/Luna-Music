@@ -281,27 +281,27 @@
                     // Client-side validation
                     if (!name) {
                         e.preventDefault();
-                        alert('Please enter user name');
+                        // Please enter user name
                         return;
                     }
                     if (!email) {
                         e.preventDefault();
-                        alert('Please enter email');
+                        // Please enter email
                         return;
                     }
                     if (!password) {
                         e.preventDefault();
-                        alert('Please enter password');
+                        // Please enter password
                         return;
                     }
                     if (!gender) {
                         e.preventDefault();
-                        alert('Please select gender');
+                        // Please select gender
                         return;
                     }
                     if (!role) {
                         e.preventDefault();
-                        alert('Please select role');
+                        // Please select role
                         return;
                     }
 

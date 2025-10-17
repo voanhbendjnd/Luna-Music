@@ -66,7 +66,6 @@ function initializePlaylistDetail() {
 
 function performSearch(query) {
   if (!window.allSongs) {
-    console.warn("All songs data not available");
     return;
   }
 
@@ -154,7 +153,6 @@ function hideSearchResults() {
 
 function addSongToPlaylist(songId) {
   if (!window.playlistId) {
-    console.error("Playlist ID not available");
     return;
   }
 
@@ -192,7 +190,7 @@ function initializeActionButtons() {
   if (addCollaboratorBtn) {
     addCollaboratorBtn.addEventListener("click", function () {
       // TODO: Implement add collaborator functionality
-      alert("Add collaborator feature coming soon!");
+      // Add collaborator feature coming soon
     });
   }
 
@@ -201,7 +199,7 @@ function initializeActionButtons() {
   if (moreOptionsBtn) {
     moreOptionsBtn.addEventListener("click", function () {
       // TODO: Implement more options menu
-      alert("More options feature coming soon!");
+      // More options feature coming soon
     });
   }
 
@@ -210,18 +208,11 @@ function initializeActionButtons() {
   if (viewToggleBtn) {
     viewToggleBtn.addEventListener("click", function () {
       // TODO: Implement view toggle functionality
-      alert("View toggle feature coming soon!");
+      // View toggle feature coming soon
     });
   }
 
-  // Playlist cover click
-  const playlistCover = document.getElementById("playlistCover");
-  if (playlistCover) {
-    playlistCover.addEventListener("click", function () {
-      // TODO: Implement cover image upload
-      alert("Cover image upload feature coming soon!");
-    });
-  }
+  // Playlist cover click - handled by onclick in JSP
 }
 
 function escapeHtml(text) {

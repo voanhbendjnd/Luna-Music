@@ -130,7 +130,7 @@
                                                 <i class="fas fa-search text-muted"></i>
                                             </span>
                                             <input type="text"
-                                                class="form-control bg-secondary border-secondary text-white"
+                                                class="form-control bg-secondary border-secondary text-white library-search-input"
                                                 style="background-color: #030303 !important; border-color: #6c757d !important; box-shadow: none !important; outline: none !important;"
                                                 placeholder="Search in Your Library">
                                         </div>
@@ -145,6 +145,30 @@
                                     <div class="tab-content active" id="playlistsTab">
                                         <div class="playlists-list" id="playlistsList">
                                             <!-- Playlists will be loaded here -->
+                                            <c:if test="${not empty userPlaylists}">
+                                                <c:forEach var="playlist" items="${userPlaylists}">
+                                                    <div class="playlist-item" onclick="viewPlaylist(${playlist.id})">
+                                                        <div class="playlist-cover">
+                                                            <i class="fas fa-music"></i>
+                                                        </div>
+                                                        <div class="playlist-info">
+                                                            <div class="playlist-name">${playlist.name}</div>
+                                                            <div class="playlist-details">${playlist.songCount} songs •
+                                                                ${playlist.totalDuration}</div>
+                                                        </div>
+                                                    </div>
+                                                </c:forEach>
+                                            </c:if>
+                                            <c:if test="${empty userPlaylists}">
+                                                <div class="empty-state">
+                                                    <i class="fas fa-music"></i>
+                                                    <p>No playlists available at the moment.</p>
+                                                    <button class="btn btn-outline-light btn-sm show-all-btn"
+                                                        onclick="createPlaylist()">
+                                                        Create your first playlist
+                                                    </button>
+                                                </div>
+                                            </c:if>
                                         </div>
                                     </div>
 
@@ -304,7 +328,8 @@
                                     <c:choose>
                                         <c:when test="${not empty requestScope.popularSong}">
                                             <div class="horizontal-scroll" id="popular-songs-container">
-                                                <c:forEach var="song" items="${requestScope.popularSong}" varStatus="status">
+                                                <c:forEach var="song" items="${requestScope.popularSong}"
+                                                    varStatus="status">
                                                     <div class="album-card" onclick="playSong(${song.id})"
                                                         data-song-id="${song.id}" <c:if test="${status.index >= 10}">
                                                         style="display: none;"</c:if>>

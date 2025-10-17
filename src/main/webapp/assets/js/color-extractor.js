@@ -51,7 +51,6 @@ class ColorExtractor {
       // Extract colors using k-means clustering
       return this.kMeansClustering(data, colorCount);
     } catch (error) {
-      console.warn("Error extracting colors:", error);
       return this.getDefaultColors();
     }
   }

@@ -7,9 +7,8 @@ import java.util.List;
 import DALs.SongDAO;
 import DALs.ArtistDAO;
 import DALs.AlbumDAO;
-import domain.entity.Song;
-import domain.entity.Artist;
-import domain.entity.Album;
+import DALs.PlaylistDAO;
+import domain.entity.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,8 +34,10 @@ public class HomeController extends HttpServlet {
         try {
             // Get user from session and pass to request
             HttpSession session = request.getSession(false);
+            User currentUser = null;
             if (session != null && session.getAttribute("user") != null) {
-                request.setAttribute("user", session.getAttribute("user"));
+                currentUser = (User) session.getAttribute("user");
+                request.setAttribute("user", currentUser);
             }
 
             // Get popular songs (limit to 20)
@@ -68,6 +69,18 @@ public class HomeController extends HttpServlet {
             }
             request.setAttribute("albums", albums);
 
+            // Get user playlists if user is logged in
+            if (currentUser != null) {
+                var playlistDAO = new PlaylistDAO();
+                List<Playlist> userPlaylists = playlistDAO.getPlaylistsByID(currentUser.getId());
+                if (userPlaylists == null) {
+                    userPlaylists = List.of();
+                }
+                request.setAttribute("userPlaylists", userPlaylists);
+            } else {
+                request.setAttribute("userPlaylists", List.of());
+            }
+
         } catch (Exception e) {
             System.err.println("Error loading home data: " + e.getMessage());
             e.printStackTrace();
@@ -75,6 +88,7 @@ public class HomeController extends HttpServlet {
             request.setAttribute("songs", List.of());
             request.setAttribute("artists", List.of());
             request.setAttribute("albums", List.of());
+            request.setAttribute("userPlaylists", List.of());
         }
 
         // Forward to home.jsp directly

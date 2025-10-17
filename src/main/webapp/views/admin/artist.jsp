@@ -330,13 +330,13 @@
                                 const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
 
                                 if (file.size > maxSize) {
-                                    alert('Image size must be less than 5MB');
+                                    // Image size must be less than 5MB
                                     this.value = '';
                                     return;
                                 }
 
                                 if (!allowedTypes.includes(file.type) && !file.name.match(/\.(jpg|jpeg|png|gif)$/i)) {
-                                    alert('Please select a valid image file (JPG, PNG, GIF)');
+                                    // Please select a valid image file (JPG, PNG, GIF)
                                     this.value = '';
                                     return;
                                 }
@@ -390,7 +390,7 @@
 
                             if (!name) {
                                 e.preventDefault();
-                                alert('Please enter artist name');
+                                // Please enter artist name
                                 return;
                             }
 

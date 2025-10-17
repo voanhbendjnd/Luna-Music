@@ -1,8 +1,8 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/footer.css">
 
-<footer class="footer-main">
+<footer class="footer-main" style="border-top: 1px solid rgb(0, 0, 0);">
     <div class="footer-content">
-        <div class="footer-columns">
+        <div class="footer-columns" style="padding: 0 2rem;">
             <!-- Company Column -->
             <div class="footer-column">
                 <h5>Company</h5>

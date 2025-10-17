@@ -101,25 +101,41 @@ public class PlaylistController extends HttpServlet {
     private void showPlaylistList(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            HttpSession session = request.getSession();
-            User currentUser = (User) session.getAttribute("user");
+            HttpSession session = request.getSession(false);
+            User currentUser = null;
+            if (session != null) {
+                currentUser = (User) session.getAttribute("user");
+            }
 
-            List<Playlist> playlists;
+            List<Playlist> userPlaylists = new ArrayList<>();
+            List<Playlist> publicPlaylists = new ArrayList<>();
+
             if (currentUser != null) {
-                // Show user's playlists
-                playlists = playlistDAO.getPlaylistsByUserId(currentUser.getId());
+                // Get user's own playlists
+                userPlaylists = playlistDAO.getPlaylistsByUserId(currentUser.getId());
+                if (userPlaylists == null) {
+                    userPlaylists = new ArrayList<>();
+                }
+            }
+
+            // Get public playlists (excluding current user's playlists if logged in)
+            if (currentUser != null) {
+                publicPlaylists = playlistDAO.getPublicPlaylistsExcludingUser(currentUser.getId());
             } else {
-                // Show public playlists
-                playlists = playlistDAO.getPublicPlaylists();
+                publicPlaylists = playlistDAO.getPublicPlaylists();
+            }
+            if (publicPlaylists == null) {
+                publicPlaylists = new ArrayList<>();
             }
 
-            // If no playlists exist, create demo playlists
-            if (playlists == null || playlists.isEmpty()) {
-                createDemoPlaylists();
-                playlists = playlistDAO.getPublicPlaylists();
-            }
+            // Combine playlists for display
+            List<Playlist> allPlaylists = new ArrayList<>();
+            allPlaylists.addAll(userPlaylists);
+            allPlaylists.addAll(publicPlaylists);
 
-            request.setAttribute("playlists", playlists);
+            request.setAttribute("userPlaylists", userPlaylists);
+            request.setAttribute("publicPlaylists", publicPlaylists);
+            request.setAttribute("playlists", allPlaylists);
             request.setAttribute("currentUser", currentUser);
             request.getRequestDispatcher("/views/playlist-list.jsp").forward(request, response);
 
@@ -132,8 +148,11 @@ public class PlaylistController extends HttpServlet {
     private void showCreatePlaylistForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            HttpSession session = request.getSession();
-            User currentUser = (User) session.getAttribute("user");
+            HttpSession session = request.getSession(false);
+            User currentUser = null;
+            if (session != null) {
+                currentUser = (User) session.getAttribute("user");
+            }
 
             if (currentUser == null) {
                 response.sendRedirect(request.getContextPath() + "/login");
@@ -155,14 +174,8 @@ public class PlaylistController extends HttpServlet {
             Playlist playlist = playlistDAO.getPlaylistById(playlistId);
 
             if (playlist == null) {
-                // If playlist doesn't exist, create demo playlists
-                createDemoPlaylists();
-                playlist = playlistDAO.getPlaylistById(playlistId);
-
-                if (playlist == null) {
-                    response.sendError(HttpServletResponse.SC_NOT_FOUND, "Playlist not found");
-                    return;
-                }
+                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Playlist not found");
+                return;
             }
 
             // Get songs in playlist
@@ -194,8 +207,11 @@ public class PlaylistController extends HttpServlet {
     private void showEditPlaylistForm(HttpServletRequest request, HttpServletResponse response, Long playlistId)
             throws ServletException, IOException {
         try {
-            HttpSession session = request.getSession();
-            User currentUser = (User) session.getAttribute("user");
+            HttpSession session = request.getSession(false);
+            User currentUser = null;
+            if (session != null) {
+                currentUser = (User) session.getAttribute("user");
+            }
 
             if (currentUser == null) {
                 response.sendRedirect(request.getContextPath() + "/login");
@@ -228,8 +244,11 @@ public class PlaylistController extends HttpServlet {
     private void createPlaylist(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            HttpSession session = request.getSession();
-            User currentUser = (User) session.getAttribute("user");
+            HttpSession session = request.getSession(false);
+            User currentUser = null;
+            if (session != null) {
+                currentUser = (User) session.getAttribute("user");
+            }
 
             if (currentUser == null) {
                 response.sendRedirect(request.getContextPath() + "/login");
@@ -264,8 +283,11 @@ public class PlaylistController extends HttpServlet {
     private void updatePlaylist(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            HttpSession session = request.getSession();
-            User currentUser = (User) session.getAttribute("user");
+            HttpSession session = request.getSession(false);
+            User currentUser = null;
+            if (session != null) {
+                currentUser = (User) session.getAttribute("user");
+            }
 
             if (currentUser == null) {
                 response.sendRedirect(request.getContextPath() + "/login");
@@ -310,8 +332,11 @@ public class PlaylistController extends HttpServlet {
     private void deletePlaylist(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            HttpSession session = request.getSession();
-            User currentUser = (User) session.getAttribute("user");
+            HttpSession session = request.getSession(false);
+            User currentUser = null;
+            if (session != null) {
+                currentUser = (User) session.getAttribute("user");
+            }
 
             if (currentUser == null) {
                 response.sendRedirect(request.getContextPath() + "/login");
@@ -352,8 +377,11 @@ public class PlaylistController extends HttpServlet {
     private void addSongToPlaylist(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            HttpSession session = request.getSession();
-            User currentUser = (User) session.getAttribute("user");
+            HttpSession session = request.getSession(false);
+            User currentUser = null;
+            if (session != null) {
+                currentUser = (User) session.getAttribute("user");
+            }
 
             if (currentUser == null) {
                 response.sendRedirect(request.getContextPath() + "/login");
@@ -395,8 +423,11 @@ public class PlaylistController extends HttpServlet {
     private void removeSongFromPlaylist(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            HttpSession session = request.getSession();
-            User currentUser = (User) session.getAttribute("user");
+            HttpSession session = request.getSession(false);
+            User currentUser = null;
+            if (session != null) {
+                currentUser = (User) session.getAttribute("user");
+            }
 
             if (currentUser == null) {
                 response.sendRedirect(request.getContextPath() + "/login");
@@ -432,31 +463,6 @@ public class PlaylistController extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    /**
-     * Create demo playlists for testing
-     */
-    private void createDemoPlaylists() {
-        try {
-            // Create demo user first
-            User demoUser = new User();
-            demoUser.setId(1L);
-            demoUser.setName("Demo User");
-            demoUser.setEmail("demo@example.com");
-
-            // Create demo playlists
-            Playlist playlist1 = new Playlist("My Playlist #1", "Demo playlist 1", demoUser);
-            Playlist playlist2 = new Playlist("My Playlist #2", "Demo playlist 2", demoUser);
-
-            playlistDAO.createPlaylist(playlist1);
-            playlistDAO.createPlaylist(playlist2);
-
-            System.out.println("Demo playlists created successfully");
-        } catch (Exception e) {
-            System.err.println("Error creating demo playlists: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 

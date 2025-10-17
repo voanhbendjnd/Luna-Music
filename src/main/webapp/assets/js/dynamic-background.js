@@ -58,7 +58,6 @@ class DynamicBackgroundManager {
       // Add smooth transition
       this.addTransitionEffect();
     } catch (error) {
-      console.warn("Error processing image for dynamic background:", error);
       this.applyDefaultBackground();
     } finally {
       this.isProcessing = false;

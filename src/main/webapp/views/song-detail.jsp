@@ -55,7 +55,8 @@
             </head>
             <%@include file="/views/components/header.jsp" %>
 
-                <body>
+                <body style="background-color: #121212;
+                ">
                     <div class="spotify-player" style="background-color: #121212;">
                         <!-- Top Section - Song Details with Red Gradient -->
                         <div class="song-detail-section">
@@ -221,7 +222,7 @@
                                 <!-- Main Controls -->
                                 <div class="main-controls">
                                     <button class="control-btn shuffle-btn">
-                                        <a id="nextBtn">
+                                        <a id="nextBtnShuffle">
                                             <i class="fas fa-random"></i>
                                         </a>
                                     </button>
@@ -236,7 +237,6 @@
                                     <button class="control-btn next-btn">
                                         <a id="nextBtn">
                                             <i class="fas fa-step-forward"></i>
-
                                         </a>
                                     </button>
                                     <button class="control-btn repeat-btn">
@@ -271,7 +271,6 @@
                              * Play related song
                              */
                             function playRelatedSong(songId) {
-                                console.log("Playing related song:", songId);
                                 // Navigate đến song-detail page
                                 window.location.href = currentContextPath + "/song-detail?id=" + songId;
                             }

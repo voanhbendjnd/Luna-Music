@@ -12,6 +12,7 @@ let currentSongId;
 let progressFill;
 let currentTimeSpan;
 let nextBtn;
+let nextBtnShuffle;
 
 // Initialize when DOM is loaded
 document.addEventListener("DOMContentLoaded", function () {
@@ -23,11 +24,10 @@ document.addEventListener("DOMContentLoaded", function () {
   currentTimeSpan = document.getElementById("currentTime");
   nextBtn = document.getElementById("nextBtn");
   prevBtn = document.getElementById("prevBtn");
+  nextBtnShuffle = document.getElementById("nextBtnShuffle");
   // Get current song ID from URL
   const urlParams = new URLSearchParams(window.location.search);
   currentSongId = urlParams.get("id");
-
-  console.log("Song Detail Page Loaded. Song ID:", currentSongId);
 
   // Initialize event listeners
   initializeEventListeners();
@@ -46,6 +46,9 @@ function initializeEventListeners() {
   // Previous button click
   if (prevBtn) {
     prevBtn.addEventListener("click", playPreviousSong);
+  }
+  if (nextBtnShuffle) {
+    nextBtnShuffle.addEventListener("click", playNextSong);
   }
   // Play button clicks
   if (mainPlayBtn) {
@@ -90,9 +93,7 @@ function initializeAudioPlayer() {
     audioPlayer.load();
 
     // Update play count when audio starts playing
-    audioPlayer.addEventListener("canplay", function () {
-      console.log("Audio ready to play");
-    });
+    audioPlayer.addEventListener("canplay", function () {});
   }
 }
 
@@ -122,7 +123,6 @@ function playAudio() {
       updatePlayCount();
     })
     .catch((error) => {
-      console.error("Error playing audio:", error);
       showPlayError();
     });
 }
@@ -139,10 +139,7 @@ function pauseAudio() {
 /**
  * Audio loaded event
  */
-function onAudioLoaded() {
-  console.log("Audio metadata loaded");
-  console.log("Duration:", audioPlayer.duration, "seconds");
-}
+function onAudioLoaded() {}
 
 /**
  * Audio play event
@@ -150,7 +147,6 @@ function onAudioLoaded() {
 function onAudioPlay() {
   isPlaying = true;
   updatePlayButtons();
-  console.log("Audio started playing");
 }
 
 /**
@@ -159,21 +155,17 @@ function onAudioPlay() {
 function onAudioPause() {
   isPlaying = false;
   updatePlayButtons();
-  console.log("Audio paused");
 }
 
 /**
  * Update play buttons state
  */
 function updatePlayButtons() {
-  console.log("Updating play buttons. isPlaying:", isPlaying);
-
   // Update main play button
   if (mainPlayBtn) {
     const icon = mainPlayBtn.querySelector("i");
     if (icon) {
       icon.className = isPlaying ? "fas fa-pause" : "fas fa-play";
-      console.log("Main button icon updated to:", icon.className);
     }
     mainPlayBtn.classList.toggle("active", isPlaying);
   }
@@ -183,7 +175,6 @@ function updatePlayButtons() {
     const icon = bottomPlayBtn.querySelector("i");
     if (icon) {
       icon.className = isPlaying ? "fas fa-pause" : "fas fa-play";
-      console.log("Bottom button icon updated to:", icon.className);
     }
   }
 }
@@ -206,7 +197,6 @@ function onAudioEnded() {
  * Audio error event
  */
 function onAudioError(error) {
-  console.error("Audio error:", error);
   showPlayError();
 }
 
@@ -226,14 +216,10 @@ function updatePlayCount() {
     .then((response) => response.json())
     .then((data) => {
       if (data.success) {
-        console.log("Play count updated successfully");
       } else {
-        console.error("Failed to update play count:", data.message);
       }
     })
-    .catch((error) => {
-      console.error("Error updating play count:", error);
-    });
+    .catch((error) => {});
 }
 
 /**
@@ -250,14 +236,11 @@ function playNextSong() {
     .then((response) => response.json())
     .then((data) => {
       if (data.success) {
-        console.log("Next song played successfully");
         window.location.href = data.url; // redirect to next song
       } else {
-        console.error("Failed to play next song:", data.message);
       }
     })
     .catch((error) => {
-      console.error("Error playing next song:", error);
       showPlayError();
     });
 }
@@ -275,14 +258,11 @@ function playPreviousSong() {
     .then((response) => response.json())
     .then((data) => {
       if (data.success) {
-        console.log("Previous song played successfully");
         window.location.href = data.url; // redirect to previous song
       } else {
-        console.error("Failed to play previous song:", data.message);
       }
     })
     .catch((error) => {
-      console.error("Error playing previous song:", error);
       showPlayError();
     });
 }
@@ -359,8 +339,6 @@ function onProgressBarClick(event) {
 
   const newTime = percentage * audioPlayer.duration;
   audioPlayer.currentTime = newTime;
-
-  console.log("Progress bar clicked:", percentage, "New time:", newTime);
 }
 
 /**

@@ -1,6 +1,7 @@
 package DALs;
 
 import domain.entity.Playlist;
+import domain.entity.PlaylistSong;
 import domain.entity.Song;
 import domain.entity.User;
 import utils.DatabaseConfig;
@@ -78,6 +79,46 @@ public class PlaylistDAO extends DatabaseConfig {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return playlists;
+    }
+
+    public List<Playlist> getPlaylistsByID(Long id) {
+        var sql = "SELECT p.*, u.name as user_name FROM Playlists p " +
+                "JOIN Users u ON p.user_id = u.id WHERE p.user_id = ? ORDER BY p.updatedAt DESC";
+        try {
+            var ps = connection.prepareStatement(sql);
+            ps.setLong(1, id);
+            var rs = ps.executeQuery();
+            var playlists = new ArrayList<Playlist>();
+            while (rs.next()) {
+                var playlist = mapResultSetToPlaylist(rs);
+                playlists.add(playlist);
+            }
+            return playlists;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    // Get all playlists for a user with songs loaded
+    public List<Playlist> getPlaylistsByUserIdWithSongs(Long userId) {
+        List<Playlist> playlists = getPlaylistsByUserId(userId);
+
+        // Load songs for each playlist
+        for (Playlist playlist : playlists) {
+            List<Song> songs = getSongsInPlaylist(playlist.getId());
+            // Create PlaylistSong objects for the playlist
+            List<PlaylistSong> playlistSongList = new ArrayList<>();
+            for (Song song : songs) {
+                PlaylistSong playlistSong = new PlaylistSong();
+                playlistSong.setSong(song);
+                playlistSong.setPlaylist(playlist);
+                playlistSongList.add(playlistSong);
+            }
+            playlist.setPlaylistSongs(playlistSongList);
+        }
+
         return playlists;
     }
 
@@ -241,13 +282,33 @@ public class PlaylistDAO extends DatabaseConfig {
         return playlists;
     }
 
-    // Get public playlists (for now, all playlists are considered public)
+    // Get public playlists (excluding current user's playlists)
     public List<Playlist> getPublicPlaylists() {
         List<Playlist> playlists = new ArrayList<>();
         String sql = "SELECT TOP 20 p.*, u.name as user_name FROM Playlists p " +
                 "JOIN Users u ON p.user_id = u.id ORDER BY p.updatedAt DESC";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    playlists.add(mapResultSetToPlaylist(rs));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return playlists;
+    }
+
+    // Get public playlists excluding specific user
+    public List<Playlist> getPublicPlaylistsExcludingUser(Long excludeUserId) {
+        List<Playlist> playlists = new ArrayList<>();
+        String sql = "SELECT TOP 20 p.*, u.name as user_name FROM Playlists p " +
+                "JOIN Users u ON p.user_id = u.id " +
+                "WHERE p.user_id != ? ORDER BY p.updatedAt DESC";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setLong(1, excludeUserId);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     playlists.add(mapResultSetToPlaylist(rs));

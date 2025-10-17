@@ -4,13 +4,16 @@ package controllers;
 import java.io.IOException;
 
 import DALs.UserDAO;
+import DALs.PlaylistDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import utils.HashPassword;
 
 import java.util.Base64;
+import java.util.ArrayList;
 
 /**
  *
@@ -37,7 +40,18 @@ public class LoginController extends HttpServlet {
             byte[] saveSalt = Base64.getDecoder().decode(user.getSalt());
             boolean checkLoginSuccess = HashPassword.isExpectedPassword(password.toCharArray(), saveSalt, saveHash);
             if (checkLoginSuccess) {
-                request.getSession().setAttribute("user", user);
+                HttpSession session = request.getSession();
+                session.setMaxInactiveInterval(30 * 60);
+                session.setAttribute("lastAccessedTime", System.currentTimeMillis());
+                session.setAttribute("lastRequestTime", System.currentTimeMillis());
+                session.setAttribute("user", user);
+                var playlistDAO = new PlaylistDAO();
+                Long userID = user.getId();
+                if (userID != null) {
+                    var playlists = playlistDAO
+                            .getPlaylistsByUserId(userID);
+                    session.setAttribute("userPlaylists", playlists);
+                }
                 response.sendRedirect(request.getContextPath() + "/");
             } else {
                 request.setAttribute("error", "Username or password incorrect!");

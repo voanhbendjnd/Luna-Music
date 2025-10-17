@@ -193,12 +193,11 @@ public class GenreDAO extends DatabaseConfig {
      */
     public List<Genre> getMostPopular(int limit) {
         List<Genre> genres = new ArrayList<>();
-        String sql = "SELECT g.id, g.name, g.description, COUNT(s.id) as song_count " +
+        String sql = "SELECT TOP ? g.id, g.name, g.description, COUNT(s.id) as song_count " +
                 "FROM Genres g " +
                 "LEFT JOIN Songs s ON g.id = s.genre_id " +
                 "GROUP BY g.id, g.name, g.description " +
-                "ORDER BY song_count DESC, g.name ASC " +
-                "LIMIT ?";
+                "ORDER BY song_count DESC, g.name ASC";
 
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
