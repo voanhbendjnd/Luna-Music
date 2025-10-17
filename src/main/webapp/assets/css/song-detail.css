@@ -12,16 +12,16 @@ body {
     overflow-x: hidden;
     overflow-y: auto;
     /* Ensure vertical scrolling is enabled */
-    padding-bottom: 120px;
-    /* Ensure body has bottom padding for player bar */
+    padding-bottom: 100px;
+    /* Reduced padding for player bar */
 }
 
 .spotify-player {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    padding-bottom: 150px;
-    /* Additional padding for player bar */
+    padding-bottom: 50px;
+    /* Reduced padding for player bar */
 }
 
 /* Top Section - Song Details with Dynamic Gradient */
@@ -218,12 +218,12 @@ body {
     background-color: #121212;
     padding: 0 32px 32px;
     flex: 1;
-    padding-bottom: 200px;
-    /* Increased padding to ensure full visibility */
+    padding-bottom: 10px;
+    /* Reduced padding for better spacing */
     min-height: 400px;
     /* Ensure minimum height for content */
-    margin-bottom: 100px;
-    /* Additional margin for safety */
+    margin-bottom: 10px;
+    /* Reduced margin for better spacing */
 }
 
 .recommended-container {
@@ -420,10 +420,10 @@ body {
     .controls-section,
     .recommended-section {
         padding: 24px 16px;
-        padding-bottom: 200px;
-        /* Increased bottom spacing on mobile */
-        margin-bottom: 100px;
-        /* Additional margin for mobile */
+        padding-bottom: 60px;
+        /* Reduced bottom spacing on mobile */
+        margin-bottom: 40px;
+        /* Reduced margin for mobile */
     }
 
     .player-content {

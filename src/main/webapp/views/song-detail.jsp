@@ -56,7 +56,7 @@
             <%@include file="/views/components/header.jsp" %>
 
                 <body>
-                    <div class="spotify-player">
+                    <div class="spotify-player" style="background-color: #121212;">
                         <!-- Top Section - Song Details with Red Gradient -->
                         <div class="song-detail-section">
                             <div class="song-detail-content">
@@ -221,7 +221,9 @@
                                 <!-- Main Controls -->
                                 <div class="main-controls">
                                     <button class="control-btn shuffle-btn">
-                                        <i class="fas fa-random"></i>
+                                        <a id="nextBtn">
+                                            <i class="fas fa-random"></i>
+                                        </a>
                                     </button>
                                     <button class="control-btn prev-btn">
                                         <a id="prevBtn">
