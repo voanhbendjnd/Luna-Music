@@ -5,6 +5,8 @@ import domain.entity.Album;
 import domain.entity.Genre;
 import domain.entity.SongArtist;
 import domain.entity.Artist;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import utils.DatabaseConfig;
 
 import java.sql.*;
@@ -61,9 +63,57 @@ public class SongDAO extends DatabaseConfig {
             System.out.println(sql);
         } catch (SQLException e) {
             System.out.println("Error finding songs: " + e.getMessage());
-            e.printStackTrace();
+            return null;
         }
         return songs;
+    }
+
+    public List<Song> getPopularSongs() {
+        var sql = "select * from Songs order by play_count desc";
+        try {
+            var ps = connection.prepareStatement(sql);
+            var rs = ps.executeQuery();
+            var songs = new ArrayList<Song>();
+            while (rs.next()) {
+                songs.add(mapRowToSong(rs));
+            }
+            System.out.println(sql);
+            return songs;
+        } catch (SQLException ex) {
+            return null;
+        }
+    }
+    public Long preSong(Long id){
+        var sql = "select id from Songs where id = ?";
+        System.out.println(sql);
+        try{
+            var ps = connection.prepareStatement(sql);
+            ps.setLong(1, id);
+            var rs = ps.executeQuery();
+            if(rs.next()){
+                return rs.getLong("id");
+            }
+        }
+        catch(SQLException ex){
+            return null;
+        }
+        return null;
+    }
+
+    public Long nextRandomSong(Long id) {
+        var sql = "select top 1 id from Songs where id <> ? order by NEWID()";
+        try {
+            var ps = connection.prepareStatement(sql);
+            ps.setLong(1, id);
+            var rs = ps.executeQuery();
+            if (rs.next()) {
+                System.out.println(sql);
+                return rs.getLong("id");
+            }
+        } catch (SQLException ex) {
+            return null;
+        }
+        return null;
     }
 
     /**

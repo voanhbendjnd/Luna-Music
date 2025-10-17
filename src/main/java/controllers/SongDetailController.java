@@ -100,7 +100,44 @@ public class SongDetailController extends HttpServlet {
                 } else {
                     response.getWriter().write("{\"success\": false, \"message\": \"Invalid song ID\"}");
                 }
-            } else {
+            } else if ("next".equals(action)) {
+                String songIdParam = request.getParameter("songId");
+                if (songIdParam != null && !songIdParam.trim().isEmpty()) {
+                    Long songId = Long.parseLong(songIdParam);
+                    request.getSession().setAttribute("preSong", songIdParam);
+                    SongDAO songDAO = new SongDAO();
+                    Long nextSongId = songDAO.nextRandomSong(songId);
+
+                    if (nextSongId != null && nextSongId != 0) {
+                        String nextUrl = request.getContextPath() + "/song-detail?id=" + nextSongId;
+                        response.getWriter().write("{\"success\": true, \"url\": \"" + nextUrl + "\"}");
+                    } else {
+                        response.getWriter().write("{\"success\": false, \"message\": \"No next song found\"}");
+                    }
+                } else {
+                    response.getWriter().write("{\"success\": false, \"message\": \"Invalid song ID\"}");
+                }
+            }
+            else if("prev".equals(action)){
+                String songIdParam =  request.getParameter("songId");
+                String songId = request.getSession().getAttribute("preSong").toString();
+                if(songIdParam.equals(songId)){
+                    var songDAO = new SongDAO();
+                    Long nextSongId = songDAO.nextRandomSong(Long.parseLong(songIdParam));
+                    String nextUrl = request.getContextPath() + "/song-detail?id=" + nextSongId;
+                    response.getWriter().write("{\"success\": true, \"url\": \"" + nextUrl + "\"}");
+                }
+                else{
+                    var songDAO = new SongDAO();
+                    Long preSong = songDAO.preSong(Long.parseLong(songId));
+                    String nextUrl = request.getContextPath() + "/song-detail?id=" + preSong;
+                    response.getWriter().write("{\"success\": true, \"url\": \"" + nextUrl + "\"}");
+                }
+
+
+            }
+
+            else {
                 response.getWriter().write("{\"success\": false, \"message\": \"Invalid action\"}");
             }
         } catch (NumberFormatException e) {

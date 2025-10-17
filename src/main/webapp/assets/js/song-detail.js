@@ -11,6 +11,7 @@ let isPlaying = false;
 let currentSongId;
 let progressFill;
 let currentTimeSpan;
+let nextBtn;
 
 // Initialize when DOM is loaded
 document.addEventListener("DOMContentLoaded", function () {
@@ -20,7 +21,8 @@ document.addEventListener("DOMContentLoaded", function () {
   bottomPlayBtn = document.getElementById("bottomPlayBtn");
   progressFill = document.getElementById("progressFill");
   currentTimeSpan = document.getElementById("currentTime");
-
+  nextBtn = document.getElementById("nextBtn");
+  prevBtn = document.getElementById("prevBtn");
   // Get current song ID from URL
   const urlParams = new URLSearchParams(window.location.search);
   currentSongId = urlParams.get("id");
@@ -41,6 +43,10 @@ document.addEventListener("DOMContentLoaded", function () {
  * Initialize event listeners
  */
 function initializeEventListeners() {
+  // Previous button click
+  if (prevBtn) {
+    prevBtn.addEventListener("click", playPreviousSong);
+  }
   // Play button clicks
   if (mainPlayBtn) {
     mainPlayBtn.addEventListener("click", togglePlay);
@@ -48,6 +54,11 @@ function initializeEventListeners() {
 
   if (bottomPlayBtn) {
     bottomPlayBtn.addEventListener("click", togglePlay);
+  }
+
+  // Next button click
+  if (nextBtn) {
+    nextBtn.addEventListener("click", playNextSong);
   }
 
   // Progress bar click
@@ -200,7 +211,7 @@ function onAudioError(error) {
 }
 
 /**
- * Update play count in database
+ * Update play count in database call controller SongDetailController.java
  */
 function updatePlayCount() {
   if (!currentSongId) return;
@@ -225,6 +236,56 @@ function updatePlayCount() {
     });
 }
 
+/**
+ * Play next song
+ */
+function playNextSong() {
+  fetch(window.location.pathname, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: "action=next&songId=" + currentSongId,
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        console.log("Next song played successfully");
+        window.location.href = data.url; // redirect to next song
+      } else {
+        console.error("Failed to play next song:", data.message);
+      }
+    })
+    .catch((error) => {
+      console.error("Error playing next song:", error);
+      showPlayError();
+    });
+}
+/**
+ * Play previous song
+ */
+function playPreviousSong() {
+  fetch(window.location.pathname, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: "action=prev&songId=" + currentSongId,
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        console.log("Previous song played successfully");
+        window.location.href = data.url; // redirect to previous song
+      } else {
+        console.error("Failed to play previous song:", data.message);
+      }
+    })
+    .catch((error) => {
+      console.error("Error playing previous song:", error);
+      showPlayError();
+    });
+}
 /**
  * Show play error notification
  */

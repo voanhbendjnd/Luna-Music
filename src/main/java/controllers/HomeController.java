@@ -1,6 +1,8 @@
 package controllers;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import DALs.SongDAO;
@@ -20,6 +22,10 @@ import jakarta.servlet.http.HttpServletResponse;
  * @author Vo Anh Ben - CE190709
  */
 public class HomeController extends HttpServlet {
+
+    public List<Song> getPopularSongs(List<Song> songs){
+       return songs.stream().sorted(Comparator.comparing(Song::getPlayCount).reversed()).toList();
+    }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -33,6 +39,12 @@ public class HomeController extends HttpServlet {
                 songs = songs.subList(0, 20);
             }
             request.setAttribute("songs", songs);
+            var popularSongs = this.getPopularSongs(songs);
+            if(popularSongs != null && popularSongs.size() > 10){
+                popularSongs =popularSongs.subList(0,10);
+            }
+            request.setAttribute("popularSong", popularSongs);
+
 
             // Get featured artists (limit to 10)
             var artistDAO = new ArtistDAO();

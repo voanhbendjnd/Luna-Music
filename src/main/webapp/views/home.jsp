@@ -302,9 +302,9 @@
                                         </button>
                                     </div>
                                     <c:choose>
-                                        <c:when test="${not empty requestScope.songs}">
+                                        <c:when test="${not empty requestScope.popularSong}">
                                             <div class="horizontal-scroll" id="popular-songs-container">
-                                                <c:forEach var="song" items="${requestScope.songs}" varStatus="status">
+                                                <c:forEach var="song" items="${requestScope.popularSong}" varStatus="status">
                                                     <div class="album-card" onclick="playSong(${song.id})"
                                                         data-song-id="${song.id}" <c:if test="${status.index >= 10}">
                                                         style="display: none;"</c:if>>

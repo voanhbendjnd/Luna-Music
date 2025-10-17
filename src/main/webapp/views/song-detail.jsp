@@ -103,6 +103,7 @@
                             <div class="controls-container">
                                 <!-- Playback Controls -->
                                 <div class="playback-controls">
+                                    <!-- mainPlayBtn -->
                                     <button class="control-btn play-btn" id="mainPlayBtn">
                                         <i class="fas fa-play"></i>
                                     </button>
@@ -194,29 +195,9 @@
                                         </c:when>
                                         <c:otherwise>
                                             <div class="recommended-song">
-                                                <img src="https://via.placeholder.com/40/FF6B6B/FFFFFF?text=GOT"
-                                                    alt="Step Back" class="recommended-cover">
-                                                <div class="recommended-info">
-                                                    <div class="recommended-title">Step Back</div>
-                                                    <div class="recommended-artist">GOT the beat</div>
-                                                    <div class="recommended-stats">
-                                                        <span class="play-count">164,800,398</span>
-                                                        <span class="duration">3:48</span>
-                                                    </div>
-                                                </div>
+                                                <div>No song available</div>
                                             </div>
-                                            <div class="recommended-song">
-                                                <img src="https://via.placeholder.com/40/4ECDC4/FFFFFF?text=AESPA"
-                                                    alt="Savage" class="recommended-cover">
-                                                <div class="recommended-info">
-                                                    <div class="recommended-title">Savage</div>
-                                                    <div class="recommended-artist">Aespa</div>
-                                                    <div class="recommended-stats">
-                                                        <span class="play-count">291,093,892</span>
-                                                        <span class="duration">3:58</span>
-                                                    </div>
-                                                </div>
-                                            </div>
+
                                         </c:otherwise>
                                     </c:choose>
                                 </div>
@@ -243,13 +224,18 @@
                                         <i class="fas fa-random"></i>
                                     </button>
                                     <button class="control-btn prev-btn">
-                                        <i class="fas fa-step-backward"></i>
+                                        <a id="prevBtn">
+                                            <i class="fas fa-step-backward"></i>
+                                        </a>
                                     </button>
                                     <button class="control-btn main-play-btn" id="bottomPlayBtn">
                                         <i class="fas fa-play"></i>
                                     </button>
                                     <button class="control-btn next-btn">
-                                        <i class="fas fa-step-forward"></i>
+                                        <a id="nextBtn">
+                                            <i class="fas fa-step-forward"></i>
+
+                                        </a>
                                     </button>
                                     <button class="control-btn repeat-btn">
                                         <a href="${pageContext.request.contextPath}/song-detail?id=${song.id}"
