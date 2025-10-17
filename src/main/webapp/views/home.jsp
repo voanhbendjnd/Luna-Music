@@ -49,6 +49,41 @@
                         border-color: #6c757d !important;
                         box-shadow: none !important;
                     }
+
+                    /* Force dark background */
+                    body,
+                    html {
+                        background-color: #030303 !important;
+                        color: white !important;
+                    }
+
+                    .container-fluid,
+                    .row {
+                        background-color: #030303 !important;
+                    }
+
+                    .bg-dark {
+                        background-color: #030303 !important;
+                    }
+
+                    /* Override Bootstrap defaults */
+                    .container-fluid {
+                        background-color: #030303 !important;
+                    }
+
+                    .row {
+                        background-color: #030303 !important;
+                    }
+
+                    .col-md-3,
+                    .col-lg-2 {
+                        background-color: #030303 !important;
+                    }
+
+                    .col-md-9,
+                    .col-lg-10 {
+                        background-color: #030303 !important;
+                    }
                 </style>
             </head>
 
@@ -90,11 +125,13 @@
 
                                     <div class="d-flex gap-2">
                                         <div class="input-group input-group-sm">
-                                            <span class="input-group-text bg-secondary border-secondary">
+                                            <span class="input-group-text bg-secondary border-secondary"
+                                                style="background-color: #030303 !important; border-color: #6c757d !important; box-shadow: none !important; outline: none !important;">
                                                 <i class="fas fa-search text-muted"></i>
                                             </span>
                                             <input type="text"
                                                 class="form-control bg-secondary border-secondary text-white"
+                                                style="background-color: #030303 !important; border-color: #6c757d !important; box-shadow: none !important; outline: none !important;"
                                                 placeholder="Search in Your Library">
                                         </div>
                                         <button class="btn btn-outline-secondary btn-sm" id="sortBtn">
@@ -127,80 +164,65 @@
                         <!-- Main Content -->
                         <div class="col-md-9 col-lg-10 bg-dark">
                             <div class="p-4">
-                                <!-- Artists Section -->
-                                <div class="mb-5">
-                                    <h2 class="h3 mb-4 text-white fw-bold">Artists</h2>
-                                    <div class="d-flex gap-3 overflow-auto pb-2">
-                                        <c:choose>
-                                            <c:when test="${not empty requestScope.artists}">
-                                                <c:forEach var="artist" items="${requestScope.artists}">
-                                                    <div class="text-center" style="min-width: 150px;"
-                                                        onclick="viewArtist(${artist.id})">
-                                                        <div class="position-relative mb-2">
-                                                            <img src="${pageContext.request.contextPath}${artist.imagePath}"
-                                                                alt="${artist.name}"
-                                                                class="rounded-circle object-fit-cover"
-                                                                style="width: 120px; height: 120px;"
-                                                                onerror="this.src='${pageContext.request.contextPath}/assets/img/default-artist.png'">
+                                <div class="section">
+                                    <h2 class="section-title">New Songs</h2>
+                                    <c:choose>
+                                        <c:when test="${not empty requestScope.songs}">
+                                            <div class="horizontal-scroll">
+                                                <c:forEach var="song" items="${requestScope.songs}" varStatus="status">
+                                                    <c:if test="${status.index < 10}">
+                                                        <div class="album-card" onclick="playSong(${song.id})"
+                                                            data-song-id="${song.id}">
+                                                            <img src="${pageContext.request.contextPath}${song.coverImage}"
+                                                                alt="${song.title}" class="album-cover"
+                                                                onerror="this.src='${pageContext.request.contextPath}/assets/img/default-song.png'">
+                                                            <div class="album-title">${song.title}</div>
                                                         </div>
-                                                        <h6 class="text-white mb-1 fw-semibold">${artist.name}</h6>
-                                                        <small class="text-muted">Artist</small>
-                                                    </div>
+                                                    </c:if>
                                                 </c:forEach>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <!-- Demo artists for development -->
-                                                <div class="text-center" style="min-width: 150px;">
-                                                    <div class="position-relative mb-2">
-                                                        <img src="https://via.placeholder.com/150/FF6B6B/FFFFFF?text=IVE"
-                                                            alt="IVE" class="rounded-circle object-fit-cover"
-                                                            style="width: 120px; height: 120px;">
-                                                    </div>
-                                                    <h6 class="text-white mb-1 fw-semibold">IVE</h6>
-                                                    <small class="text-muted">Artist</small>
-                                                </div>
-                                                <div class="text-center" style="min-width: 150px;">
-                                                    <div class="position-relative mb-2">
-                                                        <img src="https://via.placeholder.com/150/4ECDC4/FFFFFF?text=BABYMONSTER"
-                                                            alt="BABYMONSTER" class="rounded-circle object-fit-cover"
-                                                            style="width: 120px; height: 120px;">
-                                                    </div>
-                                                    <h6 class="text-white mb-1 fw-semibold">BABYMONSTER</h6>
-                                                    <small class="text-muted">Artist</small>
-                                                </div>
-                                                <div class="text-center" style="min-width: 150px;">
-                                                    <div class="position-relative mb-2">
-                                                        <img src="https://via.placeholder.com/150/45B7D1/FFFFFF?text=JENNIE"
-                                                            alt="JENNIE" class="rounded-circle object-fit-cover"
-                                                            style="width: 120px; height: 120px;">
-                                                    </div>
-                                                    <h6 class="text-white mb-1 fw-semibold">JENNIE</h6>
-                                                    <small class="text-muted">Artist</small>
-                                                </div>
-                                                <div class="text-center" style="min-width: 150px;">
-                                                    <div class="position-relative mb-2">
-                                                        <img src="https://via.placeholder.com/150/F9CA24/FFFFFF?text=KATSEYE"
-                                                            alt="KATSEYE" class="rounded-circle object-fit-cover"
-                                                            style="width: 120px; height: 120px;">
-                                                    </div>
-                                                    <h6 class="text-white mb-1 fw-semibold">KATSEYE</h6>
-                                                    <small class="text-muted">Artist</small>
-                                                </div>
-                                                <div class="text-center" style="min-width: 150px;">
-                                                    <div class="position-relative mb-2">
-                                                        <img src="https://via.placeholder.com/150/6C5CE7/FFFFFF?text=LE+SSERAFIM"
-                                                            alt="LE SSERAFIM" class="rounded-circle object-fit-cover"
-                                                            style="width: 120px; height: 120px;">
-                                                    </div>
-                                                    <h6 class="text-white mb-1 fw-semibold">LE SSERAFIM</h6>
-                                                    <small class="text-muted">Artist</small>
-                                                </div>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </div>
+                                            </div>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <div class="empty-state">
+                                                <i class="fas fa-music"></i>
+                                                <p>No songs available at the moment.</p>
+                                            </div>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </div>
-
-
+                                <!-- Artists Section -->
+                                <div class="section">
+                                    <h2 class="section-title">Artists</h2>
+                                    <c:choose>
+                                        <c:when test="${not empty requestScope.artists}">
+                                            <div class="horizontal-scroll">
+                                                <c:forEach var="artist" items="${requestScope.artists}"
+                                                    varStatus="status">
+                                                    <c:if test="${status.index < 10}">
+                                                        <div class="artist-card" onclick="viewArtist(${artist.id})"
+                                                            data-artist-id="${artist.id}">
+                                                            <div class="position-relative mb-2">
+                                                                <img src="${pageContext.request.contextPath}${artist.imagePath}"
+                                                                    alt="${artist.name}"
+                                                                    class="rounded-circle object-fit-cover"
+                                                                    style="width: 120px; height: 120px;"
+                                                                    onerror="this.src='${pageContext.request.contextPath}/assets/img/default-artist.png'">
+                                                            </div>
+                                                            <div class="artist-name">${artist.name}</div>
+                                                            <div class="artist-label">Artist</div>
+                                                        </div>
+                                                    </c:if>
+                                                </c:forEach>
+                                            </div>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <div class="empty-state">
+                                                <i class="fas fa-music"></i>
+                                                <p>No songs available at the moment.</p>
+                                            </div>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </div>
                                 <!-- Albums Section -->
                                 <div class="mb-5">
                                     <h2 class="h3 mb-4 text-white fw-bold">Albums</h2>

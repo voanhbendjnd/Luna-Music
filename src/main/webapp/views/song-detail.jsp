@@ -13,6 +13,7 @@
                 <link href="${pageContext.request.contextPath}/assets/css/bootstrap.min.css" rel="stylesheet">
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
                 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/song-detail.css">
+                <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/if-footer-song-detail.css">
 
                 <style>
                     /* Dynamic background styles */
@@ -213,7 +214,7 @@
                         </div>
 
                         <!-- Bottom Player Bar -->
-                        <div class="bottom-player-bar">
+                        <div class="bottom-player-bar" style="background-color: #000000;">
                             <div class="player-content">
                                 <!-- Progress Bar -->
                                 <div class="progress-container">
@@ -264,28 +265,28 @@
                         <source src="${pageContext.request.contextPath}${song.filePath}" type="audio/mp3">
                         Your browser does not support the audio element.
                     </audio>
+                    <%@include file="/views/components/footer.jsp" %>
+                        <!-- Scripts -->
+                        <script src="${pageContext.request.contextPath}/assets/js/bootstrap.bundle.min.js"></script>
+                        <script src="${pageContext.request.contextPath}/assets/js/color-extractor.js"></script>
+                        <script src="${pageContext.request.contextPath}/assets/js/dynamic-background.js"></script>
+                        <script src="${pageContext.request.contextPath}/assets/js/song-detail.js"></script>
 
-                    <!-- Scripts -->
-                    <script src="${pageContext.request.contextPath}/assets/js/bootstrap.bundle.min.js"></script>
-                    <script src="${pageContext.request.contextPath}/assets/js/color-extractor.js"></script>
-                    <script src="${pageContext.request.contextPath}/assets/js/dynamic-background.js"></script>
-                    <script src="${pageContext.request.contextPath}/assets/js/song-detail.js"></script>
+                        <script>
+                            // Context path for navigation
+                            const currentContextPath = "${pageContext.request.contextPath}";
 
-                    <script>
-                        // Context path for navigation
-                        const currentContextPath = "${pageContext.request.contextPath}";
+                            /**
+                             * Play related song
+                             */
+                            function playRelatedSong(songId) {
+                                console.log("Playing related song:", songId);
+                                window.location.href = currentContextPath + "/song-detail?id=" + songId;
+                            }
 
-                        /**
-                         * Play related song
-                         */
-                        function playRelatedSong(songId) {
-                            console.log("Playing related song:", songId);
-                            window.location.href = currentContextPath + "/song-detail?id=" + songId;
-                        }
-
-                        // Export function globally
-                        window.playRelatedSong = playRelatedSong;
-                    </script>
+                            // Export function globally
+                            window.playRelatedSong = playRelatedSong;
+                        </script>
                 </body>
 
 </html>
