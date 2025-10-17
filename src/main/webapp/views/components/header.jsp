@@ -1,73 +1,90 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/header.css">
+<%@ page contentType="text/html;charset=UTF-8" %>
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+        <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+            <header class="navbar navbar-expand-lg header-navbar sticky-top">
+                <div class="container-fluid px-4 px-lg-5">
+                    <!-- Left Section: Logo -->
+                    <a class="navbar-brand header-logo me-4" href="<%= request.getContextPath()%>/">
+                        <img src="<%= request.getContextPath() %>/assets/img/LogoFinal.png" alt="Luna Music Logo">
+                    </a>
 
-<header class="navbar navbar-expand-lg header-navbar sticky-top">
-    <div class="container-fluid px-4 px-lg-5">
-        <!-- Left Section: Logo -->
-        <a class="navbar-brand header-logo me-4" href="<%= request.getContextPath()%>/">
-            <img src="<%= request.getContextPath() %>/assets/img/LogoFinal.png" alt="Luna Music Logo">
-        </a>
+                    <!-- Middle Section: Home Button + Search Bar -->
+                    <div class="search-container d-none d-lg-flex align-items-center mx-4">
+                        <!-- Home Button -->
+                        <a href="<%= request.getContextPath()%>/" class="home-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                                <path
+                                    d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5" />
+                            </svg>
+                        </a>
 
-        <!-- Middle Section: Home Button + Search Bar -->
-        <div class="search-container d-none d-lg-flex align-items-center mx-4">
-            <!-- Home Button -->
-            <a href="<%= request.getContextPath()%>/" class="home-button">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-                    <path
-                        d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5" />
-                </svg>
-            </a>
+                        <!-- Search Bar -->
+                        <div class="search-input-group">
+                            <span class="input-group-text">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="search-icon"
+                                    viewBox="0 0 16 16">
+                                    <path
+                                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                                </svg>
+                            </span>
+                            <input type="text" class="form-control" placeholder="What do you want to play?">
+                        </div>
+                    </div>
 
-            <!-- Search Bar -->
-            <div class="search-input-group">
-                <span class="input-group-text">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="search-icon" viewBox="0 0 16 16">
-                        <path
-                            d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
-                    </svg>
-                </span>
-                <input type="text" class="form-control" placeholder="What do you want to play?">
-            </div>
-        </div>
+                    <!-- Right Section: Navigation Links and Buttons -->
+                    <div class="d-flex align-items-center">
+                        <!-- Mobile Menu Button -->
+                        <button class="mobile-menu-button d-lg-none me-2" data-bs-toggle="modal"
+                            data-bs-target="#authModal">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+                                <path d="M14 14s-1-1.5-6-1.5S2 14 2 14s1-4 6-4 6 4 6 4" />
+                            </svg>
+                        </button>
 
-        <!-- Right Section: Navigation Links and Buttons -->
-        <div class="d-flex align-items-center">
-            <!-- Mobile Menu Button -->
-            <button class="mobile-menu-button d-lg-none me-2" data-bs-toggle="modal" data-bs-target="#authModal">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
-                    <path d="M14 14s-1-1.5-6-1.5S2 14 2 14s1-4 6-4 6 4 6 4" />
-                </svg>
-            </button>
+                        <!-- Desktop Navigation Links -->
+                        <div class="header-nav-links d-none d-lg-flex align-items-center">
+                            <c:if test="${empty user}">
+                                <a href="<%= request.getContextPath()%>/register" class="signup-link">Sign up</a>
+                                <a href="<%= request.getContextPath() %>/login" class="login-button">Log in</a>
+                            </c:if>
+                            <c:if test="${not empty user}">
+                                <span class="welcome-text me-3">Welcome, ${user.name}!</span>
+                                <a href="<%= request.getContextPath()%>/logout" class="login-button">Logout</a>
+                            </c:if>
+                        </div>
+                    </div>
+                </div>
+            </header>
 
-            <!-- Desktop Navigation Links -->
-            <div class="header-nav-links d-none d-lg-flex align-items-center">
-                <a href="<%= request.getContextPath()%>/register" class="signup-link">Sign up</a>
-                <a href="<%= request.getContextPath() %>/login" class="login-button">Log in</a>
-            </div>
-        </div>
-    </div>
-</header>
-
-<!-- Mobile Authentication Modal -->
-<div class="modal fade auth-modal" id="authModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Account</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                        class="bi bi-x-lg" viewBox="0 0 16 16">
-                        <path
-                            d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
-                    </svg>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="d-grid gap-2">
-                    <a href="<%= request.getContextPath()%>/register" class="btn btn-outline-light">Sign up</a>
-                    <a href="<%= request.getContextPath() %>/login" class="btn btn-light">Login</a>
+            <!-- Mobile Authentication Modal -->
+            <div class="modal fade auth-modal" id="authModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Account</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-x-lg" viewBox="0 0 16 16">
+                                    <path
+                                        d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="d-grid gap-2">
+                                <c:if test="${empty user}">
+                                    <a href="<%= request.getContextPath()%>/register" class="btn btn-outline-light">Sign
+                                        up</a>
+                                    <a href="<%= request.getContextPath() %>/login" class="btn btn-light">Login</a>
+                                </c:if>
+                                <c:if test="${not empty user}">
+                                    <a href="<%= request.getContextPath()%>/logout"
+                                        class="btn btn-outline-light">Logout</a>
+                                </c:if>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>

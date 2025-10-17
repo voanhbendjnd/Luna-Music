@@ -9,8 +9,11 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import utils.HashPassword;
+
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 /**
  *
@@ -30,20 +33,23 @@ public class LoginController extends HttpServlet {
         var password = request.getParameter("password");
         String username = request.getParameter("email");
         // authentication
-        var user = new UserDAO();
-        var strUsername = user.login(username, password);
-        if (!strUsername.equals("")) {
-                String encodedUsername = URLEncoder.encode(strUsername, StandardCharsets.UTF_8.toString());
-
-            Cookie cookie = new Cookie("name", encodedUsername);
-            cookie.setMaxAge(60 * 60); // 1 hour
-            response.addCookie(cookie);
-            response.sendRedirect(request.getContextPath() + "/views/layouts/defaultLayout.jsp");
+        var userDAO = new UserDAO();
+        var user = userDAO.LoginWithEmail(username);
+        if (user != null) {
+            byte[] saveHash = Base64.getDecoder().decode(user.getPassword());
+            byte[] saveSalt = Base64.getDecoder().decode(user.getSalt());
+            boolean checkLoginSuccess = HashPassword.isExpectedPassword(password.toCharArray(), saveSalt, saveHash);
+            if (checkLoginSuccess) {
+                request.getSession().setAttribute("user", user);
+                response.sendRedirect(request.getContextPath() + "/");
+            } else {
+                request.setAttribute("error", "Username or password incorrect!");
+                request.getRequestDispatcher("/views/login.jsp").forward(request, response);
+            }
         } else {
-            request.setAttribute("loginError", "Username or password incorrect!.");
-            request.getRequestDispatcher("/views/layouts/defaultLayout.jsp").forward(request, response);
+            request.setAttribute("error", "User not found!");
+            request.getRequestDispatcher("/views/login.jsp").forward(request, response);
         }
-
     }
 
 }

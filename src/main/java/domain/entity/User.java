@@ -21,12 +21,13 @@ public class User {
     private Role role;
     private Instant createdAt, updatedAt;
     private String updatedBy, createdBy;
+    private String salt;
 
     public User() {
     }
 
     public User(Long id, String name, String email, String password, String avatar, boolean active, GenderEnum gender,
-            Role role, Instant createdAt, Instant updatedAt, String updatedBy, String createdBy) {
+            Role role, Instant createdAt, Instant updatedAt, String updatedBy, String createdBy, String salt) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -35,10 +36,19 @@ public class User {
         this.active = active;
         this.gender = gender;
         this.role = role;
+        this.salt = salt;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.updatedBy = updatedBy;
         this.createdBy = createdBy;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 
     public Long getId() {

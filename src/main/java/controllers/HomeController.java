@@ -15,6 +15,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 /**
  * Home Controller for Luna Music
@@ -23,15 +24,22 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 public class HomeController extends HttpServlet {
 
-    public List<Song> getPopularSongs(List<Song> songs){
-       return songs.stream().sorted(Comparator.comparing(Song::getPlayCount).reversed()).toList();
+    public List<Song> getPopularSongs(List<Song> songs) {
+        return songs.stream().sorted(Comparator.comparing(Song::getPlayCount).reversed()).toList();
     }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
         try {
+            // Get user from session and pass to request
+            HttpSession session = request.getSession(false);
+            if (session != null && session.getAttribute("user") != null) {
+                request.setAttribute("user", session.getAttribute("user"));
+            }
+
             // Get popular songs (limit to 20)
             var songDAO = new SongDAO();
             List<Song> songs = songDAO.findAll(null);
@@ -40,11 +48,10 @@ public class HomeController extends HttpServlet {
             }
             request.setAttribute("songs", songs);
             var popularSongs = this.getPopularSongs(songs);
-            if(popularSongs != null && popularSongs.size() > 10){
-                popularSongs =popularSongs.subList(0,10);
+            if (popularSongs != null && popularSongs.size() > 10) {
+                popularSongs = popularSongs.subList(0, 10);
             }
             request.setAttribute("popularSong", popularSongs);
-
 
             // Get featured artists (limit to 10)
             var artistDAO = new ArtistDAO();

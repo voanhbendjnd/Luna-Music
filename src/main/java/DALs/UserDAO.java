@@ -19,6 +19,28 @@ public class UserDAO extends DatabaseConfig {
         super();
     }
 
+    public boolean Register(String name, String gender, String email, String password, String salt) {
+        var sql = "insert into Users (name, gender, email, password, salt, role_id) values (?,?,?,?,?,?)";
+        try {
+            var ps = connection.prepareStatement(sql);
+            ps.setString(1, name);
+            ps.setString(2, gender);
+            ps.setString(3, email);
+            ps.setString(4, password);
+            ps.setString(5, salt);
+            var roleDAO = new RoleDAO();
+            var role = roleDAO.findByName("MEMBER");
+            if (role != null) {
+                ps.setLong(6, role.getId());
+            } else {
+                ps.setNull(6, java.sql.Types.INTEGER);
+            }
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            return false;
+        }
+    }
+
     public String login(String userName, String password) {
         String query = "Select * from Users where email = ? and password = ?;";
         try {
@@ -91,6 +113,32 @@ public class UserDAO extends DatabaseConfig {
         } catch (SQLException e) {
             System.out.println("Error finding user by id: " + e.getMessage());
             e.printStackTrace();
+        }
+        return null;
+    }
+
+    public User LoginWithEmail(String email) {
+        var sql = "select id, name, email, password, salt, role_id from Users where email =?";
+        try {
+            var ps = connection.prepareStatement(sql);
+            ps.setString(1, email);
+            var rs = ps.executeQuery();
+            System.out.println(sql);
+            if (rs.next()) {
+                var user = new User();
+                user.setName(rs.getString("name"));
+                user.setId(rs.getLong("id"));
+                user.setPassword(rs.getString("password"));
+                user.setSalt(rs.getString("salt"));
+                var roleDAO = new RoleDAO();
+                var role = roleDAO.findById(rs.getLong("role_id"));
+                if (role != null) {
+                    user.setRole(role);
+                }
+                return user;
+            }
+        } catch (SQLException ex) {
+            return null;
         }
         return null;
     }

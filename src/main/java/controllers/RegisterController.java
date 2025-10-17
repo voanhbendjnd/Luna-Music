@@ -4,19 +4,24 @@ package controllers;
 import java.io.IOException;
 
 import DALs.UserDAO;
+import domain.entity.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import utils.HashPassword;
+
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 /**
  *
  * @author Vo Anh Ben - CE190709
  */
 public class RegisterController extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -27,21 +32,25 @@ public class RegisterController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        var name = request.getParameter("name");
+        var gender = request.getParameter("gender");
+        var email = request.getParameter("email");
         var password = request.getParameter("password");
-        String username = request.getParameter("email");
-        // authentication
-        var user = new UserDAO();
-        var strUsername = user.login(username, password);
-        if (!strUsername.equals("")) {
-            String encodedUsername = URLEncoder.encode(strUsername, StandardCharsets.UTF_8.toString());
 
-            Cookie cookie = new Cookie("name", encodedUsername);
-            cookie.setMaxAge(60 * 60); // 1 hour
-            response.addCookie(cookie);
-            response.sendRedirect(request.getContextPath() + "/views/home.jsp");
+        // create salt
+        byte[] salt = HashPassword.getNextSalt();
+        // hash password
+        byte[] hashedPassword = HashPassword.hash(password.toCharArray(), salt);
+        String lastPassword = Base64.getEncoder().encodeToString(hashedPassword);
+        String lastSalt = Base64.getEncoder().encodeToString(salt);
+        // save
+        var userDAO = new UserDAO();
+        var check = userDAO.Register(name, gender, email, lastPassword, lastSalt);
+        if (check) {
+            response.sendRedirect(request.getContextPath()+"/login");
         } else {
             request.setAttribute("loginError", "Username or password incorrect!.");
-            request.getRequestDispatcher("/views/login.jsp").forward(request, response);
+            request.getRequestDispatcher("/views/register.jsp").forward(request, response);
         }
 
     }

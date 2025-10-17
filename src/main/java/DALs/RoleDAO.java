@@ -22,6 +22,24 @@ public class RoleDAO extends DatabaseConfig {
         return role;
 
     }
+    public Role findByName(String name){
+        try{
+            var sql ="select id, name from Roles where name = ?";
+            var ps = connection.prepareStatement(sql);
+            ps.setString(1, name);
+            var rs = ps.executeQuery();
+            if(rs.next()){
+                var role = new Role();
+                role.setId(rs.getLong("id"));
+                role.setName(rs.getString("name"));
+                return role;
+            }
+        }
+        catch(SQLException ex){
+            return null;
+        }
+        return null;
+    }
 
     public boolean existsById(Long id) {
         String sql = "select * from Roles where id = ?";
