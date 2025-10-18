@@ -439,7 +439,7 @@ public class SongDAO extends DatabaseConfig {
      */
     public List<Song> findByAlbumId(long albumId) {
         List<Song> songs = new ArrayList<>();
-        String sql = "SELECT s.id, s.title, s.file_path, s.coverImage, s.duration, s.play_count, s.album_id, s.genre_id, "
+        String sql = "SELECT s.id, s.title, s.file_path, s.coverImage, s.duration, s.play_count, s.album_id, s.genre_id, s.lyric, "
                 +
                 "s.createdAt, s.updatedAt, " +
                 "a.id as album_id, a.title as album_title, a.cover_image_path, " +

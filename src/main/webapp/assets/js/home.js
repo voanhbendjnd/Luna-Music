@@ -166,7 +166,7 @@ function playSong(songId) {
  * @param {number} artistId - The artist ID
  */
 function viewArtist(artistId) {
-  window.location.href = currentContextPath + "/artist?id=" + artistId;
+  window.location.href = currentContextPath + "/artist-detail?id=" + artistId;
 }
 
 /**
@@ -174,7 +174,7 @@ function viewArtist(artistId) {
  * @param {number} albumId - The album ID
  */
 function viewAlbum(albumId) {
-  window.location.href = currentContextPath + "/album?id=" + albumId;
+  window.location.href = currentContextPath + "/album-detail?id=" + albumId;
 }
 
 /**
