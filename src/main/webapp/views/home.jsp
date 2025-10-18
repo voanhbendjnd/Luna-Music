@@ -149,12 +149,22 @@
                                                 <c:forEach var="playlist" items="${userPlaylists}">
                                                     <div class="playlist-item" onclick="viewPlaylist(${playlist.id})">
                                                         <div class="playlist-cover">
-                                                            <i class="fas fa-music"></i>
+                                                            <c:choose>
+                                                                <c:when test="${not empty playlist.coverImage}">
+                                                                    <img src="${pageContext.request.contextPath}${playlist.coverImage}"
+                                                                        alt="${playlist.name}"
+                                                                        onerror="this.src='${pageContext.request.contextPath}/assets/img/default-playlist.png'"
+                                                                        style="width: 100%; height: 100%; object-fit: cover;">
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <i class="fas fa-music"></i>
+                                                                </c:otherwise>
+                                                            </c:choose>
                                                         </div>
                                                         <div class="playlist-info">
                                                             <div class="playlist-name">${playlist.name}</div>
-                                                            <div class="playlist-details">${playlist.songCount} songs •
-                                                                ${playlist.totalDuration}</div>
+                                                            <!-- <div class="playlist-details">${playlist.songCount} songs •
+                                                                ${playlist.totalDuration}</div> -->
                                                         </div>
                                                     </div>
                                                 </c:forEach>
@@ -358,6 +368,46 @@
 
                 <script src="${pageContext.request.contextPath}/assets/js/bootstrap.bundle.min.js"></script>
                 <script src="${pageContext.request.contextPath}/assets/js/home.js"></script>
+
+                <!-- Library search functionality -->
+                <script>
+                    // Wait for DOM to be ready check hd chưa
+                    if (document.readyState === 'loading') {
+                        // đang load thì chờ 
+                        document.addEventListener('DOMContentLoaded', initLibrarySearch);
+                    } else {
+                        // đã load xong thì gọi hàm dưới
+                        initLibrarySearch();
+                    }
+
+                    function initLibrarySearch() {
+                        const searchInput = document.querySelector(".library-search-input");
+
+                        if (searchInput) {
+                            searchInput.addEventListener("input", function (e) {
+                                // Lấy giá trị user gõ
+                                const query = e.target.value.toLowerCase().trim();
+                                // dữ liệu có sẳn ở html render
+                                const items = document.querySelectorAll(".playlist-item");
+                                // lọc
+                                items.forEach(item => {
+                                    const nameEl = item.querySelector(".playlist-name");
+                                    if (nameEl) {
+                                        const name = nameEl.textContent.toLowerCase();
+                                        // so sánh
+                                        if (query === "" || name.includes(query)) {
+                                            // hiển thị
+                                            item.style.display = "flex";
+                                        } else {
+                                            // ẩn
+                                            item.style.display = "none";
+                                        }
+                                    }
+                                });
+                            });
+                        }
+                    }
+                </script>
             </body>
 
 </html>

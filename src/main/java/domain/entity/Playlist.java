@@ -23,6 +23,11 @@ public class Playlist {
 
     @Column(name = "updatedAt")
     private LocalDateTime updatedAt;
+    private String coverImage;
+
+    public void setCoverImage(String coverImage) {
+        this.coverImage = coverImage;
+    }
 
     // Many-to-One relationship with User
     @ManyToOne(fetch = FetchType.LAZY)
@@ -45,8 +50,9 @@ public class Playlist {
         this.user = user;
     }
 
-    public Playlist(String name, String description, User user) {
+    public Playlist(String name, String description, User user, String coverImage) {
         this(name, user);
+        this.coverImage = coverImage;
         this.description = description;
     }
 
@@ -131,10 +137,7 @@ public class Playlist {
     }
 
     public String getCoverImage() {
-        if (!playlistSongs.isEmpty()) {
-            return playlistSongs.get(0).getSong().getCoverImage();
-        }
-        return "/assets/img/default-playlist.png";
+        return coverImage;
     }
 
     @PreUpdate

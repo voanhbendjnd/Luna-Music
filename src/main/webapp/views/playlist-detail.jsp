@@ -65,6 +65,28 @@
                         cursor: pointer;
                     }
 
+                    .btn-save-cover {
+                        position: absolute;
+                        bottom: 8px;
+                        right: 8px;
+                        background: rgba(29, 185, 84, 0.9);
+                        border: none;
+                        color: white;
+                        border-radius: 50%;
+                        width: 30px;
+                        height: 30px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                    }
+
+                    .btn-save-cover:hover {
+                        background: rgba(29, 185, 84, 1);
+                        transform: scale(1.1);
+                    }
+
                     /* Add Songs Button Styles */
                     .add-songs-btn {
                         background: linear-gradient(135deg, #1db954, #1ed760);
@@ -168,12 +190,23 @@
                                 <i class="fas fa-pencil-alt edit-icon"></i>
                                 <span class="choose-photo-text">Choose photo</span>
                             </div>
-                            <input type="file" id="coverImageInput" accept="image/*" style="display: none;"
-                                onchange="handleCoverImageUpload(event)">
+
+                            <!-- Form để submit file ảnh -->
+                            <form id="coverImageForm" method="post" action="${pageContext.request.contextPath}/playlist"
+                                enctype="multipart/form-data" style="display: none;">
+                                <input type="hidden" name="action" value="updateCover">
+                                <input type="hidden" name="playlistId" value="${playlist.id}">
+                                <input type="file" id="coverImageInput" name="coverImage" accept="image/*"
+                                    onchange="handleCoverImageUpload(event)">
+                            </form>
+
                             <div class="cover-preview" id="coverPreview" style="display: none;">
                                 <img id="previewImage" src="" alt="Cover Preview">
                                 <button type="button" class="btn-remove-cover" onclick="removeCoverImage()">
                                     <i class="fas fa-times"></i>
+                                </button>
+                                <button type="button" class="btn-save-cover" onclick="saveCoverImage()">
+                                    <i class="fas fa-save"></i>
                                 </button>
                             </div>
                         </div>
@@ -402,6 +435,22 @@
                     function handleCoverImageUpload(event) {
                         const file = event.target.files[0];
                         if (file) {
+                            // Validation
+                            const maxSize = 5 * 1024 * 1024; // 5MB
+                            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+
+                            if (file.size > maxSize) {
+                                alert('Image size must be less than 5MB');
+                                event.target.value = '';
+                                return;
+                            }
+
+                            if (!allowedTypes.includes(file.type) && !file.name.match(/\.(jpg|jpeg|png|gif)$/i)) {
+                                alert('Please select a valid image file (JPG, PNG, GIF)');
+                                event.target.value = '';
+                                return;
+                            }
+
                             const reader = new FileReader();
                             reader.onload = function (e) {
                                 const preview = document.getElementById('coverPreview');
@@ -424,6 +473,25 @@
                         preview.style.display = 'none';
                         placeholder.style.display = 'block';
                         input.value = '';
+                    }
+
+                    function saveCoverImage() {
+                        const form = document.getElementById('coverImageForm');
+                        const fileInput = document.getElementById('coverImageInput');
+
+                        if (!fileInput.files[0]) {
+                            alert('Please select an image first');
+                            return;
+                        }
+
+                        // Show loading state
+                        const saveBtn = document.querySelector('.btn-save-cover');
+                        const originalContent = saveBtn.innerHTML;
+                        saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                        saveBtn.disabled = true;
+
+                        // Submit form
+                        form.submit();
                     }
 
                     // Add songs modal functionality

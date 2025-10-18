@@ -254,7 +254,6 @@ function initializeLibrarySearch() {
   if (sortBtn) {
     sortBtn.addEventListener("click", function () {
       // TODO: Implement sort functionality
-      // Sort functionality coming soon
     });
   }
 }
@@ -273,18 +272,14 @@ function filterPlaylists(query) {
     return;
   }
 
-  let visibleCount = 0;
   playlistItems.forEach((item) => {
     const playlistNameElement = item.querySelector(".playlist-name");
-    const playlistDetailsElement = item.querySelector(".playlist-details");
 
-    if (playlistNameElement && playlistDetailsElement) {
+    if (playlistNameElement) {
       const playlistName = playlistNameElement.textContent.toLowerCase();
-      const playlistDetails = playlistDetailsElement.textContent.toLowerCase();
 
-      if (playlistName.includes(query) || playlistDetails.includes(query)) {
+      if (playlistName.includes(query)) {
         item.style.display = "flex";
-        visibleCount++;
       } else {
         item.style.display = "none";
       }

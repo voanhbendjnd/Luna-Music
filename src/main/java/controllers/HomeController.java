@@ -72,7 +72,7 @@ public class HomeController extends HttpServlet {
             // Get user playlists if user is logged in
             if (currentUser != null) {
                 var playlistDAO = new PlaylistDAO();
-                List<Playlist> userPlaylists = playlistDAO.getPlaylistsByID(currentUser.getId());
+                List<Playlist> userPlaylists = playlistDAO.getPlaylistsByUserId(currentUser.getId());
                 if (userPlaylists == null) {
                     userPlaylists = List.of();
                 }

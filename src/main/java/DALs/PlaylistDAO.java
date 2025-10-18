@@ -17,6 +17,19 @@ public class PlaylistDAO extends DatabaseConfig {
         super();
     }
 
+    public boolean updateCoverImage(String coverImage, Long id) {
+        try {
+            var sql = "update Playlists set coverImage = ? where id = ?";
+            System.out.println(sql);
+            var ps = connection.prepareStatement(sql);
+            ps.setString(1, coverImage);
+            ps.setLong(2, id);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            return false;
+        }
+    }
+
     // Create a new playlist
     public Playlist createPlaylist(Playlist playlist) {
         String sql = "INSERT INTO Playlists (name, user_id, description, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?)";
@@ -41,6 +54,52 @@ public class PlaylistDAO extends DatabaseConfig {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public Playlist findById(Long id) {
+        try {
+            var sql = "select * from Playlists where id = ?";
+            var ps = connection.prepareStatement(sql);
+            var rs = ps.executeQuery();
+            if (rs.next()) {
+                var playlist = new Playlist();
+                playlist.setName(rs.getString("name"));
+                playlist.setId(rs.getLong("id"));
+                String coverImage = rs.getString("coverImage");
+                if (coverImage != null) {
+                    playlist.setCoverImage(coverImage);
+                }
+                return playlist;
+            }
+        } catch (SQLException ex) {
+            return null;
+        }
+        return null;
+    }
+
+    public List<Playlist> getPlayListOfUser(Long userID) {
+        List<Playlist> playlists = new ArrayList<>();
+        try {
+            var sql = "select id, name, coverImage from Playlists where user_id = ?";
+            var ps = connection.prepareStatement(sql);
+            ps.setLong(1, userID);
+            var rs = ps.executeQuery();
+            while (rs.next()) {
+                var pl = new Playlist();
+                String coverImage = rs.getString("coverImage");
+                if (coverImage != null && !coverImage.equals("")) {
+                    pl.setCoverImage(coverImage);
+                } else {
+                    pl.setCoverImage(null);
+                }
+                pl.setId(rs.getLong("id"));
+                pl.setName(rs.getString("name"));
+                playlists.add(pl);
+            }
+            return playlists;
+        } catch (SQLException ex) {
+            return null;
+        }
     }
 
     // Get playlist by ID
@@ -325,6 +384,12 @@ public class PlaylistDAO extends DatabaseConfig {
         Playlist playlist = new Playlist();
         playlist.setId(rs.getLong("id"));
         playlist.setName(rs.getString("name"));
+        String coverImage = rs.getString("coverImage");
+        if (coverImage != null && !coverImage.equals("")) {
+            playlist.setCoverImage(coverImage);
+        } else {
+            playlist.setCoverImage(null);
+        }
         playlist.setDescription(rs.getString("description"));
         playlist.setCreatedAt(rs.getTimestamp("createdAt").toLocalDateTime());
         playlist.setUpdatedAt(rs.getTimestamp("updatedAt").toLocalDateTime());
