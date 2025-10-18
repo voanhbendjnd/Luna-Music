@@ -45,6 +45,7 @@ public class LoginController extends HttpServlet {
                 session.setAttribute("lastAccessedTime", System.currentTimeMillis());
                 session.setAttribute("lastRequestTime", System.currentTimeMillis());
                 session.setAttribute("user", user);
+                session.setAttribute("role", user.getRole().getName());
                 var playlistDAO = new PlaylistDAO();
                 Long userID = user.getId();
                 if (userID != null) {

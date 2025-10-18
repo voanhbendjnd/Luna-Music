@@ -60,3 +60,9 @@ luồng search playlist
     └───────────────────────┘
             
     ... (Tương tự với hộp 3)
+
+HttpSession session = httpRequest.getSession(false);
+    getSession(false)
+✅ Không tạo session mới nếu chưa có
+✅ Trả về null nếu session không tồn tại
+✅ Chỉ lấy session hiện có nếu đã tồn tại
