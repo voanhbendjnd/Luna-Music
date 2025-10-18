@@ -12,6 +12,18 @@ body {
     overflow-x: hidden;
 }
 
+.playlist-description {
+    margin-top: 20px;
+}
+
+.playlist-description p {
+    margin: 0;
+}
+
+.playlist-description i {
+    margin-right: 10px;
+}
+
 .playlist-container {
     max-width: 1200px;
     margin: 0 auto;

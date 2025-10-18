@@ -33,7 +33,6 @@ public class PlaylistController extends HttpServlet {
 
     // File upload directories - Fixed paths on local machine
     private static final String BASE_UPLOAD_PATH = "C:\\Users\\PC\\Documents\\FALL25\\upload";
-    private static final String AUDIO_DIR = "music";
     private static final String IMAGE_DIR = "images";
 
     @Override
@@ -267,7 +266,7 @@ public class PlaylistController extends HttpServlet {
             List<Song> playlistSongs = playlistDAO.getSongsInPlaylist(playlistId);
 
             // Get all songs for search functionality
-            List<Song> allSongs = songDAO.findAll(null);
+            List<Song> allSongs = songDAO.findAllForPlayList(playlistId);
 
             // Create PlaylistSong objects for the view
             List<PlaylistSong> playlistSongList = new ArrayList<>();

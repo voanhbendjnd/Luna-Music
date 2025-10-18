@@ -192,49 +192,8 @@ function initializePlaylistFunctionality() {
     });
   }
 
-  // Initialize tab navigation
-  initializeTabNavigation();
-
   // Initialize library search
   initializeLibrarySearch();
-}
-
-/**
- * Initialize tab navigation
- */
-function initializeTabNavigation() {
-  const navTabs = document.querySelectorAll(".nav-link");
-
-  navTabs.forEach((tab) => {
-    tab.addEventListener("click", function () {
-      const targetTab = this.getAttribute("data-tab");
-
-      // Remove active class from all tabs and reset styles
-      navTabs.forEach((t) => {
-        t.classList.remove("active");
-        t.style.backgroundColor = "transparent";
-        t.style.color = "#b3b3b3";
-        t.style.border = "none";
-      });
-
-      // Add active class to clicked tab and set green style
-      this.classList.add("active");
-      this.style.backgroundColor = "#28a745";
-      this.style.color = "white";
-      this.style.border = "none";
-
-      // Hide all tab content
-      document.querySelectorAll(".tab-content").forEach((content) => {
-        content.classList.remove("active");
-      });
-
-      // Show target tab content
-      const targetContent = document.getElementById(targetTab + "Tab");
-      if (targetContent) {
-        targetContent.classList.add("active");
-      }
-    });
-  });
 }
 
 /**

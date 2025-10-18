@@ -202,17 +202,6 @@ function initializeActionButtons() {
       // More options feature coming soon
     });
   }
-
-  // View toggle button
-  const viewToggleBtn = document.getElementById("viewToggleBtn");
-  if (viewToggleBtn) {
-    viewToggleBtn.addEventListener("click", function () {
-      // TODO: Implement view toggle functionality
-      // View toggle feature coming soon
-    });
-  }
-
-  // Playlist cover click - handled by onclick in JSP
 }
 
 function escapeHtml(text) {

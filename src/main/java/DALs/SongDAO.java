@@ -27,6 +27,39 @@ public class SongDAO extends DatabaseConfig {
     /**
      * Find all songs with optional keyword search
      */
+    public List<Song> findAllForPlayList(Long playlistId) {
+        List<Song> songs = new ArrayList<>();
+        var sql = "SELECT s.id, s.title, s.file_path, s.coverImage, s.duration, s.play_count, s.album_id, s.genre_id, s.lyric, "
+                +
+                "s.createdAt, s.updatedAt, " +
+                "a.id as album_id, a.title as album_title, a.cover_image_path, " +
+                "g.id as genre_id, g.name as genre_name " +
+                "FROM Songs s " +
+                "LEFT JOIN Albums a ON s.album_id = a.id " +
+                "LEFT JOIN Genres g ON s.genre_id = g.id " +
+                "where not exists(select 1 from PlaylistSongs ps join Playlists p on p.id = ps.playlist_id where ps.song_id = s.id and playList_id = ?)";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setLong(1, playlistId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Song song = mapRowToSong(rs);
+                // Load song artists
+                song.setSongArtists(findSongArtistsBySongId(song.getId()));
+                songs.add(song);
+            }
+            System.out.println(sql);
+        } catch (SQLException e) {
+            System.out.println("Error finding songs: " + e.getMessage());
+            return null;
+        }
+        return songs;
+    }
+
+    /**
+     * Find all songs with optional keyword search
+     */
     public List<Song> findAll(String keyword) {
         List<Song> songs = new ArrayList<>();
         String base = "SELECT s.id, s.title, s.file_path, s.coverImage, s.duration, s.play_count, s.album_id, s.genre_id, s.lyric, "
@@ -612,6 +645,34 @@ public class SongDAO extends DatabaseConfig {
             return songs.subList(0, 5);
 
         } catch (SQLException ex) {
+            return null;
+        }
+    }
+
+    public List<Song> getAllSongs() {
+        var query = "select s.id, s.coverImage, s.lyric, s.title, s.createdAt, s.duration, s.play_count, s.file_path from Songs s";
+        try {
+            var ps = connection.prepareStatement(query);
+            var rs = ps.executeQuery();
+            List<Song> songs = new ArrayList<>();
+            while (rs.next()) {
+                var song = new Song();
+                song.setId(rs.getLong("id"));
+                song.setTitle(rs.getString("title"));
+                song.setCoverImage(rs.getString("coverImage"));
+                String lyric = rs.getString("lyric") != null ? rs.getString("lyric") : "";
+                song.setLyric(lyric);
+                Timestamp createdAt = rs.getTimestamp("createdAt");
+                song.setCreatedAt(createdAt.toInstant());
+                song.setDuration(rs.getObject("duration", Integer.class));
+                song.setPlayCount(rs.getObject("play_count", Integer.class));
+                song.setFilePath(rs.getString("file_path"));
+                songs.add(song);
+            }
+            return songs;
+        } catch (SQLException ex) {
+            System.out.println("Error finding all songs: " + ex.getMessage());
+            ex.printStackTrace();
             return null;
         }
     }

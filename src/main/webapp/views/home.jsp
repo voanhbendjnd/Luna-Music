@@ -84,6 +84,12 @@
                     .col-lg-10 {
                         background-color: #030303 !important;
                     }
+
+                    .player-btn-play:hover {
+                        transform: scale(1.06);
+                        background: #1db954;
+                        color: white;
+                    }
                 </style>
             </head>
 
@@ -91,38 +97,18 @@
                 <div class="container-fluid p-0">
                     <div class="row g-0 min-vh-100">
                         <!-- Left Sidebar - Your Library -->
-                        <div class="col-md-3 col-lg-2 bg-dark border-end border-secondary">
+                        <div class="col-md-3 col-lg-2 border-end border-secondary" style="background-color: #1db954;">
                             <div class="p-3">
                                 <div class="d-flex justify-content-between align-items-center mb-4">
                                     <h2 class="h4 mb-0 text-white fw-bold">Your Library</h2>
-                                    <button class="btn btn-outline-light btn-sm rounded-circle" id="addToLibraryBtn">
+                                    <button class="btn btn-outline-light btn-sm rounded-circle player-btn-play"
+                                        id="addToLibraryBtn">
                                         <i class="fas fa-plus"></i>
                                     </button>
                                 </div>
 
                                 <!-- Library Navigation -->
                                 <div class="mb-4">
-                                    <ul class="nav nav-pills nav-fill mb-3">
-                                        <li class="nav-item">
-                                            <button
-                                                class="nav-link active d-flex align-items-center justify-content-center gap-2"
-                                                data-tab="playlists"
-                                                style="background-color: #28a745 !important; color: white !important; border: none !important;">
-                                                <i class="fas fa-music"></i>
-                                                <span>Playlists</span>
-                                            </button>
-                                        </li>
-                                        <li class="nav-item">
-                                            <button
-                                                class="nav-link d-flex align-items-center justify-content-center gap-2"
-                                                data-tab="recents"
-                                                style="color: #b3b3b3; background-color: transparent; border: none;">
-                                                <i class="fas fa-clock"></i>
-                                                <span>Recents</span>
-                                            </button>
-                                        </li>
-                                    </ul>
-
                                     <div class="d-flex gap-2">
                                         <div class="input-group input-group-sm">
                                             <span class="input-group-text bg-secondary border-secondary"
@@ -134,62 +120,49 @@
                                                 style="background-color: #030303 !important; border-color: #6c757d !important; box-shadow: none !important; outline: none !important;"
                                                 placeholder="Search in Your Library">
                                         </div>
-                                        <button class="btn btn-outline-secondary btn-sm" id="sortBtn">
+                                        <button class="btn btn-outline-secondary btn-sm player-btn-play" id="sortBtn">
                                             <i class="fas fa-sort"></i>
                                         </button>
                                     </div>
                                 </div>
 
                                 <div class="library-content">
-                                    <!-- Playlists Tab Content -->
-                                    <div class="tab-content active" id="playlistsTab">
-                                        <div class="playlists-list" id="playlistsList">
-                                            <!-- Playlists will be loaded here -->
-                                            <c:if test="${not empty userPlaylists}">
-                                                <c:forEach var="playlist" items="${userPlaylists}">
-                                                    <div class="playlist-item" onclick="viewPlaylist(${playlist.id})">
-                                                        <div class="playlist-cover">
-                                                            <c:choose>
-                                                                <c:when test="${not empty playlist.coverImage}">
-                                                                    <img src="${pageContext.request.contextPath}${playlist.coverImage}"
-                                                                        alt="${playlist.name}"
-                                                                        onerror="this.src='${pageContext.request.contextPath}/assets/img/default-playlist.png'"
-                                                                        style="width: 100%; height: 100%; object-fit: cover;">
-                                                                </c:when>
-                                                                <c:otherwise>
-                                                                    <i class="fas fa-music"></i>
-                                                                </c:otherwise>
-                                                            </c:choose>
-                                                        </div>
-                                                        <div class="playlist-info">
-                                                            <div class="playlist-name">${playlist.name}</div>
-                                                            <!-- <div class="playlist-details">${playlist.songCount} songs •
-                                                                ${playlist.totalDuration}</div> -->
-                                                        </div>
+                                    <div class="playlists-list" id="playlistsList">
+                                        <!-- Playlists will be loaded here -->
+                                        <c:if test="${not empty userPlaylists}">
+                                            <c:forEach var="playlist" items="${userPlaylists}">
+                                                <div class="playlist-item" onclick="viewPlaylist(${playlist.id})">
+                                                    <div class="playlist-cover">
+                                                        <c:choose>
+                                                            <c:when test="${not empty playlist.coverImage}">
+                                                                <img src="${pageContext.request.contextPath}${playlist.coverImage}"
+                                                                    alt="${playlist.name}"
+                                                                    onerror="this.src='${pageContext.request.contextPath}/assets/img/default-playlist.png'"
+                                                                    style="width: 100%; height: 100%; object-fit: cover;">
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <i class="fas fa-music"></i>
+                                                            </c:otherwise>
+                                                        </c:choose>
                                                     </div>
-                                                </c:forEach>
-                                            </c:if>
-                                            <c:if test="${empty userPlaylists}">
-                                                <div class="empty-state">
-                                                    <i class="fas fa-music"></i>
-                                                    <p>No playlists available at the moment.</p>
-                                                    <button class="btn btn-outline-light btn-sm show-all-btn"
-                                                        onclick="createPlaylist()">
-                                                        Create your first playlist
-                                                    </button>
+                                                    <div class="playlist-info">
+                                                        <div class="playlist-name">${playlist.name}</div>
+                                                        <!-- <div class="playlist-details">${playlist.songCount} songs •
+                                                            ${playlist.totalDuration}</div> -->
+                                                    </div>
                                                 </div>
-                                            </c:if>
-                                        </div>
-                                    </div>
-
-                                    <!-- Recents Tab Content -->
-                                    <div class="tab-content" id="recentsTab">
-                                        <div class="recents-list" id="recentsList">
-                                            <div class="text-center text-muted py-4">
-                                                <i class="fas fa-clock fa-2x mb-2"></i>
-                                                <p class="mb-0">No recent activity</p>
+                                            </c:forEach>
+                                        </c:if>
+                                        <c:if test="${empty userPlaylists}">
+                                            <div class="empty-state">
+                                                <i class="fas fa-music"></i>
+                                                <p>No playlists available at the moment.</p>
+                                                <button class="btn btn-outline-light btn-sm show-all-btn"
+                                                    onclick="createPlaylist()">
+                                                    Create your first playlist
+                                                </button>
                                             </div>
-                                        </div>
+                                        </c:if>
                                     </div>
                                 </div>
                             </div>
