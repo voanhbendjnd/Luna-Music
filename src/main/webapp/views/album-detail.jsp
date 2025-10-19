@@ -38,6 +38,18 @@
                         z-index: 1;
                     }
 
+                    /* Artist link styles */
+                    .artist-name a,
+                    .artist-name-main a {
+                        transition: color 0.3s ease, opacity 0.3s ease;
+                    }
+
+                    .artist-name a:hover,
+                    .artist-name-main a:hover {
+                        color: #1db954 !important;
+                        opacity: 0.8;
+                    }
+
                     @keyframes backgroundPulse {
 
                         0%,
@@ -65,7 +77,6 @@
                                 <div class="album-cover-container">
                                     <img src="${pageContext.request.contextPath}${album.coverImagePath}"
                                         alt="${album.title}" class="album-cover"
-                                        onerror="this.src='${pageContext.request.contextPath}/assets/img/default-song.png'"
                                         style="width: 200px; height: 200px; object-fit: cover;">
                                 </div>
 
@@ -75,10 +86,12 @@
                                     <h1 class="song-title">${album.title}</h1>
                                     <div class="song-details">
                                         <img src="${pageContext.request.contextPath}${album.artist.imagePath}"
-                                            alt="Artist" class="artist-icon"
-                                            onerror="this.src='${pageContext.request.contextPath}/assets/img/default-artist.png'">
+                                            alt="Artist" class="artist-icon">
                                         <span class="artist-name">
-                                            ${album.artist.name}
+                                            <a href="${pageContext.request.contextPath}/artist-detail?id=${album.artist.id}"
+                                                style="color: inherit; text-decoration: none; cursor: pointer;">
+                                                ${album.artist.name}
+                                            </a>
                                         </span>
                                         <span class="release-year">${album.releaseYear}</span>
                                     </div>
@@ -92,12 +105,14 @@
                                 <!-- Artist Information -->
                                 <div class="artist-info">
                                     <img src="${pageContext.request.contextPath}${album.artist.imagePath}" alt="Artist"
-                                        class="artist-image"
-                                        onerror="this.src='${pageContext.request.contextPath}/assets/img/default-artist.png'">
+                                        class="artist-image">
                                     <div class="artist-details">
                                         <div class="artist-label">Artist</div>
                                         <div class="artist-name-main">
-                                            ${album.artist.name}
+                                            <a href="${pageContext.request.contextPath}/artist-detail?id=${album.artist.id}"
+                                                style="color: inherit; text-decoration: none; cursor: pointer;">
+                                                ${album.artist.name}
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -118,8 +133,7 @@
                                                 <c:if test="${status.index < 5}">
                                                     <div class="recommended-song" onclick="playRelatedSong(${song.id})">
                                                         <img src="${pageContext.request.contextPath}${song.coverImage}"
-                                                            alt="${song.title}" class="recommended-cover"
-                                                            onerror="this.src='${pageContext.request.contextPath}/assets/img/default-song.png'">
+                                                            alt="${song.title}" class="recommended-cover">
                                                         <div class="recommended-info">
                                                             <div class="recommended-title">${song.title}</div>
                                                             <div class="recommended-artist">

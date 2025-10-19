@@ -460,8 +460,7 @@
                                 onclick="document.getElementById('coverImageInput').click()"
                                 style="display: ${not empty playlist.coverImage ? 'block' : 'none'};">
                                 <img src="${pageContext.request.contextPath}${playlist.coverImage}"
-                                    alt="${playlist.name}" class="playlist-cover-image" id="currentCoverImage"
-                                    onerror="this.src='${pageContext.request.contextPath}/assets/img/default-playlist.png'">
+                                    alt="${playlist.name}" class="playlist-cover-image" id="currentCoverImage">
                                 <div class="playlist-cover-overlay">
                                     <button type="button" class="change-photo-btn">
                                         <i class="fas fa-camera"></i>
@@ -551,8 +550,7 @@
                                         <div class="song-item" onclick="playSong(${playlistSong.song.id})">
                                             <div class="song-number">${status.index + 1}</div>
                                             <img src="${pageContext.request.contextPath}${playlistSong.song.coverImage}"
-                                                alt="${playlistSong.song.title}" class="song-cover"
-                                                onerror="this.src='${pageContext.request.contextPath}/assets/img/default-song.png'">
+                                                alt="${playlistSong.song.title}" class="song-cover">
                                             <div class="song-info">
                                                 <div class="song-title">${playlistSong.song.title}</div>
                                                 <div class="song-artist">
@@ -884,8 +882,7 @@
                                                 data-artist-name="<c:forEach var='songArtist' items='${song.songArtists}' varStatus='artistStatus'><c:if test='${!artistStatus.first}'>, </c:if>${songArtist.artist.name}</c:forEach>">
                                                 <img src="${pageContext.request.contextPath}${song.coverImage}"
                                                     alt="${song.title}"
-                                                    style="width: 50px; height: 50px; border-radius: 4px; margin-right: 12px; object-fit: cover;"
-                                                    onerror="this.src='${pageContext.request.contextPath}/assets/img/default-song.png'">
+                                                    style="width: 50px; height: 50px; border-radius: 4px; margin-right: 12px; object-fit: cover;">
                                                 <div class="song-info">
                                                     <div class="song-title">${song.title}</div>
                                                     <div class="song-artist">

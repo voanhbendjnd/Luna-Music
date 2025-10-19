@@ -31,7 +31,6 @@ public class HomeController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
-        try {
             // Get user from session and pass to request
             HttpSession session = request.getSession(false);
             User currentUser = null;
@@ -39,7 +38,9 @@ public class HomeController extends HttpServlet {
                 currentUser = (User) session.getAttribute("user");
                 request.setAttribute("user", currentUser);
             }
-
+            if(session != null && session.getAttribute("search") != null){
+                session.removeAttribute("search");
+            }
             // Get popular songs (limit to 20)
             var songDAO = new SongDAO();
             List<Song> songs = songDAO.findAll(null);
@@ -80,18 +81,6 @@ public class HomeController extends HttpServlet {
             } else {
                 request.setAttribute("userPlaylists", List.of());
             }
-
-        } catch (Exception e) {
-            System.err.println("Error loading home data: " + e.getMessage());
-            e.printStackTrace();
-            // Set empty lists if there's an error
-            request.setAttribute("songs", List.of());
-            request.setAttribute("artists", List.of());
-            request.setAttribute("albums", List.of());
-            request.setAttribute("userPlaylists", List.of());
-        }
-
-        // Forward to home.jsp directly
-        request.getRequestDispatcher("/views/layouts/defaultLayout.jsp").forward(request, response);
+           request.getRequestDispatcher("/views/layouts/defaultLayout.jsp").forward(request, response);
     }
 }

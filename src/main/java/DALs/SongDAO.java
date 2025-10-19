@@ -5,6 +5,7 @@ import domain.entity.Album;
 import domain.entity.Genre;
 import domain.entity.SongArtist;
 import domain.entity.Artist;
+import domain.response.ResSearch;
 import utils.DatabaseConfig;
 
 import java.sql.*;
@@ -22,6 +23,64 @@ public class SongDAO extends DatabaseConfig {
 
     public SongDAO() {
         super();
+    }
+
+    /**
+     * Search at home
+     */
+    public ResSearch searchAtHome(String search){
+        var resSearch = new ResSearch();
+        var selectFirst = "select s.id songId , s.title songTitle, s.coverImage songImage, a.id artistId, a.image_path artistImage, a.name artistName, ";
+        var selectSecond = " al.id albumId, al.cover_image_path albumImage, al.title albumTitle ";
+        var from = "from Songs s ";
+        var join = "left join SongArtists sa on s.id = sa.song_id left join Artists a on a.id = sa.artist_id left join Albums al on al.artist_id = a.id ";
+        var where = "where s.title like ? or a.name like ? or al.title like ? ";
+        var sql = selectFirst + selectSecond + from + join + where;
+        try{
+            var ps = connection.prepareStatement(sql);
+            var kw = "%" + search.trim() + "%";
+            ps.setString(1, kw);
+            ps.setString(2, kw);
+            ps.setString(3, kw);
+
+            var rs = ps.executeQuery();
+            var songs = new ArrayList<Song>();
+            var artists = new ArrayList<Artist>();
+            var albums = new ArrayList<Album>();
+            while(rs.next()){
+                var song = new Song();
+                var artist = new Artist();
+                var album = new Album();
+                song.setId(rs.getLong("songId"));
+                song.setTitle(rs.getString("songTitle"));
+                song.setCoverImage(rs.getString("songImage"));
+                Long artistID =  rs.getLong("artistId");
+                artist.setId(artistID);
+                artist.setName(rs.getString("artistName"));
+                artist.setImagePath(rs.getString("artistImage"));
+                Long albumID = rs.getLong("albumId");
+                album.setId(albumID);
+                album.setTitle(rs.getString("albumTitle"));
+                album.setCoverImagePath(rs.getString("albumImage"));
+                songs.add(song);
+
+                if(
+                        artists.stream().anyMatch(x-> x.getId().equals(artistID)) || albums.stream().anyMatch(x-> x.getId().equals(albumID))
+                ){
+                    continue;
+                }
+                artists.add(artist);
+                albums.add(album);
+            }
+            resSearch.setSongs(songs);
+            resSearch.setAlbums(albums);
+            resSearch.setArtist(artists);
+        }
+        catch(SQLException ex){
+            ex.printStackTrace();
+            return null;
+        }
+        return resSearch;
     }
 
     /**

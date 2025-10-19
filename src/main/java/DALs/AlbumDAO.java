@@ -53,6 +53,13 @@ public class AlbumDAO extends DatabaseConfig {
     }
 
     /**
+     * Search albums by name
+     */
+    public List<Album> searchByName(String query) {
+        return findAll(query);
+    }
+
+    /**
      * Find album by ID
      */
     public Album findById(long id) {

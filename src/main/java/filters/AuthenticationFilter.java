@@ -91,7 +91,8 @@ public class AuthenticationFilter implements Filter {
                 path.startsWith("/artist") ||
                 path.startsWith("/assets/") ||
                 path.startsWith("/uploads/") ||
-                path.startsWith("/music/")) {
+                path.startsWith("/music/")
+        ||path.startsWith("/search")) {
             return true;
         }
 

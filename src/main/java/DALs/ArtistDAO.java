@@ -47,6 +47,13 @@ public class ArtistDAO extends DatabaseConfig {
     }
 
     /**
+     * Search artists by name
+     */
+    public List<Artist> searchByName(String query) {
+        return findAll(query);
+    }
+
+    /**
      * Find artist by ID
      */
     public Artist findById(long id) {

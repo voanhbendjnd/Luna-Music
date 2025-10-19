@@ -51,6 +51,18 @@
                             transform: scale(1.05);
                         }
                     }
+
+                    /* Artist link styles */
+                    .artist-name a,
+                    .artist-name-main a {
+                        transition: color 0.3s ease, opacity 0.3s ease;
+                    }
+
+                    .artist-name a:hover,
+                    .artist-name-main a:hover {
+                        color: #1db954 !important;
+                        opacity: 0.8;
+                    }
                 </style>
             </head>
             <%@include file="/views/components/header.jsp" %>
@@ -64,9 +76,7 @@
                                 <!-- Left Side - Album Cover -->
                                 <div class="album-cover-container">
                                     <img src="${pageContext.request.contextPath}${song.coverImage}" alt="${song.title}"
-                                        class="album-cover"
-                                        onerror="this.src='${pageContext.request.contextPath}/assets/img/default-song.png'"
-                                        style="width: 200px; height: 200px; object-fit: cover;">
+                                        class="album-cover" style="width: 200px; height: 200px; object-fit: cover;">
                                 </div>
 
                                 <!-- Right Side - Song Information -->
@@ -75,12 +85,14 @@
                                     <h1 class="song-title">${song.title}</h1>
                                     <div class="song-details">
                                         <img src="${pageContext.request.contextPath}${song.songArtists[0].artist.imagePath}"
-                                            alt="Artist" class="artist-icon"
-                                            onerror="this.src='${pageContext.request.contextPath}/assets/img/default-artist.png'">
+                                            alt="Artist" class="artist-icon">
                                         <span class="artist-name">
                                             <c:forEach var="songArtist" items="${song.songArtists}" varStatus="status">
                                                 <c:if test="${!status.first}">, </c:if>
-                                                ${songArtist.artist.name}
+                                                <a href="${pageContext.request.contextPath}/artist-detail?id=${songArtist.artist.id}"
+                                                    style="color: inherit; text-decoration: none; cursor: pointer;">
+                                                    ${songArtist.artist.name}
+                                                </a>
                                             </c:forEach>
                                         </span>
                                         <span class="album-name">
@@ -120,14 +132,16 @@
                                 <!-- Artist Information -->
                                 <div class="artist-info">
                                     <img src="${pageContext.request.contextPath}${song.songArtists[0].artist.imagePath}"
-                                        alt="Artist" class="artist-image"
-                                        onerror="this.src='${pageContext.request.contextPath}/assets/img/default-artist.png'">
+                                        alt="Artist" class="artist-image">
                                     <div class="artist-details">
                                         <div class="artist-label">Artist</div>
                                         <div class="artist-name-main">
                                             <c:forEach var="songArtist" items="${song.songArtists}" varStatus="status">
                                                 <c:if test="${!status.first}">, </c:if>
-                                                ${songArtist.artist.name}
+                                                <a href="${pageContext.request.contextPath}/artist-detail?id=${songArtist.artist.id}"
+                                                    style="color: inherit; text-decoration: none; cursor: pointer;">
+                                                    ${songArtist.artist.name}
+                                                </a>
                                             </c:forEach>
                                         </div>
                                     </div>
@@ -163,8 +177,7 @@
                                                     <div class="recommended-song"
                                                         onclick="playRelatedSong(${relatedSong.id})">
                                                         <img src="${pageContext.request.contextPath}${relatedSong.coverImage}"
-                                                            alt="${relatedSong.title}" class="recommended-cover"
-                                                            onerror="this.src='${pageContext.request.contextPath}/assets/img/default-song.png'">
+                                                            alt="${relatedSong.title}" class="recommended-cover">
                                                         <div class="recommended-info">
                                                             <div class="recommended-title">${relatedSong.title}</div>
                                                             <div class="recommended-artist">

@@ -65,7 +65,6 @@
                                 <div class="album-cover-container">
                                     <img src="${pageContext.request.contextPath}${artist.imagePath}"
                                         alt="${artist.name}" class="album-cover"
-                                        onerror="this.src='${pageContext.request.contextPath}/assets/img/default-song.png'"
                                         style="width: 200px; height: 200px; object-fit: cover;">
                                 </div>
                                 <!-- Right Side - Album Information -->
@@ -92,8 +91,7 @@
                                                         <div class="recommended-song"
                                                             onclick="playRelatedAlbum(${album.id})">
                                                             <img src="${pageContext.request.contextPath}${album.coverImagePath}"
-                                                                alt="${album.title}" class="recommended-cover"
-                                                                onerror="this.src='${pageContext.request.contextPath}/assets/img/default-song.png'">
+                                                                alt="${album.title}" class="recommended-cover">
                                                             <div class="recommended-info">
                                                                 <div class="recommended-title">${album.title}</div>
                                                             </div>
