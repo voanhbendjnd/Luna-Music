@@ -812,33 +812,31 @@
                     function removeSongFromPlaylist(event, playlistId, songId) {
                         event.stopPropagation(); // Prevent triggering playSong
 
-                        if (confirm("Are you sure you want to remove this song from the playlist?")) {
-                            const form = document.createElement('form');
-                            form.method = 'POST';
-                            form.action = currentContextPath + '/playlist';
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = currentContextPath + '/playlist';
 
-                            const actionInput = document.createElement('input');
-                            actionInput.type = 'hidden';
-                            actionInput.name = 'action';
-                            actionInput.value = 'removeSong';
+                        const actionInput = document.createElement('input');
+                        actionInput.type = 'hidden';
+                        actionInput.name = 'action';
+                        actionInput.value = 'removeSong';
 
-                            const playlistIdInput = document.createElement('input');
-                            playlistIdInput.type = 'hidden';
-                            playlistIdInput.name = 'playlistId';
-                            playlistIdInput.value = playlistId;
+                        const playlistIdInput = document.createElement('input');
+                        playlistIdInput.type = 'hidden';
+                        playlistIdInput.name = 'playlistId';
+                        playlistIdInput.value = playlistId;
 
-                            const songIdInput = document.createElement('input');
-                            songIdInput.type = 'hidden';
-                            songIdInput.name = 'songId';
-                            songIdInput.value = songId;
+                        const songIdInput = document.createElement('input');
+                        songIdInput.type = 'hidden';
+                        songIdInput.name = 'songId';
+                        songIdInput.value = songId;
 
-                            form.appendChild(actionInput);
-                            form.appendChild(playlistIdInput);
-                            form.appendChild(songIdInput);
+                        form.appendChild(actionInput);
+                        form.appendChild(playlistIdInput);
+                        form.appendChild(songIdInput);
 
-                            document.body.appendChild(form);
-                            form.submit();
-                        }
+                        document.body.appendChild(form);
+                        form.submit();
                     }
 
                     // Export functions globally
@@ -898,7 +896,7 @@
                                                     <fmt:formatNumber value="${song.duration % 60}" pattern="00" />
                                                 </div>
                                                 <button class="btn btn-sm btn-outline-success"
-                                                    onclick="toggleSongSelection(this, ${song.id})">
+                                                    onclick="addSongToPlaylist(${song.id})">
                                                     Add
                                                 </button>
                                             </div>

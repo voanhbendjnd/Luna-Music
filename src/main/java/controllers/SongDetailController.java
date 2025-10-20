@@ -59,9 +59,12 @@ public class SongDetailController extends HttpServlet {
             }
 
             // Set attributes for JSP
+            if(relatedSongs != null){
+                request.setAttribute("relatedSongs", relatedSongs);
+
+            }
             request.setAttribute("song", song);
             request.setAttribute("album", album);
-            request.setAttribute("relatedSongs", relatedSongs);
 
             // Forward to song detail page
             request.getRequestDispatcher("/views/song-detail.jsp").forward(request, response);

@@ -6,6 +6,7 @@
     box-sizing: border-box;
 }
 
+
 body {
     background-color: #1a1a1a;
     color: white;
@@ -1090,4 +1091,107 @@ img.loading {
 
 .section-title.mb-0 {
     margin-bottom: 0 !important;
+}
+
+/* Force green color for active nav pills */
+.nav-pills .nav-link.active {
+    background-color: #28a745 !important;
+    color: white !important;
+    border: none !important;
+}
+
+.nav-pills .nav-link {
+    color: #b3b3b3;
+    background-color: transparent;
+    border: none;
+}
+
+.nav-pills .nav-link:hover {
+    color: white;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Remove blue border from search input */
+.form-control:focus {
+    border-color: #6c757d !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.form-control {
+    border-color: #6c757d !important;
+    box-shadow: none !important;
+}
+
+.input-group:focus-within .form-control {
+    border-color: #6c757d !important;
+    box-shadow: none !important;
+}
+
+/* Force dark background */
+body,
+html {
+    background-color: #030303 !important;
+    color: white !important;
+}
+
+.container-fluid,
+.row {
+    background-color: #030303 !important;
+}
+
+.bg-dark {
+    background-color: #030303 !important;
+}
+
+/* Override Bootstrap defaults */
+.container-fluid {
+    background-color: #030303 !important;
+}
+
+.row {
+    background-color: #030303 !important;
+}
+
+.col-md-3,
+.col-lg-2 {
+    background-color: #030303 !important;
+}
+
+.col-md-9,
+.col-lg-10 {
+    background-color: #030303 !important;
+}
+
+.player-btn-play:hover {
+    transform: scale(1.06);
+    background: #1db954;
+    color: white;
+}
+
+.remove-song-btn {
+    background: none;
+    border: none;
+    color: #b3b3b3;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    opacity: 0;
+}
+
+.song-item:hover .remove-song-btn {
+    opacity: 1;
+}
+
+.remove-song-btn:hover {
+    color: white !important;
+    background-color: #ff4444 !important;
+    transform: scale(1.1);
+    z-index: 10;
+}
+
+.playlist-item:hover {
+    background-color: #030303;
 }

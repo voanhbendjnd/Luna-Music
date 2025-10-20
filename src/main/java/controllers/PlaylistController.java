@@ -353,7 +353,7 @@ public class PlaylistController extends HttpServlet {
             Playlist createdPlaylist = playlistDAO.createPlaylist(playlist);
 
             if (createdPlaylist != null) {
-                response.sendRedirect(request.getContextPath() + "/playlist/detail?id=" + createdPlaylist.getId());
+                response.sendRedirect(request.getContextPath() + "/playlist?id=" + createdPlaylist.getId());
             } else {
                 request.setAttribute("error", "Failed to create playlist");
                 showCreatePlaylistForm(request, response);
@@ -402,7 +402,7 @@ public class PlaylistController extends HttpServlet {
             Playlist updatedPlaylist = playlistDAO.updatePlaylist(playlist);
 
             if (updatedPlaylist != null) {
-                response.sendRedirect(request.getContextPath() + "/playlist/detail?id=" + updatedPlaylist.getId());
+                response.sendRedirect(request.getContextPath() + "/playlist?id=" + updatedPlaylist.getId());
             } else {
                 request.setAttribute("error", "Failed to update playlist");
                 showEditPlaylistForm(request, response, playlistId);
@@ -428,7 +428,7 @@ public class PlaylistController extends HttpServlet {
                 return;
             }
 
-            Long playlistId = Long.parseLong(request.getParameter("id"));
+            Long playlistId = Long.parseLong(request.getParameter("playlistId"));
 
             Playlist playlist = playlistDAO.getPlaylistById(playlistId);
 
@@ -447,7 +447,7 @@ public class PlaylistController extends HttpServlet {
             boolean deleted = playlistDAO.deletePlaylist(playlistId);
 
             if (deleted) {
-                response.sendRedirect(request.getContextPath() + "/playlist");
+                response.sendRedirect(request.getContextPath() + "/home");
             } else {
                 request.setAttribute("error", "Failed to delete playlist");
                 showPlaylistDetail(request, response, playlistId);
@@ -493,7 +493,8 @@ public class PlaylistController extends HttpServlet {
             boolean added = playlistDAO.addSongToPlaylist(playlistId, songId);
 
             if (added) {
-                response.sendRedirect(request.getContextPath() + "/playlist/detail?id=" + playlistId);
+                System.out.println(playlistId);
+                response.sendRedirect(request.getContextPath() + "/playlist?id=" + playlistId);
             } else {
                 request.setAttribute("error", "Failed to add song to playlist (song might already exist)");
                 showPlaylistDetail(request, response, playlistId);
@@ -539,7 +540,7 @@ public class PlaylistController extends HttpServlet {
             boolean removed = playlistDAO.removeSongFromPlaylist(playlistId, songId);
 
             if (removed) {
-                response.sendRedirect(request.getContextPath() + "/playlist/detail?id=" + playlistId);
+                response.sendRedirect(request.getContextPath() + "/playlist?id=" + playlistId);
             } else {
                 request.setAttribute("error", "Failed to remove song from playlist");
                 showPlaylistDetail(request, response, playlistId);
@@ -587,7 +588,7 @@ public class PlaylistController extends HttpServlet {
                 boolean updated = playlistDAO.updateCoverImage(coverImagePath, playlist.getId());
 
                 if (updated) {
-                    response.sendRedirect(request.getContextPath() + "/playlist/detail?id=" + playlistId);
+                    response.sendRedirect(request.getContextPath() + "/playlist?id=" + playlistId);
                 } else {
                     request.setAttribute("error", "Failed to update playlist cover");
                     showPlaylistDetail(request, response, playlistId);

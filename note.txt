@@ -66,3 +66,5 @@ HttpSession session = httpRequest.getSession(false);
 ✅ Không tạo session mới nếu chưa có
 ✅ Trả về null nếu session không tồn tại
 ✅ Chỉ lấy session hiện có nếu đã tồn tại
+
+ctrl shift R rest trang

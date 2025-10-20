@@ -40,9 +40,11 @@ public class AuthenticationFilter implements Filter {
         System.out.println("Filter: Path = " + path);
 
         // Get session
+        // Login rồi mới có session
         HttpSession session = httpRequest.getSession(false);
 
         // Public paths that don't require authentication
+        // chưa đăng nhập
         if (isPublicPath(path)) {
             chain.doFilter(request, response);
             return;
@@ -66,6 +68,7 @@ public class AuthenticationFilter implements Filter {
         }
 
         // User is logged in and has proper permissions
+        // đăng nhập xong rồi
         chain.doFilter(request, response);
     }
 

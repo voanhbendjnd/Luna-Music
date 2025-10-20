@@ -136,6 +136,7 @@
                                                                 data-album-id="${song.album != null ? song.album.id : ''}"
                                                                 data-genre-id="${song.genre != null ? song.genre.id : ''}"
                                                                 data-duration-id="${song.duration}"
+                                                                data-lyric="${song.lyric}"
                                                                 data-cover-image-path="${song.coverImage}"
                                                                 data-artist-ids="<c:forEach var='songArtist' items='${song.songArtists}' varStatus='status'>${songArtist.artist.id}<c:if test='${not status.last}'>,</c:if></c:forEach>">
                                                                 <i class="fas fa-edit"></i>
@@ -248,13 +249,9 @@
                                         </div>
 
                                         <div class="mb-3">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="isDownloadable"
-                                                    id="createDownloadable" checked>
-                                                <label class="form-check-label" for="createDownloadable">
-                                                    Allow Download
-                                                </label>
-                                            </div>
+                                            <label class="form-label">Lyric</label>
+                                            <textarea required name="lyric" class="form-control"
+                                                placeholder="Enter lyric"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -325,6 +322,11 @@
                                                 </c:forEach>
                                             </select>
                                         </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Lyric</label>
+                                            <textarea required name="lyric" id="editLyric" class="form-control"
+                                                placeholder="Enter lyric"></textarea>
+                                        </div>
                                     </div>
 
                                     <div class="col-md-6">
@@ -362,15 +364,7 @@
                                                 class="form-control" />
                                         </div>
 
-                                        <div class="mb-3">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="isDownloadable"
-                                                    id="editDownloadable">
-                                                <label class="form-check-label" for="editDownloadable">
-                                                    Allow Download
-                                                </label>
-                                            </div>
-                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -442,13 +436,13 @@
                                 const allowedTypes = ['audio/mpeg', 'audio/mp4', 'audio/wav', 'audio/x-m4a'];
 
                                 if (file.size > maxSize) {
-                                    alert('File size must be less than 50MB');
+                                    // File size must be less than 50MB
                                     this.value = '';
                                     return;
                                 }
 
                                 if (!allowedTypes.includes(file.type) && !file.name.match(/\.(mp3|m4a|wav)$/i)) {
-                                    alert('Please select a valid audio file (MP3, M4A, WAV)');
+                                    // Please select a valid audio file (MP3, M4A, WAV)
                                     this.value = '';
                                     return;
                                 }
@@ -557,13 +551,13 @@
                                 const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
 
                                 if (file.size > maxSize) {
-                                    alert('Image size must be less than 5MB');
+                                    // Image size must be less than 5MB
                                     this.value = '';
                                     return;
                                 }
 
                                 if (!allowedTypes.includes(file.type) && !file.name.match(/\.(jpg|jpeg|png|gif)$/i)) {
-                                    alert('Please select a valid image file (JPG, PNG, GIF)');
+                                    // Please select a valid image file (JPG, PNG, GIF)
                                     this.value = '';
                                     return;
                                 }
@@ -588,17 +582,14 @@
                         if (duration > 0) {
                             durationInput.value = duration;
                             durationInput.placeholder = '';
-                            console.log('Audio duration detected: ' + duration + ' seconds');
                         } else {
                             durationInput.placeholder = 'Duration not detected';
-                            console.log('Could not detect valid audio duration');
                         }
                         durationInput.disabled = false;
                         URL.revokeObjectURL(url);
                     });
 
                     audio.addEventListener('error', function () {
-                        console.log('Could not detect audio duration');
                         durationInput.placeholder = 'Duration not detected';
                         durationInput.disabled = false;
                         URL.revokeObjectURL(url);
@@ -623,7 +614,8 @@
                             // Set basic fields
                             document.getElementById('editId').value = btn.getAttribute('data-id');
                             document.getElementById('editTitle').value = btn.getAttribute('data-title');
-
+                            // Set lyric
+                            document.getElementById('editLyric').value = btn.getAttribute('data-lyric');
                             // Set album
                             const albumId = btn.getAttribute('data-album-id');
                             if (albumId) {
@@ -637,13 +629,11 @@
                             }
                             // Set current image
                             const imagePath = btn.getAttribute('data-cover-image-path');
-                            console.log('Image path from data attribute:', imagePath);
                             const editImagePreview = document.getElementById('editImagePreview');
                             const noCurrentImageLabel = document.getElementById('noCurrentImageLabel');
                             if (editImagePreview && noCurrentImageLabel) {
                                 if (imagePath && imagePath.trim() !== '') {
                                     const fullImagePath = '${pageContext.request.contextPath}' + imagePath;
-                                    console.log('Full image path:', fullImagePath);
                                     editImagePreview.src = fullImagePath;
                                     editImagePreview.style.display = 'block';
                                     noCurrentImageLabel.style.display = 'none';
@@ -725,14 +715,14 @@
 
                             if (!audioFile.files[0]) {
                                 e.preventDefault();
-                                alert('Please select an audio file');
+                                // Please select an audio file
                                 return;
                             }
 
                             const selectedArtists = Array.from(artistIds.selectedOptions).map(option => option.value);
                             if (selectedArtists.length === 0) {
                                 e.preventDefault();
-                                alert('Please select at least one artist');
+                                // Please select at least one artist
                                 return;
                             }
 

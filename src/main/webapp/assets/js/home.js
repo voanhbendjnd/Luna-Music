@@ -294,7 +294,6 @@ function createPlaylistItem(playlist) {
 
   return item;
 }
-
 /**
  * Create a new playlist
  */
@@ -384,6 +383,31 @@ function showAllPopularSongs() {
     showAllBtn.style.display = "none";
   }
 }
+/**
+ * Remove playlist
+ */
+function deletePlaylist(event, playlistId) {
+  event.stopPropagation(); // Khong cho click ra ngoài
+  const form = document.createElement("form");
+  form.method = "POST";
+  form.action = currentContextPath + "/playlist";
+
+  const actionInput = document.createElement("input");
+  actionInput.type = "hidden";
+  actionInput.name = "action";
+  actionInput.value = "delete";
+
+  const playlistIdInput = document.createElement("input");
+  playlistIdInput.type = "hidden";
+  playlistIdInput.name = "playlistId";
+  playlistIdInput.value = playlistId;
+
+  form.appendChild(actionInput);
+  form.appendChild(playlistIdInput);
+
+  document.body.appendChild(form);
+  form.submit();
+}
 
 // Export functions for global use
 window.playSong = playSong;
@@ -395,3 +419,4 @@ window.showAllSongs = showAllSongs;
 window.showAllArtists = showAllArtists;
 window.showAllAlbums = showAllAlbums;
 window.showAllPopularSongs = showAllPopularSongs;
+window.deletePlaylist = deletePlaylist;

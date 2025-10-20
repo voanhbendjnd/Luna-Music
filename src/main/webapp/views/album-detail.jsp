@@ -131,7 +131,7 @@
                                         <c:when test="${not empty songs}">
                                             <c:forEach var="song" items="${songs}" varStatus="status">
                                                 <c:if test="${status.index < 5}">
-                                                    <div class="recommended-song" onclick="playRelatedSong(${song.id})">
+                                                    <div class="recommended-song" onclick="playSong(${song.id})">
                                                         <img src="${pageContext.request.contextPath}${song.coverImage}"
                                                             alt="${song.title}" class="recommended-cover">
                                                         <div class="recommended-info">
@@ -185,13 +185,13 @@
                             /**
                              * Play related song
                              */
-                            function playRelatedSong(songId) {
+                            function playSong(songId) {
                                 // Navigate đến song-detail page
                                 window.location.href = currentContextPath + "/song-detail?id=" + songId;
                             }
 
                             // Export function globally
-                            window.playRelatedSong = playRelatedSong;
+                            window.playSong = playSong;
                         </script>
                 </body>
 

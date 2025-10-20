@@ -248,7 +248,7 @@
 
                             if (!name) {
                                 e.preventDefault();
-                                alert('Please enter genre name');
+                                // Please enter genre name
                                 return;
                             }
 
