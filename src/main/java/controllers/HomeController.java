@@ -50,7 +50,7 @@ public class HomeController extends HttpServlet {
             request.setAttribute("songs", songs);
             var popularSongs = this.getPopularSongs(songs);
             if (popularSongs != null && popularSongs.size() > 10) {
-                popularSongs = popularSongs.subList(0, 10);
+                popularSongs = popularSongs.subList(0, 15);
             }
             request.setAttribute("popularSong", popularSongs);
 

@@ -59,10 +59,13 @@ public class SongDetailController extends HttpServlet {
             }
 
             // Set attributes for JSP
-            if(relatedSongs != null){
+            if (relatedSongs != null) {
                 request.setAttribute("relatedSongs", relatedSongs);
 
             }
+            // increase count play song
+            songDAO.incrementPlayCount(songId);
+            // set attribute
             request.setAttribute("song", song);
             request.setAttribute("album", album);
 

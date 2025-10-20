@@ -290,6 +290,22 @@
 
                             // Export function globally
                             window.playRelatedSong = playRelatedSong;
+
+                            // auto play song
+                            document.addEventListener("DOMContentLoaded", function () {
+                                const audio = document.getElementById("audioPlayer");
+                                if (audio) {
+                                    audio.play().then(() => {
+                                        setTimeout(() => {
+                                            audio.muted = false;
+                                        }, 500) // 0.5
+                                    })
+                                        .catch(err => console.log("Error in processing play music!"));
+                                }
+                                audio.addEventListener("ended", function () {
+                                    document.getElementById("nextBtn").click();
+                                })
+                            })
                         </script>
                 </body>
 

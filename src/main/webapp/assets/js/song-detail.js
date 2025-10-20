@@ -209,17 +209,10 @@ function updatePlayCount() {
   fetch(window.location.pathname, {
     method: "POST",
     headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
+      "Content-Type": "application/x-www-form-urlencoded", // server đọc được request.parameter()
     },
     body: "action=updatePlayCount&songId=" + currentSongId,
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.success) {
-      } else {
-      }
-    })
-    .catch((error) => {});
+  });
 }
 
 /**
