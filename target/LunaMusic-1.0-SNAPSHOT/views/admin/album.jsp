@@ -53,6 +53,8 @@
                                                         <c:choose>
                                                             <c:when test="${not empty album.coverImagePath}">
                                                                 <img src="${pageContext.request.contextPath}${album.coverImagePath}"
+                                                                                                                                    onerror="this.src='${pageContext.request.contextPath}/assets/img/LogoFinal1.png'"
+
                                                                     alt="Album Cover" class="rounded"
                                                                     style="width: 60px; height: 60px; object-fit: cover;">
                                                             </c:when>
@@ -73,6 +75,7 @@
                                                         <div class="d-flex align-items-center">
                                                             <c:if test="${not empty album.artist.imagePath}">
                                                                 <img src="${pageContext.request.contextPath}${album.artist.imagePath}"
+                                                                    onerror="this.src='${pageContext.request.contextPath}/assets/img/LogoFinal1.png'"
                                                                     alt="Artist" class="rounded-circle me-2"
                                                                     style="width: 30px; height: 30px; object-fit: cover;">
                                                             </c:if>

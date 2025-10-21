@@ -27,7 +27,6 @@ create table Users(
 	updatedAt datetime default getdate(),
 	updatedBy nvarchar(50),
 	role_id int null,
-    lyric nvarchar(500),
     salt nvarchar(255),
 	    -- Mối quan hệ 1:N với Roles
 	CONSTRAINT FK_User_Role FOREIGN KEY (role_id) 
@@ -88,6 +87,7 @@ CREATE TABLE Songs (
     album_id INT NULL,
     genre_id INT NULL,
     coverImage nvarchar(255),
+    lyric nvarchar(500),
     -- Mối quan hệ Khóa Ngoại
     CONSTRAINT FK_Song_Album FOREIGN KEY (album_id) REFERENCES Albums(id) ON DELETE SET NULL,
     CONSTRAINT FK_Song_Genre FOREIGN KEY (genre_id) REFERENCES Genres(id) ON DELETE SET NULL,

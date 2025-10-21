@@ -53,6 +53,8 @@
                                                             <c:when test="${not empty artist.imagePath}">
                                                                 <img src="${pageContext.request.contextPath}${artist.imagePath}"
                                                                     alt="Artist Image" class="rounded"
+                                                                                                                                        onerror="this.src='${pageContext.request.contextPath}/assets/img/LogoFinal1.png'"
+
                                                                     style="width: 50px; height: 50px; object-fit: cover;">
                                                             </c:when>
                                                             <c:otherwise>

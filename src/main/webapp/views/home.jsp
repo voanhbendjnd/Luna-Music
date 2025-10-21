@@ -62,7 +62,7 @@
                                                             <c:when test="${not empty playlist.coverImage}">
                                                                 <img src="${pageContext.request.contextPath}${playlist.coverImage}"
                                                                     alt="${playlist.name}"
-                                                                    onerror="this.src='${pageContext.request.contextPath}/assets/img/default-playlist.png'"
+                                                                    onerror="this.src='${pageContext.request.contextPath}/assets/img/LogoFinal1.png'"
                                                                     style="width: 100%; height: 100%; object-fit: cover;">
                                                             </c:when>
                                                             <c:otherwise>
@@ -126,7 +126,7 @@
                                                         style="display: none;"</c:if>>
                                                         <img src="${pageContext.request.contextPath}${song.coverImage}"
                                                             alt="${song.title}" class="album-cover"
-                                                            onerror="this.src='${pageContext.request.contextPath}/assets/img/default-song.png'">
+                                                            onerror="this.src='${pageContext.request.contextPath}/assets/img/LogoFinal1.png'">
                                                         <div class="album-title">${song.title}</div>
                                                     </div>
                                                 </c:forEach>
@@ -160,6 +160,7 @@
                                                         <div class="position-relative mb-2">
                                                             <img src="${pageContext.request.contextPath}${artist.imagePath}"
                                                                 alt="${artist.name}"
+                                                                onerror="this.src='${pageContext.request.contextPath}/assets/img/LogoFinal1.png'"
                                                                 class="rounded-circle object-fit-cover"
                                                                 style="width: 120px; height: 120px;">
                                                         </div>
@@ -196,7 +197,8 @@
                                                         style="display: none;"
                                                         </c:if>>
                                                         <img src="${pageContext.request.contextPath}${album.coverImagePath}"
-                                                            alt="${album.title}" class="album-cover">
+                                                            alt="${album.title}" class="album-cover"
+                                                            onerror="this.src='${pageContext.request.contextPath}/assets/img/LogoFinal1.png'">
                                                         <div class="album-title">${album.title}</div>
                                                         <div class="album-type">Album</div>
 
@@ -233,8 +235,9 @@
                                                             test="${status.index >= 10}">
                                                             style="display: none;"
                                 </c:if>>
-                                <img src="${pageContext.request.contextPath}${song.coverImage}" alt="${song.title}"
-                                    class="album-cover">
+                                <img src="${pageContext.request.contextPath}${song.coverImage}"
+                                    onerror="this.src='${pageContext.request.contextPath}/assets/img/LogoFinal1.png'"
+                                    alt="${song.title}" class="album-cover">
                                 <div class="album-title">${song.title}</div>
                             </div>
                             </c:forEach>

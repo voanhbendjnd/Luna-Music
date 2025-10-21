@@ -62,6 +62,12 @@ public class AdminController extends HttpServlet {
             if (type == null || type.isBlank())
                 type = "dashboard";
             if ("dashboard".equalsIgnoreCase(type)) {
+                var userDAO = new UserDAO();
+                var songDAO = new SongDAO();
+                var albumDAO = new AlbumDAO();
+                var artistDAO = new ArtistDAO();
+                var totalUser = userDAO.countUser();
+                request.setAttribute("totalUser", totalUser);
                 request.setAttribute("viewPath", "/views/admin/dashboard.jsp");
             } else if ("users".equalsIgnoreCase(type)) {
                 String q = request.getParameter("q");
@@ -137,13 +143,16 @@ public class AdminController extends HttpServlet {
         request.getRequestDispatcher("/views/admin/tables.jsp").forward(request, response);
     }
 
+    public void handleDashboard(HttpServletRequest request, HttpServletResponse response) {
+
+    }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
         String type = request.getParameter("type");
-
         // Handle Song operations
         if ("songs".equalsIgnoreCase(type)) {
             handleSongOperationsUpdate(request, response, action);

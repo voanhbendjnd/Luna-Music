@@ -56,6 +56,7 @@
                                                             <c:if test="${not empty song.coverImage}">
                                                                 <img src="${pageContext.request.contextPath}${song.coverImage}"
                                                                     alt="Song Cover" class="rounded me-2"
+                                                                    onerror="this.src='${pageContext.request.contextPath}/assets/img/LogoFinal1.png'"
                                                                     style="width: 40px; height: 40px; object-fit: cover;">
                                                             </c:if>
                                                             <div>
@@ -206,7 +207,7 @@
 
                                         <div class="mb-3">
                                             <label class="form-label">Genre</label>
-                                            <select class="form-select" name="genreId">
+                                            <select class="form-select" name="genreId" required>
                                                 <option value="">Select genre (optional)</option>
                                                 <c:forEach var="genre" items="${requestScope.genres}">
                                                     <option value="${genre.id}">${genre.name}</option>

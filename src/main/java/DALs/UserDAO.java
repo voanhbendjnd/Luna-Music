@@ -19,18 +19,30 @@ public class UserDAO extends DatabaseConfig {
         super();
     }
 
+    public int countUser() {
+        var sql = "select count(*) total from users";
+        try {
+            var ps = connection.prepareStatement(sql);
+            var rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        } catch (SQLException ex) {
+            return 0;
+        }
+        return 0;
+    }
 
-    public boolean existsByEmail(String email){
+    public boolean existsByEmail(String email) {
         var sql = "select case when exists(select 1 from users where email = ?) then 1 else 0 end as UserExists";
-        try{
+        try {
             var ps = connection.prepareStatement(sql);
             ps.setString(1, email);
             var rs = ps.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 return rs.getInt("UserExists") != 0;
             }
-        }
-        catch(SQLException ex){
+        } catch (SQLException ex) {
             return false;
         }
         return true;
