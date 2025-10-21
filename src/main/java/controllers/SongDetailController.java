@@ -96,15 +96,10 @@ public class SongDetailController extends HttpServlet {
                     Long songId = Long.parseLong(songIdParam);
                     SongDAO songDAO = new SongDAO();
                     boolean success = songDAO.incrementPlayCount(songId);
-
                     if (success) {
-                        response.getWriter().write("{\"success\": true, \"message\": \"Play count updated\"}");
-                    } else {
-                        response.getWriter()
-                                .write("{\"success\": false, \"message\": \"Failed to update play count\"}");
+                        System.out.println("Đã tăng lượt nghe bài hát (" + songId + ") lên 1");
                     }
-                } else {
-                    response.getWriter().write("{\"success\": false, \"message\": \"Invalid song ID\"}");
+
                 }
             } else if ("next".equals(action)) {
                 String songIdParam = request.getParameter("songId");

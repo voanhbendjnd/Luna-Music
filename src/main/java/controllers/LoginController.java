@@ -55,11 +55,11 @@ public class LoginController extends HttpServlet {
                 }
                 response.sendRedirect(request.getContextPath() + "/");
             } else {
-                request.setAttribute("error", "Username or password incorrect!");
+                request.setAttribute("errorMsg", "Username or password incorrect!");
                 request.getRequestDispatcher("/views/login.jsp").forward(request, response);
             }
         } else {
-            request.setAttribute("error", "User not found!");
+            request.setAttribute("errorMsg", "User not found!");
             request.getRequestDispatcher("/views/login.jsp").forward(request, response);
         }
     }

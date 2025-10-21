@@ -28,10 +28,18 @@ public class RegisterController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        var email = request.getParameter("email");
+        var userDAO = new UserDAO();
+        // valid data
+        if(userDAO.existsByEmail(email)){
+            request.setAttribute("errorMsg", "Email already exists");
+            request.getRequestDispatcher("/views/register.jsp").forward(request, response);
+            return;
+        }
         var name = request.getParameter("name");
         var gender = request.getParameter("gender");
-        var email = request.getParameter("email");
         var password = request.getParameter("password");
+
 
         // create salt
         byte[] salt = HashPassword.getNextSalt();
@@ -40,7 +48,6 @@ public class RegisterController extends HttpServlet {
         String lastPassword = Base64.getEncoder().encodeToString(hashedPassword);
         String lastSalt = Base64.getEncoder().encodeToString(salt);
         // save
-        var userDAO = new UserDAO();
         var check = userDAO.Register(name, gender, email, lastPassword, lastSalt);
         if (check) {
             response.sendRedirect(request.getContextPath() + "/login");

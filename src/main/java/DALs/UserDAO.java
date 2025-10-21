@@ -19,6 +19,23 @@ public class UserDAO extends DatabaseConfig {
         super();
     }
 
+
+    public boolean existsByEmail(String email){
+        var sql = "select case when exists(select 1 from users where email = ?) then 1 else 0 end as UserExists";
+        try{
+            var ps = connection.prepareStatement(sql);
+            ps.setString(1, email);
+            var rs = ps.executeQuery();
+            if(rs.next()){
+                return rs.getInt("UserExists") != 0;
+            }
+        }
+        catch(SQLException ex){
+            return false;
+        }
+        return true;
+    }
+
     public boolean Register(String name, String gender, String email, String password, String salt) {
         var sql = "insert into Users (name, gender, email, password, salt, role_id) values (?,?,?,?,?,?)";
         try {
