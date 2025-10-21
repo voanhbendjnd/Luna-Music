@@ -2,7 +2,6 @@ package controllers;
 
 import DALs.PlaylistDAO;
 import DALs.SongDAO;
-import DALs.UserDAO;
 import domain.entity.Playlist;
 import domain.entity.PlaylistSong;
 import domain.entity.Song;
@@ -29,7 +28,6 @@ import java.util.List;
 public class PlaylistController extends HttpServlet {
     private PlaylistDAO playlistDAO;
     private SongDAO songDAO;
-    private UserDAO userDAO;
 
     // File upload directories - Fixed paths on local machine
     private static final String BASE_UPLOAD_PATH = "C:\\Users\\PC\\Documents\\FALL25\\upload";
@@ -39,7 +37,6 @@ public class PlaylistController extends HttpServlet {
     public void init() throws ServletException {
         playlistDAO = new PlaylistDAO();
         songDAO = new SongDAO();
-        userDAO = new UserDAO();
     }
 
     @Override

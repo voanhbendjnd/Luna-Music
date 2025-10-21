@@ -753,19 +753,6 @@ public class SongDAO extends DatabaseConfig {
      */
     public List<Song> findRelatedSongs(Long songId, int limit, Long albumId) {
         List<Song> relatedSongs = new ArrayList<>();
-        String sql = "SELECT DISTINCT s.id, s.title, s.duration, s.coverImage, s.play_count, s.album_id, s.genre_id, " +
-                "s.createdAt, s.updatedAt " +
-                "FROM Songs s " +
-                "INNER JOIN SongArtist sa ON s.id = sa.song_id " +
-                "WHERE sa.artist_id IN ( " +
-                "    SELECT sa2.artist_id FROM SongArtist sa2 WHERE sa2.song_id = ? " +
-                ") AND s.id != ? " +
-                "UNION " +
-                "SELECT DISTINCT s.id, s.title, s.duration, s.coverImage, s.play_count, s.album_id, s.genre_id, " +
-                "s.createdAt, s.updatedAt " +
-                "FROM Songs s " +
-                "WHERE s.album_id = (SELECT album_id FROM Songs WHERE id = ?) AND s.id != ? " +
-                "ORDER BY play_count DESC";
         var query = "select s.id, s.coverImage, s.lyric, s.title, s.createdAt, s.duration, s.play_count, s.file_path from Songs s inner join Albums a on a.id = s.album_id where s.id <> ? and a.id = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(query);
