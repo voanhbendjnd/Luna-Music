@@ -5,14 +5,9 @@
 package controllers;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
 
 import DALs.AlbumDAO;
 import DALs.SongDAO;
-import domain.entity.Album;
-import domain.entity.Song;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,7 +31,7 @@ public class AlbumController extends HttpServlet {
             }
             // Get album details if available
             AlbumDAO albumDAO = new AlbumDAO();
-            var album =  albumDAO.findById(Long.parseLong(albumId));
+            var album = albumDAO.findById(Long.parseLong(albumId));
             // Get song with albumID
             var songDAO = new SongDAO();
             var songs = songDAO.findByAlbumId(Long.parseLong(albumId));

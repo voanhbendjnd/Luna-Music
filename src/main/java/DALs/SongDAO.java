@@ -25,10 +25,24 @@ public class SongDAO extends DatabaseConfig {
         super();
     }
 
+    public int countSong() {
+        var sql = "select count(*) total from Songs";
+        try {
+            var ps = connection.prepareStatement(sql);
+            var rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        } catch (SQLException ex) {
+            return 0;
+        }
+        return 0;
+    }
+
     /**
      * Search at home
      */
-    public ResSearch searchAtHome(String search){
+    public ResSearch searchAtHome(String search) {
         var resSearch = new ResSearch();
         var selectFirst = "select s.id songId , s.title songTitle, s.coverImage songImage, a.id artistId, a.image_path artistImage, a.name artistName, ";
         var selectSecond = " al.id albumId, al.cover_image_path albumImage, al.title albumTitle ";
@@ -36,7 +50,7 @@ public class SongDAO extends DatabaseConfig {
         var join = "left join SongArtists sa on s.id = sa.song_id left join Artists a on a.id = sa.artist_id left join Albums al on al.artist_id = a.id ";
         var where = "where s.title like ? or a.name like ? or al.title like ? ";
         var sql = selectFirst + selectSecond + from + join + where;
-        try{
+        try {
             var ps = connection.prepareStatement(sql);
             var kw = "%" + search.trim() + "%";
             ps.setString(1, kw);
@@ -47,14 +61,14 @@ public class SongDAO extends DatabaseConfig {
             var songs = new ArrayList<Song>();
             var artists = new ArrayList<Artist>();
             var albums = new ArrayList<Album>();
-            while(rs.next()){
+            while (rs.next()) {
                 var song = new Song();
                 var artist = new Artist();
                 var album = new Album();
                 song.setId(rs.getLong("songId"));
                 song.setTitle(rs.getString("songTitle"));
                 song.setCoverImage(rs.getString("songImage"));
-                Long artistID =  rs.getLong("artistId");
+                Long artistID = rs.getLong("artistId");
                 artist.setId(artistID);
                 artist.setName(rs.getString("artistName"));
                 artist.setImagePath(rs.getString("artistImage"));
@@ -64,9 +78,8 @@ public class SongDAO extends DatabaseConfig {
                 album.setCoverImagePath(rs.getString("albumImage"));
                 songs.add(song);
 
-                if(
-                        artists.stream().anyMatch(x-> x.getId().equals(artistID)) || albums.stream().anyMatch(x-> x.getId().equals(albumID))
-                ){
+                if (artists.stream().anyMatch(x -> x.getId().equals(artistID))
+                        || albums.stream().anyMatch(x -> x.getId().equals(albumID))) {
                     continue;
                 }
                 artists.add(artist);
@@ -75,8 +88,7 @@ public class SongDAO extends DatabaseConfig {
             resSearch.setSongs(songs);
             resSearch.setAlbums(albums);
             resSearch.setArtist(artists);
-        }
-        catch(SQLException ex){
+        } catch (SQLException ex) {
             ex.printStackTrace();
             return null;
         }

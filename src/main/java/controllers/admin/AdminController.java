@@ -66,8 +66,16 @@ public class AdminController extends HttpServlet {
                 var songDAO = new SongDAO();
                 var albumDAO = new AlbumDAO();
                 var artistDAO = new ArtistDAO();
-                var totalUser = userDAO.countUser();
-                request.setAttribute("totalUser", totalUser);
+                var totalUsers = userDAO.countUser();
+                var totalAlbums = albumDAO.countAlbum();
+                var totalSongs = songDAO.countSong();
+                var totalArtist = artistDAO.countArtist();
+                User user = (User)request.getSession().getAttribute("user");
+                request.setAttribute("name", user.getName());
+                request.setAttribute("totalArtists", totalArtist);
+                request.setAttribute("totalAlbums", totalAlbums);
+                request.setAttribute("totalSongs", totalSongs);
+                request.setAttribute("totalUsers", totalUsers);
                 request.setAttribute("viewPath", "/views/admin/dashboard.jsp");
             } else if ("users".equalsIgnoreCase(type)) {
                 String q = request.getParameter("q");

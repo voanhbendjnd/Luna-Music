@@ -19,6 +19,20 @@ public class ArtistDAO extends DatabaseConfig {
         super();
     }
 
+    public int countArtist() {
+        var sql = "select count(*) total from Artists";
+        try {
+            var ps = connection.prepareStatement(sql);
+            var rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        } catch (Exception e) {
+            return 0;
+        }
+        return 0;
+    }
+
     /**
      * Find all artists with optional keyword search
      */

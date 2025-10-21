@@ -20,6 +20,20 @@ public class AlbumDAO extends DatabaseConfig {
         super();
     }
 
+    public int countAlbum() {
+        var sql = "select count(*) total from Albums";
+        try {
+            var ps = connection.prepareStatement(sql);
+            var rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        } catch (SQLException ex) {
+            return 0;
+        }
+        return 0;
+    }
+
     /**
      * Find all albums with optional keyword search
      */
