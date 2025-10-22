@@ -60,10 +60,12 @@
                                                     <div class="playlist-cover">
                                                         <c:choose>
                                                             <c:when test="${not empty playlist.coverImage}">
-                                                                <img src="${pageContext.request.contextPath}${playlist.coverImage}"
+                                                                <i class="fas fa-music"></i>
+
+                                                                <!-- <img src="${pageContext.request.contextPath}${playlist.coverImage}"
                                                                     alt="${playlist.name}"
                                                                     onerror="this.src='${pageContext.request.contextPath}/assets/img/LogoFinal1.png'"
-                                                                    style="width: 100%; height: 100%; object-fit: cover;">
+                                                                    style="width: 100%; height: 100%; object-fit: cover;"> -->
                                                             </c:when>
                                                             <c:otherwise>
                                                                 <i class="fas fa-music"></i>

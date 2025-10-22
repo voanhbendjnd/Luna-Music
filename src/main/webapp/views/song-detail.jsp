@@ -120,7 +120,8 @@
                                     <button class="control-btn play-btn" id="mainPlayBtn">
                                         <i class="fas fa-play"></i>
                                     </button>
-                                    <button class="control-btn add-btn">
+                                    <button class="control-btn add-btn" data-bs-toggle="modal"
+                                        data-bs-target="#playlistModal">
                                         <i class="fas fa-plus"></i>
                                     </button>
                                     <button class="control-btn download-btn">
@@ -259,6 +260,40 @@
                                         </a>
                                     </button>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- CREATE MODAL -->
+                    <div class="modal fade" id="playlistModal" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content" style="background-color: #121212">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Add to playlist</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <c:forEach var="playlist" items="${playlists}" varStatus="status">
+                                    <form method="post" action="${pageContext.request.contextPath}/playlist">
+                                        <input type="hidden" name="action" value="addSong" />
+                                        <input type="hidden" name="songId" value="${song.id}" />
+                                        <input type="hidden" name="playlistId" value="${playlist.id}" />
+                                        <div class="my-playlist">
+                                            <div class="playlist-title">
+                                                ${playlist.name}
+                                            </div>
+                                            <button>
+                                                Add
+                                                <!-- <i class="fas fa-plus"></i> -->
+                                            </button>
+                                        </div>
+                                    </form>
+
+
+
+                                </c:forEach>
+
+
+
                             </div>
                         </div>
                     </div>

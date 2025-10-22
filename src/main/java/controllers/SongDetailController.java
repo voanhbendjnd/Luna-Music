@@ -2,7 +2,9 @@ package controllers;
 
 import DALs.SongDAO;
 import DALs.AlbumDAO;
+import DALs.PlaylistDAO;
 import domain.entity.Song;
+import domain.entity.User;
 import domain.entity.Album;
 
 import jakarta.servlet.ServletException;
@@ -65,6 +67,17 @@ public class SongDetailController extends HttpServlet {
             }
             // increase count play song
             songDAO.incrementPlayCount(songId);
+            // My playlist
+            var session = request.getSession(false);
+            if (session != null) {
+                var user = (User) session.getAttribute("user");
+                var playlistDAO = new PlaylistDAO();
+                var playlists = playlistDAO.getPlayListOfUser(user.getId());
+                if (!playlists.isEmpty() && playlists != null) {
+                    request.setAttribute("playlists", playlists);
+                }
+            }
+
             // set attribute
             request.setAttribute("song", song);
             request.setAttribute("album", album);

@@ -65,7 +65,8 @@ public class SongDAO extends DatabaseConfig {
                 var song = new Song();
                 var artist = new Artist();
                 var album = new Album();
-                song.setId(rs.getLong("songId"));
+                var songID = rs.getLong("songId");
+                song.setId(songID);
                 song.setTitle(rs.getString("songTitle"));
                 song.setCoverImage(rs.getString("songImage"));
                 Long artistID = rs.getLong("artistId");
@@ -76,6 +77,9 @@ public class SongDAO extends DatabaseConfig {
                 album.setId(albumID);
                 album.setTitle(rs.getString("albumTitle"));
                 album.setCoverImagePath(rs.getString("albumImage"));
+                if(songs.stream().anyMatch(x -> x.getId().equals(songID))){
+                    continue;
+                }
                 songs.add(song);
 
                 if (artists.stream().anyMatch(x -> x.getId().equals(artistID))

@@ -5,6 +5,161 @@
     box-sizing: border-box;
 }
 
+/* Bottom Player Bar */
+.bottom-player-bar {
+    background-color: #121212;
+    border-top: 1px solid #282828;
+    padding: 16px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 4px;
+    background-color: #535353;
+    border-radius: 2px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: #ffffff;
+    width: 2%;
+    border-radius: 2px;
+    transition: width 0.1s ease;
+}
+
+.time-display {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Main Controls */
+.main-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.main-play-btn {
+    width: 48px;
+    height: 48px;
+    background-color: white;
+    color: black;
+    font-size: 18px;
+}
+
+.main-play-btn:hover {
+    background-color: #f0f0f0;
+    transform: scale(1.05);
+}
+
+/* Right Controls */
+.right-controls {
+    display: flex;
+    gap: 16px;
+}
+
+/* Audio Player */
+#audioPlayer {
+    display: none;
+}
+
+/* Progress Container */
+.progress-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.player-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+/* Animation for smooth transitions */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.song-detail-content,
+.controls-container,
+.recommended-container {
+    animation: fadeIn 0.6s ease-out;
+}
+
+/* Hover effects for interactive elements */
+.recommended-song,
+.control-btn {
+    transition: all 0.2s ease;
+}
+
+.control-btn {
+    width: 56px;
+    height: 56px;
+    border: none;
+    border-radius: 50%;
+    background-color: transparent;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+.control-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: scale(1.05);
+}
+
+.play-btn {
+    background-color: #1db954;
+    width: 64px;
+    height: 64px;
+    font-size: 24px;
+}
+
+.play-btn:hover {
+    background-color: #1ed760;
+    transform: scale(1.05);
+}
+
+.play-btn.active {
+    background-color: #1db954;
+}
+
+.play-btn.active i::before {
+    content: "\f04c";
+    /* pause icon */
+}
+
+.play-btn:not(.active) i::before {
+    content: "\f04b";
+    /* play icon */
+}
+
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #121212;

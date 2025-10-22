@@ -9,6 +9,30 @@ html {
     background-color: #121212;
 }
 
+.my-playlist {
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 10px;
+}
+
+.my-playlist button {
+    border: none;
+    width: 50px;
+    border-radius: 10px;
+    border: 1px solid #1db954;
+    background-color: #121212;
+    color: #1db954;
+    font-weight: bold;
+}
+
+.my-playlist .playlist-title {
+    font: 1em sans-serif;
+    font-style: italic;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #121212;

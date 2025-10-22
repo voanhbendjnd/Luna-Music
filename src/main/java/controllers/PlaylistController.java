@@ -277,7 +277,7 @@ public class PlaylistController extends HttpServlet {
 
             request.setAttribute("playlist", playlist);
             request.setAttribute("allSongs", allSongs);
-            request.getRequestDispatcher("/views/playlist-detail.jsp").forward(request, response);
+            request.getRequestDispatcher("/views/playlist.jsp").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -491,10 +491,10 @@ public class PlaylistController extends HttpServlet {
 
             if (added) {
                 System.out.println(playlistId);
-                response.sendRedirect(request.getContextPath() + "/playlist?id=" + playlistId);
+                response.sendRedirect(request.getContextPath() + "/song-detail?id=" + songId);
             } else {
-                request.setAttribute("error", "Failed to add song to playlist (song might already exist)");
-                showPlaylistDetail(request, response, playlistId);
+                response.sendRedirect(request.getContextPath() + "/song-detail?id=" + songId);
+
             }
 
         } catch (Exception e) {

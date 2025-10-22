@@ -165,6 +165,9 @@
 
                 <script src="${pageContext.request.contextPath}/assets/js/bootstrap.bundle.min.js"></script>
                 <script src="${pageContext.request.contextPath}/assets/js/home.js"></script>
+                <script>
+
+                </script>
             </body>
 
 </html>
