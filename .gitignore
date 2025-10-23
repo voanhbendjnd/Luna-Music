@@ -1,2 +1,16 @@
-/target/
-/.metadata/
+# Ignore Maven build output
+target/
+*.class
+*.war
+*.log
+
+# IDE config files
+.settings/
+.classpath
+.project
+.idea/
+*.iml
+
+# OS-specific
+.DS_Store
+Thumbs.db
