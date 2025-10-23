@@ -100,8 +100,7 @@
                                         </span>
                                         <span class="release-year">2021</span>
                                         <span class="duration">
-                                            <fmt:formatNumber value="${song.duration / 60}" pattern="#,##0" />:
-                                            <fmt:formatNumber value="${song.duration % 60}" pattern="00" />
+                                            <span class="total-time">${song.formattedDuration}</span>
                                         </span>
                                         <span class="play-count">
                                             <fmt:formatNumber value="${song.playCount}" pattern="#,##0" />
@@ -120,14 +119,17 @@
                                     <button class="control-btn play-btn" id="mainPlayBtn">
                                         <i class="fas fa-play"></i>
                                     </button>
-                                    <button class="control-btn add-btn" data-bs-toggle="modal"
-                                        data-bs-target="#playlistModal">
-                                        <i class="fas fa-plus"></i>
-                                    </button>
-                                    <button class="control-btn download-btn">
-                                        <i class="fas fa-download"></i>
-                                    </button>
-
+                                    <c:if test="${not empty user}">
+                                        <button class="control-btn add-btn" data-bs-toggle="modal"
+                                            data-bs-target="#playlistModal">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </c:if>
+                                    <c:if test="${empty user}">
+                                        <a href="${pageContext.request.contextPath}/login">
+                                            <i style="color: white; padding:5px;" class="fas fa-plus"></i>
+                                        </a>
+                                    </c:if>
                                 </div>
 
                                 <!-- Artist Information -->
@@ -279,7 +281,9 @@
                                         <input type="hidden" name="playlistId" value="${playlist.id}" />
                                         <div class="my-playlist">
                                             <div class="playlist-title">
-                                                ${playlist.name}
+                                                <i class="fas fa-music"></i>
+
+                                                <span>${playlist.name}</span>
                                             </div>
                                             <button>
                                                 Add
@@ -341,6 +345,7 @@
                                     document.getElementById("nextBtn").click();
                                 })
                             })
+
                         </script>
                 </body>
 

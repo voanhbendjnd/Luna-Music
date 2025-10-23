@@ -49,24 +49,24 @@ public class HomeController extends HttpServlet {
             }
             request.setAttribute("songs", songs);
             var popularSongs = this.getPopularSongs(songs);
-            if (popularSongs != null && popularSongs.size() > 10) {
-                popularSongs = popularSongs.subList(0, 15);
+            if (popularSongs != null && popularSongs.size() > 20) {
+                popularSongs = popularSongs.subList(0, 20);
             }
             request.setAttribute("popularSong", popularSongs);
 
             // Get featured artists (limit to 10)
             var artistDAO = new ArtistDAO();
             List<Artist> artists = artistDAO.findAll(null);
-            if (artists.size() > 10) {
-                artists = artists.subList(0, 10);
+            if (artists.size() > 20) {
+                artists = artists.subList(0, 20);
             }
             request.setAttribute("artists", artists);
 
             // Get featured albums (limit to 15)
             var albumDAO = new AlbumDAO();
             List<Album> albums = albumDAO.findAll(null);
-            if (albums.size() > 15) {
-                albums = albums.subList(0, 15);
+            if (albums.size() > 20) {
+                albums = albums.subList(0, 20);
             }
             request.setAttribute("albums", albums);
 

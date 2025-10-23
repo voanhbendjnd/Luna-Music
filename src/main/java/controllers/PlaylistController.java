@@ -70,7 +70,7 @@ public class PlaylistController extends HttpServlet {
             if (playlistId != null) {
                 showPlaylistDetail(request, response, Long.parseLong(playlistId));
             } else {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Playlist ID is required");
+                return;
             }
         } else if (pathInfo.startsWith("/edit")) {
             // Show edit playlist form
@@ -78,10 +78,10 @@ public class PlaylistController extends HttpServlet {
             if (playlistId != null) {
                 showEditPlaylistForm(request, response, Long.parseLong(playlistId));
             } else {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Playlist ID is required");
+                return;
             }
         } else {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
         }
     }
 
@@ -175,7 +175,7 @@ public class PlaylistController extends HttpServlet {
         } else if ("removeSong".equals(action)) {
             removeSongFromPlaylist(request, response);
         } else {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid action");
+            return;
         }
     }
 
@@ -222,7 +222,6 @@ public class PlaylistController extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -245,7 +244,6 @@ public class PlaylistController extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -255,7 +253,6 @@ public class PlaylistController extends HttpServlet {
             Playlist playlist = playlistDAO.getPlaylistById(playlistId);
 
             if (playlist == null) {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Playlist not found");
                 return;
             }
 
@@ -281,7 +278,6 @@ public class PlaylistController extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -302,13 +298,11 @@ public class PlaylistController extends HttpServlet {
             Playlist playlist = playlistDAO.getPlaylistById(playlistId);
 
             if (playlist == null) {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Playlist not found");
                 return;
             }
 
             // Check if user owns this playlist
             if (playlist.getUser().getId() != currentUser.getId()) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN, "You don't have permission to edit this playlist");
                 return;
             }
 
@@ -318,7 +312,6 @@ public class PlaylistController extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -358,7 +351,6 @@ public class PlaylistController extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -383,13 +375,11 @@ public class PlaylistController extends HttpServlet {
             Playlist playlist = playlistDAO.getPlaylistById(playlistId);
 
             if (playlist == null) {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Playlist not found");
                 return;
             }
 
             // Check if user owns this playlist
             if (playlist.getUser().getId() != currentUser.getId()) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN, "You don't have permission to edit this playlist");
                 return;
             }
 
@@ -407,7 +397,6 @@ public class PlaylistController extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -430,14 +419,11 @@ public class PlaylistController extends HttpServlet {
             Playlist playlist = playlistDAO.getPlaylistById(playlistId);
 
             if (playlist == null) {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Playlist not found");
                 return;
             }
 
             // Check if user owns this playlist
             if (playlist.getUser().getId() != currentUser.getId()) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN,
-                        "You don't have permission to delete this playlist");
                 return;
             }
 
@@ -452,7 +438,6 @@ public class PlaylistController extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -476,14 +461,11 @@ public class PlaylistController extends HttpServlet {
             Playlist playlist = playlistDAO.getPlaylistById(playlistId);
 
             if (playlist == null) {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Playlist not found");
                 return;
             }
 
             // Check if user owns this playlist
             if (playlist.getUser().getId() != currentUser.getId()) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN,
-                        "You don't have permission to modify this playlist");
                 return;
             }
 
@@ -491,15 +473,16 @@ public class PlaylistController extends HttpServlet {
 
             if (added) {
                 System.out.println(playlistId);
-                response.sendRedirect(request.getContextPath() + "/song-detail?id=" + songId);
+                response.sendRedirect(request.getContextPath() + "/song-detail?id=" +
+                        songId);
             } else {
-                response.sendRedirect(request.getContextPath() + "/song-detail?id=" + songId);
+                response.sendRedirect(request.getContextPath() + "/song-detail?id=" +
+                        songId);
 
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -523,14 +506,11 @@ public class PlaylistController extends HttpServlet {
             Playlist playlist = playlistDAO.getPlaylistById(playlistId);
 
             if (playlist == null) {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Playlist not found");
                 return;
             }
 
             // Check if user owns this playlist
             if (playlist.getUser().getId() != currentUser.getId()) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN,
-                        "You don't have permission to modify this playlist");
                 return;
             }
 
@@ -545,7 +525,6 @@ public class PlaylistController extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -567,14 +546,11 @@ public class PlaylistController extends HttpServlet {
             Playlist playlist = playlistDAO.getPlaylistById(playlistId);
 
             if (playlist == null) {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Playlist not found");
                 return;
             }
 
             // Check if user owns this playlist
             if (playlist.getUser().getId() != currentUser.getId()) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN,
-                        "You don't have permission to modify this playlist");
                 return;
             }
 
@@ -597,15 +573,6 @@ public class PlaylistController extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-    }
-
-    @Override
-    public void destroy() {
-        // Note: All DAOs extend DatabaseConfig and will be garbage collected
-        // automatically
-        // No need to explicitly close connections as they are managed by the parent
-        // class
     }
 }

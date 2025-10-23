@@ -185,16 +185,12 @@ public class AdminController extends HttpServlet {
             return;
         }
 
-        // Handle User operations (existing code)
         var dao = new UserDAO();
-        try {
             if ("create".equals(action)) {
                 User u = buildUserFromRequest(request);
 
-                // Check if email already exists
                 User existingUser = dao.findByEmail(u.getEmail());
                 if (existingUser != null) {
-                    // Load users data and show error message on the same page
                     String q = request.getParameter("q");
                     var roleDAO = new RoleDAO();
                     var users = dao.findAll(q);
@@ -213,7 +209,6 @@ public class AdminController extends HttpServlet {
                     request.setAttribute("success", "User created successfully!");
                     response.sendRedirect(request.getContextPath() + "/admin?action=list&type=users");
                 } else {
-                    // Load users data and show error message on the same page
                     String q = request.getParameter("q");
                     var roleDAO = new RoleDAO();
                     var users = dao.findAll(q);
@@ -233,10 +228,8 @@ public class AdminController extends HttpServlet {
                 if (idStr != null && !idStr.isBlank()) {
                     u.setId(Long.parseLong(idStr));
 
-                    // Check if email already exists for another user
                     User existingUser = dao.findByEmail(u.getEmail());
                     if (existingUser != null && !existingUser.getId().equals(u.getId())) {
-                        // Load users data and show error message on the same page
                         String q = request.getParameter("q");
                         var roleDAO = new RoleDAO();
                         var users = dao.findAll(q);
@@ -256,7 +249,6 @@ public class AdminController extends HttpServlet {
                     request.setAttribute("success", "User updated successfully!");
                     response.sendRedirect(request.getContextPath() + "/admin?action=list&type=users");
                 } else {
-                    // Load users data and show error message on the same page
                     String q = request.getParameter("q");
                     var roleDAO = new RoleDAO();
                     var users = dao.findAll(q);
@@ -277,20 +269,6 @@ public class AdminController extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/admin?action=list&type=users");
                 return;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            // Load users data and show error message on the same page
-            String q = request.getParameter("q");
-            var roleDAO = new RoleDAO();
-            var users = dao.findAll(q);
-            var roles = roleDAO.findAll();
-            request.setAttribute("users", users);
-            request.setAttribute("roles", roles);
-            request.setAttribute("q", q == null ? "" : q);
-            request.setAttribute("error", "Operation failed: " + e.getMessage());
-            request.setAttribute("viewPath", "/views/admin/user.jsp");
-            request.getRequestDispatcher("/views/admin/tables.jsp").forward(request, response);
-        }
     }
 
     private User buildUserFromRequest(HttpServletRequest request) {
@@ -298,7 +276,6 @@ public class AdminController extends HttpServlet {
         u.setName(request.getParameter("name"));
         u.setEmail(request.getParameter("email"));
         u.setPassword(request.getParameter("password"));
-        // u.setAvatar(request.getParameter("avatar"));
         u.setActive(
                 "on".equals(request.getParameter("active")) || "true".equalsIgnoreCase(request.getParameter("active")));
         String gender = request.getParameter("gender");
@@ -309,7 +286,6 @@ public class AdminController extends HttpServlet {
             }
         }
 
-        // Handle role parameter
         String roleIdStr = request.getParameter("role");
         if (roleIdStr != null && !roleIdStr.isBlank()) {
             try {
@@ -338,7 +314,6 @@ public class AdminController extends HttpServlet {
             if ("create".equals(action)) {
                 Song song = buildSongFromRequest(request);
                 if (songDAO.create(song)) {
-                    // Handle artist relationships
                     String[] artistIds = request.getParameterValues("artistIds");
                     if (artistIds != null && artistIds.length > 0) {
                         List<Long> artistIdList = new ArrayList<>();
@@ -357,19 +332,16 @@ public class AdminController extends HttpServlet {
                 if (idStr != null && !idStr.isBlank()) {
                     Song song = buildSongFromRequest(request);
                     song.setId(Long.parseLong(idStr));
-                    // find song
                     var currentSong = songDAO.findById(Long.parseLong(idStr));
                     if (currentSong != null) {
                         var checkAudio = false;
                         var checkImage = false;
-                        // Handle file uploads
                         String audioFilePath = handleFileUpload(request, "audioFile", AUDIO_DIR,
                                 ALLOWED_AUDIO_EXTENSIONS);
                         if (audioFilePath != null) {
                             checkAudio = true;
                             currentSong.setFilePath("/uploads/" + AUDIO_DIR + "/" + audioFilePath);
                         }
-                        // Handle cover image upload (for song)
                         String coverImagePath = handleFileUpload(request, "coverImage", IMAGE_DIR,
                                 ALLOWED_IMAGE_EXTENSIONS);
                         if (coverImagePath != null) {
@@ -379,41 +351,25 @@ public class AdminController extends HttpServlet {
                         currentSong.setTitle(request.getParameter("title"));
                         currentSong.setLyric(request.getParameter("lyric"));
 
-                        // Handle duration
                         String durationStr = request.getParameter("duration");
                         if (durationStr != null && !durationStr.trim().isEmpty() && checkAudio) {
-                            try {
-                                currentSong.setDuration(Integer.parseInt(durationStr));
-                            } catch (NumberFormatException e) {
-                                // Keep duration as null if parsing fails
-                            }
+                            currentSong.setDuration(Integer.parseInt(durationStr));
+
                         }
-
-                        // Set default play count
                         song.setPlayCount(0);
-
-                        // Handle album
                         String albumIdStr = request.getParameter("albumId");
                         if (albumIdStr != null && !albumIdStr.trim().isEmpty()) {
-                            try {
                                 var albumDAO = new AlbumDAO();
                                 var album = albumDAO.findById(Long.parseLong(albumIdStr));
                                 currentSong.setAlbum(album);
-                            } catch (NumberFormatException e) {
-                                // Keep album as null if parsing fails
-                            }
                         }
 
-                        // Handle genre
                         String genreIdStr = request.getParameter("genreId");
                         if (genreIdStr != null && !genreIdStr.trim().isEmpty()) {
-                            try {
                                 var genreDAO = new GenreDAO();
                                 Genre genre = genreDAO.findById(Long.parseLong(genreIdStr));
                                 currentSong.setGenre(genre);
-                            } catch (NumberFormatException e) {
-                                // Keep genre as null if parsing fails
-                            }
+
                         }
                         var updateSuccess = false;
                         if (!checkImage && !checkAudio) {
@@ -438,21 +394,6 @@ public class AdminController extends HttpServlet {
                             songArtistDAO.updateSongArtists(song.getId(), artistIdList);
                         }
                     }
-                    //
-
-                    // if (songDAO.update(song)) {
-                    // // Update artist relationships
-                    // String[] artistIds = request.getParameterValues("artistIds");
-                    // List<Long> artistIdList = new ArrayList<>();
-                    // if (artistIds != null) {
-                    // for (String artistId : artistIds) {
-                    // if (artistId != null && !artistId.trim().isEmpty()) {
-                    // artistIdList.add(Long.parseLong(artistId));
-                    // }
-                    // }
-                    // }
-                    // songArtistDAO.updateSongArtists(song.getId(), artistIdList);
-                    // }
                 }
                 response.sendRedirect(request.getContextPath() + "/admin?action=list&type=songs");
 
@@ -460,17 +401,13 @@ public class AdminController extends HttpServlet {
                 String idStr = request.getParameter("id");
                 if (idStr != null && !idStr.isBlank()) {
                     long songId = Long.parseLong(idStr);
-                    // Delete song-artist relationships first
                     songArtistDAO.deleteBySongId(songId);
-                    // Then delete the song
                     songDAO.delete(songId);
                 }
                 response.sendRedirect(request.getContextPath() + "/admin?action=list&type=songs");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect(request.getContextPath() + "/admin?action=list&type=songs&error=" +
-                    java.net.URLEncoder.encode("Operation failed: " + e.getMessage(), "UTF-8"));
         }
     }
 
@@ -484,11 +421,7 @@ public class AdminController extends HttpServlet {
         // Handle duration
         String durationStr = request.getParameter("duration");
         if (durationStr != null && !durationStr.trim().isEmpty()) {
-            try {
                 song.setDuration(Integer.parseInt(durationStr));
-            } catch (NumberFormatException e) {
-                // Keep duration as null if parsing fails
-            }
         }
 
         // Set default play count
@@ -497,25 +430,18 @@ public class AdminController extends HttpServlet {
         // Handle album
         String albumIdStr = request.getParameter("albumId");
         if (albumIdStr != null && !albumIdStr.trim().isEmpty()) {
-            try {
                 Album album = new Album();
                 album.setId(Long.parseLong(albumIdStr));
                 song.setAlbum(album);
-            } catch (NumberFormatException e) {
-                // Keep album as null if parsing fails
-            }
         }
 
         // Handle genre
         String genreIdStr = request.getParameter("genreId");
         if (genreIdStr != null && !genreIdStr.trim().isEmpty()) {
-            try {
                 Genre genre = new Genre();
                 genre.setId(Long.parseLong(genreIdStr));
                 song.setGenre(genre);
-            } catch (NumberFormatException e) {
-                // Keep genre as null if parsing fails
-            }
+
         }
 
         // Handle file uploads
@@ -654,7 +580,6 @@ public class AdminController extends HttpServlet {
             throws ServletException, IOException {
         var albumDAO = new AlbumDAO();
 
-        try {
             if ("create".equals(action)) {
                 Album album = buildAlbumFromRequest(request);
                 albumDAO.create(album);
@@ -708,11 +633,6 @@ public class AdminController extends HttpServlet {
                 }
                 response.sendRedirect(request.getContextPath() + "/admin?action=list&type=albums");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.sendRedirect(request.getContextPath() + "/admin?action=list&type=albums&error=" +
-                    java.net.URLEncoder.encode("Operation failed: " + e.getMessage(), "UTF-8"));
-        }
     }
 
     /**
@@ -722,7 +642,6 @@ public class AdminController extends HttpServlet {
             throws ServletException, IOException {
         var genreDAO = new GenreDAO();
 
-        try {
             if ("create".equals(action)) {
                 Genre genre = buildGenreFromRequest(request);
                 genreDAO.create(genre);
@@ -744,11 +663,6 @@ public class AdminController extends HttpServlet {
                 }
                 response.sendRedirect(request.getContextPath() + "/admin?action=list&type=genres");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.sendRedirect(request.getContextPath() + "/admin?action=list&type=genres&error=" +
-                    java.net.URLEncoder.encode("Operation failed: " + e.getMessage(), "UTF-8"));
-        }
     }
 
     /**
@@ -778,25 +692,18 @@ public class AdminController extends HttpServlet {
         // Handle release year
         String releaseYearStr = request.getParameter("releaseYear");
         if (releaseYearStr != null && !releaseYearStr.trim().isEmpty()) {
-            try {
                 album.setReleaseYear(Integer.parseInt(releaseYearStr));
-            } catch (NumberFormatException e) {
-                // Keep release year as null if parsing fails
-            }
+
         }
 
         // Handle artist
         String artistIdStr = request.getParameter("artistId");
         if (artistIdStr != null && !artistIdStr.trim().isEmpty()) {
-            try {
                 Artist artist = new Artist();
                 artist.setId(Long.parseLong(artistIdStr));
                 album.setArtist(artist);
-            } catch (NumberFormatException e) {
-                // Keep artist as null if parsing fails
-            }
-        }
 
+        }
         // Handle cover image upload
         String coverImagePath = handleFileUpload(request, "coverImage", IMAGE_DIR, ALLOWED_IMAGE_EXTENSIONS);
         if (coverImagePath != null) {

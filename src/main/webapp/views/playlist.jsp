@@ -147,12 +147,6 @@
                                         <i class="fas fa-step-forward"></i>
                                     </a>
                                 </button>
-                                <button class="control-btn repeat-btn">
-                                    <a href="${pageContext.request.contextPath}/song-detail?id=${song.id}"
-                                        style="color: white;">
-                                        <i class="fas fa-redo"></i>
-                                    </a>
-                                </button>
                             </div>
                         </div>
                     </div>
@@ -186,8 +180,7 @@
                                 const bottomSongArtist = document.getElementById("bottomSongArtist");
                                 const bottomPlayBtn = document.getElementById("bottomPlayBtn");
                                 const progressFill = document.getElementById("progressFill");
-                                const currentTimeSpan = document.getElementById("currentTime");
-                                const totalTimeSpan = document.getElementById("totalTime"); // Nhớ thêm id="totalTime" trong HTML
+
 
                                 let currentSongIndex = -1;
                                 let isPlaying = false;
@@ -213,6 +206,56 @@
                                     bottomSongTitle.textContent = song.title;
                                     bottomSongArtist.textContent = song.artist;
                                 }
+                                const nextBtn = document.getElementById("nextBtn");
+
+                                nextBtn.addEventListener("click", function () {
+                                    if (currentSongIndex + 1 < playlistSongs.length) {
+                                        playSongByIndex(currentSongIndex + 1);
+                                    }
+                                    else {
+                                        playSongByIndex(0);
+                                    }
+                                });
+                                const prevBtn = document.getElementById("prevBtn");
+                                prevBtn.addEventListener("click", function () {
+                                    if (currentSongIndex - 1 >= 0) {
+                                        playSongByIndex(currentSongIndex - 1);
+                                    }
+                                    else {
+                                        playSongByIndex(0);
+                                    }
+                                })
+                                const nextBtnShuffle = document.getElementById("nextBtnShuffle");
+                                nextBtnShuffle.addEventListener("click", function () {
+                                    const randomIndex = Math.floor(Math.random() * playlistSongs.length);
+                                    playSongByIndex(randomIndex);
+                                })
+
+                                function removeSongFromPlaylist(event, playlistId, songId) {
+                                    event.stopPropagation();
+                                    const form = document.createElement("form");
+                                    form.method = "POST";
+                                    form.action = currentContextPath + "/playlist";
+                                    const actionInput = document.createElement("input");
+                                    actionInput.type = "hidden";
+                                    actionInput.name = "action";
+                                    actionInput.value = "removeSong";
+                                    const handlePlaylistId = document.createElement("input");
+                                    handlePlaylistId.type = "hidden";
+                                    handlePlaylistId.name = "playlistId";
+                                    handlePlaylistId.value = playlistId;
+                                    const handleSongId = document.createElement("input");
+                                    handleSongId.type = "hidden";
+                                    handleSongId.name = "songId";
+                                    handleSongId.value = songId;
+                                    form.appendChild(actionInput);
+                                    form.appendChild(handlePlaylistId);
+                                    form.appendChild(handleSongId);
+                                    document.body.appendChild(form);
+                                    form.submit();
+                                    document.body.removeChild(form);
+                                }
+                                window.removeSongFromPlaylist = removeSongFromPlaylist;
 
                                 // === GÁN HÀM GỌI TỪ HTML ===
                                 window.playSong = function (songID) {
@@ -241,6 +284,7 @@
                                         progressFill.style.width = progress + "%";
                                     }
                                 });
+
 
                                 // === TỰ ĐỘNG PHÁT BÀI TIẾP THEO ===
                                 audioPlayer.addEventListener("ended", function () {

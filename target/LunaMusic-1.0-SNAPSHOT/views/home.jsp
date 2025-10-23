@@ -4,6 +4,7 @@
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
         <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
+
             <head>
                 <title>Luna Music - Home</title>
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -60,10 +61,12 @@
                                                     <div class="playlist-cover">
                                                         <c:choose>
                                                             <c:when test="${not empty playlist.coverImage}">
-                                                                <img src="${pageContext.request.contextPath}${playlist.coverImage}"
+                                                                <i class="fas fa-music"></i>
+
+                                                                <!-- <img src="${pageContext.request.contextPath}${playlist.coverImage}"
                                                                     alt="${playlist.name}"
                                                                     onerror="this.src='${pageContext.request.contextPath}/assets/img/LogoFinal1.png'"
-                                                                    style="width: 100%; height: 100%; object-fit: cover;">
+                                                                    style="width: 100%; height: 100%; object-fit: cover;"> -->
                                                             </c:when>
                                                             <c:otherwise>
                                                                 <i class="fas fa-music"></i>

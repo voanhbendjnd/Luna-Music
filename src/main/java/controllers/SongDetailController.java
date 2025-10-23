@@ -71,11 +71,14 @@ public class SongDetailController extends HttpServlet {
             var session = request.getSession(false);
             if (session != null) {
                 var user = (User) session.getAttribute("user");
-                var playlistDAO = new PlaylistDAO();
-                var playlists = playlistDAO.getPlayListOfUser(user.getId());
-                if (!playlists.isEmpty() && playlists != null) {
-                    request.setAttribute("playlists", playlists);
+                if(user != null){
+                    var playlistDAO = new PlaylistDAO();
+                    var playlists = playlistDAO.getPlayListOfUser(user.getId());
+                    if (!playlists.isEmpty() && playlists != null) {
+                        request.setAttribute("playlists", playlists);
+                    }
                 }
+
             }
 
             // set attribute

@@ -275,26 +275,6 @@ function displayPlaylistsFromResponse(html) {
 }
 
 /**
- * Create a playlist item element for sidebar
- */
-function createPlaylistItem(playlist) {
-  const item = document.createElement("div");
-  item.className = "playlist-item";
-  item.onclick = () => viewPlaylist(playlist.id);
-
-  item.innerHTML = `
-    <div class="playlist-cover">
-      <i class="fas fa-music"></i>
-    </div>
-    <div class="playlist-info">
-      <div class="playlist-name">${playlist.name}</div>
-      <div class="playlist-details">${playlist.songCount} songs • ${playlist.totalDuration}</div>
-    </div>
-  `;
-
-  return item;
-}
-/**
  * Create a new playlist
  */
 function createPlaylist() {
