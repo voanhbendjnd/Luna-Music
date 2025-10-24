@@ -53,8 +53,7 @@
                                                         <c:choose>
                                                             <c:when test="${not empty album.coverImagePath}">
                                                                 <img src="${pageContext.request.contextPath}${album.coverImagePath}"
-                                                                                                                                    onerror="this.src='${pageContext.request.contextPath}/assets/img/LogoFinal1.png'"
-
+                                                                    onerror="this.src='${pageContext.request.contextPath}/assets/img/LogoFinal1.png'"
                                                                     alt="Album Cover" class="rounded"
                                                                     style="width: 60px; height: 60px; object-fit: cover;">
                                                             </c:when>
@@ -298,18 +297,6 @@
             </div>
 
             <script>
-                // DataTables initialization
-                window.addEventListener('DOMContentLoaded', () => {
-                    const table = document.getElementById('datatablesSimple');
-                    if (table && window.simpleDatatables) {
-                        new simpleDatatables.DataTable(table, {
-                            searchable: true,
-                            sortable: true,
-                            perPage: 10,
-                            perPageSelect: [5, 10, 15, 20, 25]
-                        });
-                    }
-                });
 
                 // Image preview functionality
                 document.addEventListener('DOMContentLoaded', function () {

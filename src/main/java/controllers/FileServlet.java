@@ -27,7 +27,6 @@ public class FileServlet extends HttpServlet {
         // Get the file path from the request ex: /uploads/music/filename.mp3
         String requestPath = request.getPathInfo();
         if (requestPath == null || requestPath.isEmpty()) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
 
@@ -38,7 +37,6 @@ public class FileServlet extends HttpServlet {
         // Check if file exists ex:
         // C:\Users\PC\Documents\FALL25/upload\music\filename.mp3
         if (!file.exists() || !file.isFile()) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
 
@@ -48,11 +46,9 @@ public class FileServlet extends HttpServlet {
             String canonicalFilePath = file.getCanonicalPath();
             String canonicalBasePath = new File(BASE_UPLOAD_PATH).getCanonicalPath();
             if (!canonicalFilePath.startsWith(canonicalBasePath)) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN);
                 return;
             }
         } catch (IOException e) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return;
         }
 
@@ -82,7 +78,6 @@ public class FileServlet extends HttpServlet {
             // serving file: C:\Users\PC\Documents\FALL25/upload\music\filename.mp3, Error:
             // java.io.IOException
             System.err.println("Error serving file: " + file.getAbsolutePath() + ", Error: " + e.getMessage());
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 

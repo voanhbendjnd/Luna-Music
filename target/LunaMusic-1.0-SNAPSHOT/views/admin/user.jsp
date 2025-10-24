@@ -35,9 +35,9 @@
                                         aria-label="Close"></button>
                                 </div>
                             </c:if>
-                            <c:if test="${not empty requestScope.error}">
+                            <c:if test="${not empty error}">
                                 <div class="alert alert-danger alert-dismissible fade show m-3" role="alert">
-                                    <i class="fas fa-exclamation-circle me-2"></i>${requestScope.error}
+                                    <i class="fas fa-exclamation-circle me-2"></i>${error}
                                     <button type="button" class="btn-close" data-bs-dismiss="alert"
                                         aria-label="Close"></button>
                                 </div>
@@ -124,6 +124,7 @@
                     </div>
                     <form method="post" action="${pageContext.request.contextPath}/admin">
                         <input type="hidden" name="action" value="create" />
+                        <input type="hidden" name="type" value="users" />
                         <div class="modal-body">
                             <div class="mb-3">
                                 <label class="form-label">Name</label>
@@ -183,6 +184,8 @@
                     </div>
                     <form method="post" action="${pageContext.request.contextPath}/admin">
                         <input type="hidden" name="action" value="update" />
+                        <input type="hidden" name="type" value="users" />
+
                         <input type="hidden" name="id" id="editId" />
                         <div class="modal-body">
                             <div class="mb-3">
@@ -243,6 +246,8 @@
                     </div>
                     <form method="post" action="${pageContext.request.contextPath}/admin">
                         <input type="hidden" name="action" value="delete" />
+                        <input type="hidden" name="type" value="users" />
+
                         <input type="hidden" name="id" id="deleteId" />
                         <div class="modal-body">
                             <p>Are you sure you want to delete user: <strong id="deleteName"></strong>?</p>

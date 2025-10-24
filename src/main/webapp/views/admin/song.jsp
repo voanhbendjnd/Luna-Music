@@ -412,18 +412,7 @@
             </div>
 
             <script>
-                // DataTables initialization
-                window.addEventListener('DOMContentLoaded', () => {
-                    const table = document.getElementById('datatablesSimple');
-                    if (table && window.simpleDatatables) {
-                        new simpleDatatables.DataTable(table, {
-                            searchable: true,
-                            sortable: true,
-                            perPage: 10,
-                            perPageSelect: [5, 10, 15, 20, 25]
-                        });
-                    }
-                });
+
 
                 // File upload validation
                 document.addEventListener('DOMContentLoaded', function () {
@@ -581,7 +570,7 @@
                     audio.addEventListener('loadedmetadata', function () {
                         const duration = Math.round(audio.duration);
                         if (duration > 0) {
-                            durationInput.value = duration;
+                            durationInput.value = duration; // auto fill
                             durationInput.placeholder = '';
                         } else {
                             durationInput.placeholder = 'Duration not detected';

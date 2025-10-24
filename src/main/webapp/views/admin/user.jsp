@@ -28,16 +28,17 @@
                             </div>
 
                             <!-- Success/Error Messages -->
-                            <c:if test="${not empty requestScope.success}">
+                            <c:if test="${not empty success}">
                                 <div class="alert alert-success alert-dismissible fade show m-3" role="alert">
-                                    <i class="fas fa-check-circle me-2"></i>${requestScope.success}
+                                    <i class="fas fa-check-circle me-2"></i>${success}
                                     <button type="button" class="btn-close" data-bs-dismiss="alert"
                                         aria-label="Close"></button>
                                 </div>
                             </c:if>
-                            <c:if test="${not empty requestScope.error}">
-                                <div class="alert alert-danger alert-dismissible fade show m-3" role="alert">
-                                    <i class="fas fa-exclamation-circle me-2"></i>${requestScope.error}
+                            <c:if test="${not empty error}">
+                                <div class="alert alert-danger alert-dismissible fade show m-3" role="alert"
+                                    id="errorMsg">
+                                    <i class="fas fa-exclamation-circle me-2"></i>${error}
                                     <button type="button" class="btn-close" data-bs-dismiss="alert"
                                         aria-label="Close"></button>
                                 </div>
@@ -124,6 +125,7 @@
                     </div>
                     <form method="post" action="${pageContext.request.contextPath}/admin">
                         <input type="hidden" name="action" value="create" />
+                        <input type="hidden" name="type" value="users" />
                         <div class="modal-body">
                             <div class="mb-3">
                                 <label class="form-label">Name</label>
@@ -141,7 +143,7 @@
                                 <div class="col-md-6">
                                     <label class="form-label">Gender</label>
                                     <select class="form-select" name="gender">
-                                        <option value="">Select gender</option>
+                                        <option value="NOT_PREFER">-Select gender-</option>
                                         <option value="MALE">Male</option>
                                         <option value="FEMALE">Female</option>
                                         <option value="OTHER">Other</option>
@@ -183,6 +185,7 @@
                     </div>
                     <form method="post" action="${pageContext.request.contextPath}/admin">
                         <input type="hidden" name="action" value="update" />
+                        <input type="hidden" name="type" value="users" />
                         <input type="hidden" name="id" id="editId" />
                         <div class="modal-body">
                             <div class="mb-3">
@@ -193,15 +196,11 @@
                                 <label class="form-label">Email</label>
                                 <input required type="email" name="email" id="editEmail" class="form-control" />
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Password</label>
-                                <input type="password" name="password" id="editPassword" class="form-control" />
-                            </div>
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label class="form-label">Gender</label>
                                     <select class="form-select" name="gender" id="editGender">
-                                        <option value="">-Select Gender-</option>
+                                        <option value="NOT_PREFER">-Select Gender-</option>
                                         <option value="MALE">Male</option>
                                         <option value="FEMALE">Female</option>
                                         <option value="OTHER">Other</option>
@@ -243,6 +242,8 @@
                     </div>
                     <form method="post" action="${pageContext.request.contextPath}/admin">
                         <input type="hidden" name="action" value="delete" />
+                        <input type="hidden" name="type" value="users" />
+
                         <input type="hidden" name="id" id="deleteId" />
                         <div class="modal-body">
                             <p>Are you sure you want to delete user: <strong id="deleteName"></strong>?</p>
@@ -265,59 +266,22 @@
                 }
             });
 
+            const ERROR_DISPLAY_TIME = 2000; // 3 giây
 
-            // Find create form specifically
-            const createForm = document.querySelector('form[action*="/admin"] input[name="action"][value="create"]')?.closest('form');
+            setTimeout(function () {
+                const msg = document.getElementById('errorMsg');
+                if (msg) {
+                    // Thêm hiệu ứng mờ dần (fade out)
+                    msg.style.transition = "opacity 0.5s ease";
+                    msg.style.opacity = "0";
 
-            // Form validation only - similar to other entities
-            if (createForm) {
-                createForm.addEventListener('submit', function (e) {
-                    const name = this.querySelector('input[name="name"]')?.value?.trim() || '';
-                    const email = this.querySelector('input[name="email"]')?.value?.trim() || '';
-                    const password = this.querySelector('input[name="password"]')?.value?.trim() || '';
-                    const gender = this.querySelector('select[name="gender"]')?.value || '';
-                    const role = this.querySelector('select[name="role"]')?.value || '';
 
-                    // Client-side validation
-                    if (!name) {
-                        e.preventDefault();
-                        // Please enter user name
-                        return;
-                    }
-                    if (!email) {
-                        e.preventDefault();
-                        // Please enter email
-                        return;
-                    }
-                    if (!password) {
-                        e.preventDefault();
-                        // Please enter password
-                        return;
-                    }
-                    if (!gender) {
-                        e.preventDefault();
-                        // Please select gender
-                        return;
-                    }
-                    if (!role) {
-                        e.preventDefault();
-                        // Please select role
-                        return;
-                    }
+                    // Sau khi mờ dần thì ẩn hoàn toàn
+                    setTimeout(() => msg.style.display = 'none', 500);
+                }
+            }, ERROR_DISPLAY_TIME);
 
-                    // Show loading state like other entities
-                    const submitBtn = this.querySelector('button[type="submit"]');
-                    const originalText = submitBtn.innerHTML;
-                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Saving...';
-                    submitBtn.disabled = true;
 
-                    // Re-enable button if form submission fails
-                    setTimeout(() => {
-                        submitBtn.innerHTML = originalText;
-                        submitBtn.disabled = false;
-                    }, 10000);
-                });
-            }
 
             // Modal population
             document.addEventListener('DOMContentLoaded', function () {
@@ -328,7 +292,6 @@
                         document.getElementById('editId').value = btn.getAttribute('data-id');
                         document.getElementById('editName').value = btn.getAttribute('data-name');
                         document.getElementById('editEmail').value = btn.getAttribute('data-email');
-                        document.getElementById('editPassword').value = '';
                         const gender = btn.getAttribute('data-gender') || '';
                         document.getElementById('editGender').value = gender;
                         const role = btn.getAttribute('data-role') || '';

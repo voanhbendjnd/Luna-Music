@@ -188,7 +188,7 @@ public class UserDAO extends DatabaseConfig {
     }
 
     public boolean create(User u) {
-        String sql = "INSERT INTO Users(name, email, password, active, gender, createdAt, updatedAt, createdBy, updatedBy, role_id) VALUES(?,?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO Users(name, email, password, active, gender, createdAt, updatedAt, createdBy, updatedBy, role_id, salt) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, u.getName());
@@ -206,6 +206,7 @@ public class UserDAO extends DatabaseConfig {
             } else {
                 ps.setNull(10, java.sql.Types.INTEGER);
             }
+            ps.setString(11, u.getSalt());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             System.out.println("Error creating user: " + e.getMessage());
@@ -215,23 +216,21 @@ public class UserDAO extends DatabaseConfig {
     }
 
     public boolean update(User u) {
-        String sql = "UPDATE Users SET name=?, email=?, password=?, active=?, gender=?, role_id=?, updatedAt=?, updatedBy=? WHERE id=?";
+        String sql = "UPDATE Users SET name=?, email=?, active=?, gender=?, role_id=?, updatedAt=?, updatedBy=? WHERE id=?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, u.getName());
             ps.setString(2, u.getEmail());
-            ps.setString(3, u.getPassword());
-            ps.setBoolean(4, u.isActive());
-            ps.setString(5, u.getGender() != null ? u.getGender().name() : null);
-            // Handle role - set to null if role is null or role id is null
+            ps.setBoolean(3, u.isActive());
+            ps.setString(4, u.getGender() != null ? u.getGender().name() : null);
             if (u.getRole() != null && u.getRole().getId() != null) {
-                ps.setLong(6, u.getRole().getId());
+                ps.setLong(5, u.getRole().getId());
             } else {
-                ps.setNull(6, java.sql.Types.INTEGER);
+                ps.setNull(5, java.sql.Types.INTEGER);
             }
-            ps.setTimestamp(7, java.sql.Timestamp.from(java.time.Instant.now()));
-            ps.setString(8, u.getUpdatedBy());
-            ps.setLong(9, u.getId());
+            ps.setTimestamp(6, java.sql.Timestamp.from(java.time.Instant.now()));
+            ps.setString(7, u.getUpdatedBy());
+            ps.setLong(8, u.getId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             System.out.println("Error updating user: " + e.getMessage());
