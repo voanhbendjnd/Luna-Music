@@ -798,7 +798,7 @@ public class SongDAO extends DatabaseConfig {
 
     public List<Song> getRelationSongByArtist(Long artistID, Long songID){
         var songs = new ArrayList<Song>();
-        var query = "  select s.id, s.coverImage, s.lyric, s.title, s.createdAt, s.duration, s.play_count, s.file_path from Songs s inner join SongArtists sa on sa.song_id = s.id inner join Artists a on a.id = artist_id where a.id = ? and s.id <> ?";
+        var query = "select s.id, s.coverImage, s.lyric, s.title, s.createdAt, s.duration, s.play_count, s.file_path from Songs s inner join SongArtists sa on sa.song_id = s.id inner join Artists a on a.id = artist_id where a.id = ? and s.id <> ?";
         System.out.println(query);
         try{
             var ps = connection.prepareStatement(query);
@@ -827,6 +827,68 @@ public class SongDAO extends DatabaseConfig {
             return null;
         }
 
+    }
+    public List<Song> getSongsAtFilterHome(String key){
+        var songs = new ArrayList<Song>();
+        var sql = "select s.id, s.coverImage, s.lyric, s.title, s.createdAt, s.duration, s.play_count, s.file_path from Songs s inner join Genres g on s.genre_id = g.id where g.name = ? order by s.createdAt desc";
+        try{
+            var ps = connection.prepareStatement(sql);
+            ps.setString(1, key);
+            var rs = ps.executeQuery();
+            while(rs.next()){
+                var song = new Song();
+                Long id = rs.getLong("id");
+                if(songs.stream().anyMatch(x -> x.getId().equals(id))){
+                    continue;
+                }
+
+                song.setId(id);
+                song.setCoverImage(rs.getString("coverImage"));
+                song.setTitle(rs.getString("title"));
+                song.setDuration(rs.getObject("duration", Integer.class));
+                song.setPlayCount(rs.getObject("play_count", Integer.class));
+                song.setFilePath(rs.getString("file_path"));
+                Timestamp createdAt = rs.getTimestamp("createdAt");
+                song.setCreatedAt(createdAt.toInstant());
+                String lyric = rs.getString("lyric") != null ? rs.getString("lyric") : "";
+                song.setLyric(lyric);
+                System.out.println(song.getTitle());
+                songs.add(song);
+            }
+            return songs;
+        }
+        catch(SQLException ex){
+            return null;
+        }
+    }
+    public List<Song> getSongsAtFilterHomePopular(String key){
+        var songs = new ArrayList<Song>();
+        var sql = "select select s.id, s.coverImage, s.lyric, s.title, s.createdAt, s.duration, s.play_count, s.file_path from Songs s inner join Genres g on s.genre_id = g.id where g.name = ? order by s.play_count desc";
+        try{
+            var ps = connection.prepareStatement(sql);
+            ps.setString(1, key);
+            var rs = ps.executeQuery();
+            while(rs.next()){
+                var song = new Song();
+                song.setId(rs.getLong("id"));
+                song.setCoverImage(rs.getString("coverImage"));
+                song.setTitle(rs.getString("title"));
+                song.setDuration(rs.getObject("duration", Integer.class));
+                song.setPlayCount(rs.getObject("play_count", Integer.class));
+                song.setFilePath(rs.getString("file_path"));
+                Timestamp createdAt = rs.getTimestamp("createdAt");
+
+                song.setCreatedAt(createdAt.toInstant());
+                String lyric = rs.getString("lyric") != null ? rs.getString("lyric") : "";
+                song.setLyric(lyric);
+                System.out.println(song.getTitle());
+                songs.add(song);
+            }
+            return songs;
+        }
+        catch(SQLException ex){
+            return null;
+        }
     }
 
     public List<Long> findArtistBySongId(Long id){

@@ -65,6 +65,29 @@ public class AlbumDAO extends DatabaseConfig {
         }
         return albums;
     }
+    public List<Album> fetchAlbumsByGenre(String key){
+        var albums = new ArrayList<Album>();
+        try{
+            String sql = "SELECT a.id, a.title, a.artist_id, a.release_year, a.cover_image_path, a.createdAt, " +
+                    "ar.id as artist_id, ar.name as artist_name, ar.bio as artist_bio, ar.image_path as artist_image_path " +
+                    "from Albums a inner join Songs s on s.album_id = a.id inner join Genres g on g.id = s.genre_id JOIN Artists ar ON a.artist_id = ar.id where g.name = ?";
+            var ps = connection.prepareStatement(sql);
+            ps.setString(1, key);
+            var rs =  ps.executeQuery();
+            while(rs.next()){
+                Long id = rs.getLong("id");
+                if(albums.stream().anyMatch(x->  x.getId().equals(id))){
+                    continue;
+                }
+                albums.add(mapRowToAlbum(rs));
+            }
+            return  albums;
+
+        }
+        catch(SQLException ex){
+            return null;
+        }
+    }
 
     /**
      * Search albums by name

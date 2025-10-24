@@ -55,9 +55,31 @@ public class ArtistDAO extends DatabaseConfig {
             }
         } catch (SQLException e) {
             System.out.println("Error finding artists: " + e.getMessage());
-            e.printStackTrace();
+            return null;
         }
         return artists;
+    }
+    public List<Artist> fetchAllArtistByGenre(String key){
+        var artists = new ArrayList<Artist>();
+        var sql = "SELECT a.id, a.name, a.bio, a.image_path, a.createdAt, a.updatedAt FROM Artists a inner join SongArtists sa on sa.artist_id = a.id " +
+                "inner join Songs s on sa.song_id = s.id inner join Genres g on g.id = s.genre_id  where g.name = ?";
+        try{
+            var ps = connection.prepareStatement(sql);
+            ps.setString(1, key);
+            var rs = ps.executeQuery();
+            while(rs.next()){
+                var id = rs.getLong("id");
+                if(artists.stream().anyMatch(x-> x.getId().equals(id))){
+                    continue;
+                }
+                artists.add(mapRowToArtist(rs));
+
+            }
+            return artists;
+        }
+        catch(SQLException ex){
+            return null;
+        }
     }
 
     /**

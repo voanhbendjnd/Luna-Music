@@ -30,8 +30,12 @@ public class HomeController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+            var action = request.getParameter("action");
+            if(action != null){
+                this.filterHome(request, response, request.getParameter("type"));
+                return;
+            }
 
-            // Get user from session and pass to request
             HttpSession session = request.getSession(false);
             User currentUser = null;
             if (session != null && session.getAttribute("user") != null) {
@@ -83,4 +87,40 @@ public class HomeController extends HttpServlet {
             }
            request.getRequestDispatcher("/views/layouts/defaultLayout.jsp").forward(request, response);
     }
+    public void  filterHome(HttpServletRequest request, HttpServletResponse response, String filter) throws ServletException, IOException {
+        var songDAO = new SongDAO();
+        var albumDAO = new AlbumDAO();
+        var artistDAO = new ArtistDAO();
+        HttpSession session = request.getSession(false);
+        User currentUser = null;
+        if (session != null && session.getAttribute("user") != null) {
+            currentUser = (User) session.getAttribute("user");
+            request.setAttribute("user", currentUser);
+        }
+        if(session != null && session.getAttribute("search") != null){
+            session.removeAttribute("search");
+        }
+        var songs = songDAO.getSongsAtFilterHome(filter);
+        var populars = songs.stream().sorted(Comparator.comparing(Song::getPlayCount).reversed()).toList();
+        var albums = albumDAO.fetchAlbumsByGenre(filter);
+        var artists = artistDAO.fetchAllArtistByGenre(filter);
+        request.setAttribute("popularSong", populars);
+        request.setAttribute("songs", songs);
+        request.setAttribute("albums", albums);
+        request.setAttribute("artists", artists);
+
+        if (currentUser != null) {
+            var playlistDAO = new PlaylistDAO();
+            List<Playlist> userPlaylists = playlistDAO.getPlaylistsByUserId(currentUser.getId());
+            if (userPlaylists == null) {
+                userPlaylists = List.of();
+            }
+            request.setAttribute("userPlaylists", userPlaylists);
+        } else {
+            request.setAttribute("userPlaylists", List.of());
+        }
+        request.getRequestDispatcher("/views/layouts/defaultLayout.jsp").forward(request, response);
+
+    }
+
 }

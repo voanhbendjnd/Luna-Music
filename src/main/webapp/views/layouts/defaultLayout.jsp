@@ -13,11 +13,15 @@
             <body>
 
                 <%@include file="../components/header.jsp" %>
-                    <nav class="nav nav-pills nav-fill" style="margin-left: 250px;">
-                        <a class="nav-link active" aria-current="page" href="#">Vpop</a>
-                        <a class="nav-link" href="#">Kpop</a>
-                        <a class="nav-link active" href="#">Jpop</a>
-                        <a class="nav-link disabled" aria-disabled="true">Usuk</a>
+                    <nav class="nav nav-pills nav-fill" style="width: 30%; margin: 0 auto;">
+                        <a class="nav-link"
+                            href="${pageContext.request.contextPath}/home?action=filter&type=Vpop">Vpop</a>
+                        <a class="nav-link"
+                            href="${pageContext.request.contextPath}/home?action=filter&type=Kpop">Kpop</a>
+                        <a class="nav-link"
+                            href="${pageContext.request.contextPath}/home?action=filter&type=Jpop">Jpop</a>
+                        <a class="nav-link"
+                            href="${pageContext.request.contextPath}/home?action=filter&type=Us-uk">Usuk</a>
                     </nav>
                     <div class="main-content">
                         <%@include file="../home.jsp" %>
@@ -26,10 +30,7 @@
 
                         <%@include file="../components/bottom-nav.jsp" %>
 
-
-
-                            <script src="${pageContext.request.contextPath}/assets/js/bootstrap.bundle.min.js"></script>
-
             </body>
+
 
 </html>
