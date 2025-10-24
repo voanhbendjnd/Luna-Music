@@ -538,19 +538,4 @@
                     opacity: 0.6;
                     cursor: not-allowed;
                 }
-
-                /* Responsive adjustments */
-                @media (max-width: 768px) {
-                    .modal-lg {
-                        max-width: 95%;
-                    }
-
-                    .table-responsive {
-                        font-size: 0.875rem;
-                    }
-
-                    .image-preview-container {
-                        min-height: 200px;
-                    }
-                }
             </style>

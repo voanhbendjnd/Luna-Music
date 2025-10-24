@@ -42,12 +42,22 @@ public class SongDetailController extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/home");
                 return;
             }
-            List<Song> relatedSongs;
+            List<Song> relatedSongs = List.of();
             // Get albumID by songsID
+            var check = false;
             var albumId = songDAO.findAlbumBySongID(songId);
             if (albumId != null && albumId != 0) {
                 relatedSongs = songDAO.findRelatedSongs(songId, 5, albumId);
-            } else {
+                if(relatedSongs.getFirst() != null){
+                    check = true;
+                }
+            }
+            else if(!check){
+                var artistIds = songDAO.findArtistBySongId(songId);
+                relatedSongs = songDAO.getRelationSongByArtist(artistIds.getFirst(), songId);
+
+            }
+            if(relatedSongs.isEmpty()) {
                 relatedSongs = songDAO.findNoRelatedSongs(songId);
             }
 

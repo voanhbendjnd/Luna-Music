@@ -795,4 +795,55 @@ public class SongDAO extends DatabaseConfig {
         }
         return relatedSongs;
     }
+
+    public List<Song> getRelationSongByArtist(Long artistID, Long songID){
+        var songs = new ArrayList<Song>();
+        var query = "  select s.id, s.coverImage, s.lyric, s.title, s.createdAt, s.duration, s.play_count, s.file_path from Songs s inner join SongArtists sa on sa.song_id = s.id inner join Artists a on a.id = artist_id where a.id = ? and s.id <> ?";
+        System.out.println(query);
+        try{
+            var ps = connection.prepareStatement(query);
+            ps.setLong(1, artistID);
+            ps.setLong(2, songID);
+            var rs = ps.executeQuery();
+            while(rs.next()){
+                var song = new Song();
+                song.setId(rs.getLong("id"));
+                song.setCoverImage(rs.getString("coverImage"));
+                song.setTitle(rs.getString("title"));
+                song.setDuration(rs.getObject("duration", Integer.class));
+                song.setPlayCount(rs.getObject("play_count", Integer.class));
+                song.setFilePath(rs.getString("file_path"));
+                Timestamp createdAt = rs.getTimestamp("createdAt");
+
+                song.setCreatedAt(createdAt.toInstant());
+                String lyric = rs.getString("lyric") != null ? rs.getString("lyric") : "";
+                song.setLyric(lyric);
+                System.out.println(song.getTitle());
+                songs.add(song);
+            }
+            return songs;
+        }
+        catch(SQLException ex){
+            return null;
+        }
+
+    }
+
+    public List<Long> findArtistBySongId(Long id){
+        var sql = "select distinct(a.id) from Artists a inner join SongArtists sa on sa.artist_id = a.id inner join Songs s on s.id = sa.song_id where s.id = ?";
+        var ids = new ArrayList<Long>();
+        System.out.println(sql);
+        try{
+            var ps = connection.prepareStatement(sql);
+            ps.setLong(1, id);
+            var rs = ps.executeQuery();
+            while(rs.next()){
+                ids.add(rs.getLong("id"));
+            }
+            return ids;
+        }
+        catch(SQLException ex){
+            return null;
+        }
+    }
 }

@@ -13,7 +13,12 @@
             <body>
 
                 <%@include file="../components/header.jsp" %>
-
+                    <nav class="nav nav-pills nav-fill" style="margin-left: 250px;">
+                        <a class="nav-link active" aria-current="page" href="#">Vpop</a>
+                        <a class="nav-link" href="#">Kpop</a>
+                        <a class="nav-link active" href="#">Jpop</a>
+                        <a class="nav-link disabled" aria-disabled="true">Usuk</a>
+                    </nav>
                     <div class="main-content">
                         <%@include file="../home.jsp" %>
                     </div>
