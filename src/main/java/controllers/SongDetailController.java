@@ -3,6 +3,7 @@ package controllers;
 import DALs.SongDAO;
 import DALs.AlbumDAO;
 import DALs.PlaylistDAO;
+import domain.entity.Artist;
 import domain.entity.Song;
 import domain.entity.User;
 import domain.entity.Album;
@@ -32,7 +33,7 @@ public class SongDetailController extends HttpServlet {
                 return;
             }
 
-            Long songId = Long.parseLong(songIdParam);
+            long songId = Long.parseLong(songIdParam);
 
             // Get song details
             SongDAO songDAO = new SongDAO();
@@ -43,18 +44,21 @@ public class SongDetailController extends HttpServlet {
                 return;
             }
             List<Song> relatedSongs = List.of();
-            // Get albumID by songsID
-            var check = false;
-            var albumId = songDAO.findAlbumBySongID(songId);
-            if (albumId != null && albumId != 0) {
-                relatedSongs = songDAO.findRelatedSongs(songId, 5, albumId);
-                if(relatedSongs.getFirst() != null){
-                    check = true;
-                }
+            var currentSong = songDAO.findById(songId);
+            List<Long> artistIds = null;
+            var songArtists = currentSong.getSongArtists();
+            if(songArtists != null && !songArtists.isEmpty()){
+                artistIds = songArtists.stream().map(x -> x.getArtist().getId()).toList();
             }
-            else if(!check){
-                var artistIds = songDAO.findArtistBySongId(songId);
-                relatedSongs = songDAO.getRelationSongByArtist(artistIds.getFirst(), songId);
+            // Get albumID by songsID
+            var albumId = currentSong.getAlbum() != null ? currentSong.getAlbum().getId() : null;
+
+            if (albumId != null) {
+                relatedSongs = songDAO.findRelatedSongs(songId, albumId);
+
+            }
+            if(relatedSongs.isEmpty() && artistIds !=  null){
+                relatedSongs = songDAO.getRelationSongByArtist(artistIds, songId);
 
             }
             if(relatedSongs.isEmpty()) {

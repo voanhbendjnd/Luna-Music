@@ -7,9 +7,9 @@
             <div class="footer-column">
                 <h5>Company</h5>
                 <ul>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Jobs</a></li>
-                    <li><a href="#">For the Record</a></li>
+                    <li><a href="${pageContext.request.contextPath}/about">About</a></li>
+                    <li><a href="https://github.com/voanhbendjnd">Jobs</a></li>
+                    <li><a href="https://github.com/voanhbendjnd">For the Record</a></li>
                 </ul>
             </div>
 
@@ -17,11 +17,11 @@
             <div class="footer-column">
                 <h5>Communities</h5>
                 <ul>
-                    <li><a href="#">For Artists</a></li>
-                    <li><a href="#">Developers</a></li>
-                    <li><a href="#">Advertising</a></li>
-                    <li><a href="#">Investors</a></li>
-                    <li><a href="#">Vendors</a></li>
+                    <li><a href="https://github.com/voanhbendjnd">For Artists</a></li>
+                    <li><a href="https://github.com/voanhbendjnd">Developers</a></li>
+                    <li><a href="https://github.com/voanhbendjnd">Advertising</a></li>
+                    <li><a href="https://github.com/voanhbendjnd">Investors</a></li>
+                    <li><a href="https://github.com/voanhbendjnd">Vendors</a></li>
                 </ul>
             </div>
 
@@ -29,10 +29,10 @@
             <div class="footer-column">
                 <h5>Useful links</h5>
                 <ul>
-                    <li><a href="#">Support</a></li>
-                    <li><a href="#">Free Mobile App</a></li>
-                    <li><a href="#">Popular by Country</a></li>
-                    <li><a href="#">Import your music</a></li>
+                    <li><a href="https://github.com/voanhbendjnd">Support</a></li>
+                    <li><a href="https://github.com/voanhbendjnd">Free Mobile App</a></li>
+                    <li><a href="https://github.com/voanhbendjnd">Popular by Country</a></li>
+                    <li><a href="${pageContext.request.contextPath}/admin">Import your music</a></li>
                 </ul>
             </div>
 
@@ -40,9 +40,9 @@
             <div class="footer-column">
                 <h5>Luna Plans</h5>
                 <ul>
-                    <li><a href="#">Premium Individual</a></li>
-                    <li><a href="#">Premium Student</a></li>
-                    <li><a href="#">Luna Free</a></li>
+                    <li><a href="https://github.com/voanhbendjnd">Premium Individual</a></li>
+                    <li><a href="https://github.com/voanhbendjnd">Premium Student</a></li>
+                    <li><a href="https://github.com/voanhbendjnd">Luna Free</a></li>
                 </ul>
             </div>
         </div>

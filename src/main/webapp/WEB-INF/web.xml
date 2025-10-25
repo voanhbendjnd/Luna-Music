@@ -19,6 +19,10 @@
         <servlet-class>controllers.HomeController</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>AboutController</servlet-name>
+        <servlet-class>controllers.AboutController</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>LoginController</servlet-name>
         <servlet-class>controllers.LoginController</servlet-class>
     </servlet>
@@ -66,6 +70,10 @@
     <servlet-mapping>
         <servlet-name>HomeController</servlet-name>
         <url-pattern>/home</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AboutController</servlet-name>
+        <url-pattern>/about</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>RootRedirect</servlet-name>

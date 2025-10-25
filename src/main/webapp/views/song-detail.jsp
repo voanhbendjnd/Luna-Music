@@ -98,7 +98,11 @@
                                         <span class="album-name">
                                             <c:if test="${not empty album}">${album.title}</c:if>
                                         </span>
-                                        <span class="release-year">2021</span>
+                                        <span class="release-year">
+                                            <c:if test="${not empty album}">
+                                                ${album.releaseYear}
+                                            </c:if>
+                                        </span>
                                         <span class="duration">
                                             <span class="total-time">${song.formattedDuration}</span>
                                         </span>

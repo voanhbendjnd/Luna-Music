@@ -81,7 +81,7 @@ public class AuthenticationFilter implements Filter {
                 path.equals("/home") ||
                 path.equals("/login") ||
                 path.equals("/register") ||
-                path.equals("/logout")) {
+                path.equals("/logout") || path.equals("/about")) {
             return true;
         }
 

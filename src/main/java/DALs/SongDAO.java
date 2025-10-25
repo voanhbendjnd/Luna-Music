@@ -13,6 +13,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * SongDAO class for CRUD operations on Songs table
@@ -717,7 +718,7 @@ public class SongDAO extends DatabaseConfig {
             System.out.println(query);
 
             Collections.shuffle(songs);
-            return songs.subList(0, 5);
+            return songs.size() > 4 ? songs.subList(0, 5) : songs;
 
         } catch (SQLException ex) {
             return null;
@@ -747,7 +748,6 @@ public class SongDAO extends DatabaseConfig {
             return songs;
         } catch (SQLException ex) {
             System.out.println("Error finding all songs: " + ex.getMessage());
-            ex.printStackTrace();
             return null;
         }
     }
@@ -755,25 +755,18 @@ public class SongDAO extends DatabaseConfig {
     /**
      * Find related songs (same album or same artist)
      */
-    public List<Song> findRelatedSongs(Long songId, int limit, Long albumId) {
+    public List<Song> findRelatedSongs(Long songId,Long albumId) {
         List<Song> relatedSongs = new ArrayList<>();
         var query = "select s.id, s.coverImage, s.lyric, s.title, s.createdAt, s.duration, s.play_count, s.file_path from Songs s inner join Albums a on a.id = s.album_id where s.id <> ? and a.id = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(query);
-            // ps.setLong(1, songId);
-            // ps.setLong(2, songId);
-            // ps.setLong(3, songId);
-            // ps.setLong(4, songId);
+
             ps.setLong(1, songId);
             ps.setLong(2, albumId);
 
             ResultSet rs = ps.executeQuery();
             int count = 0;
-            // while (rs.next() && count < limit) {
-            // relatedSongs.add(mapRowToSong(rs));
-            // count++;
-            // }
-            while (rs.next() && count < limit) {
+            while (rs.next()) {
                 var song = new Song();
                 song.setId(rs.getLong("id"));
                 song.setCoverImage(rs.getString("coverImage"));
@@ -791,19 +784,29 @@ public class SongDAO extends DatabaseConfig {
             }
         } catch (SQLException e) {
             System.out.println("Error finding related songs: " + e.getMessage());
-            e.printStackTrace();
         }
-        return relatedSongs;
+        return relatedSongs.size() > 4 ? relatedSongs.subList(0, 5)  : relatedSongs;
     }
 
-    public List<Song> getRelationSongByArtist(Long artistID, Long songID){
+    public List<Song> getRelationSongByArtist(List<Long> artistIds, Long songID){
         var songs = new ArrayList<Song>();
-        var query = "select s.id, s.coverImage, s.lyric, s.title, s.createdAt, s.duration, s.play_count, s.file_path from Songs s inner join SongArtists sa on sa.song_id = s.id inner join Artists a on a.id = artist_id where a.id = ? and s.id <> ?";
+        var listStr = new ArrayList<String>();
+        for(var x :  artistIds){
+            listStr.add("?");
+        }
+        var artistList = String.join(",", listStr);
+        var query = "select s.id, s.coverImage, s.lyric, s.title, s.createdAt, s.duration, s.play_count, "+
+                "s.file_path from Songs s inner join SongArtists sa "+
+                "on sa.song_id = s.id inner join Artists a on a.id = sa.artist_id where s.id <> ? and a.id IN("+ artistList + ")";
         System.out.println(query);
         try{
             var ps = connection.prepareStatement(query);
-            ps.setLong(1, artistID);
-            ps.setLong(2, songID);
+            ps.setLong(1, songID);
+            int i = 2;
+            for(var x : artistIds){
+                ps.setLong(i, x);
+                ++i;
+            }
             var rs = ps.executeQuery();
             while(rs.next()){
                 var song = new Song();
@@ -821,7 +824,7 @@ public class SongDAO extends DatabaseConfig {
                 System.out.println(song.getTitle());
                 songs.add(song);
             }
-            return songs;
+            return songs.size() > 4 ? songs.subList(0, 5) : songs;
         }
         catch(SQLException ex){
             return null;
