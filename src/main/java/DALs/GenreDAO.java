@@ -44,6 +44,35 @@ public class GenreDAO extends DatabaseConfig {
         }
         return genres;
     }
+    /**
+     * Find all genres with optional keyword search
+     */
+    public List<Genre> findAllWithPagination(String key, int  limit, int offset) {
+        List<Genre> genres = new ArrayList<>();
+        String base = "SELECT id, name, description FROM Genres ";
+        if(key != null && !key.isEmpty()){
+            base += " where name like ? ";
+        }
+        base += " ORDER BY id DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        System.out.println("limit: " + limit);
+        System.out.println("offset: " + offset);
+        int index = 1;
+        try {
+            PreparedStatement ps = connection.prepareStatement(base);
+            if(key != null && !key.isEmpty()){
+                ps.setString(index++, key);
+            }
+                ps.setInt(index++, offset);
+                ps.setInt(index++, limit);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                genres.add(mapRowToGenre(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error finding genres: " + e.getMessage());
+        }
+        return genres;
+    }
 
     /**
      * Find genre by ID
@@ -184,6 +213,27 @@ public class GenreDAO extends DatabaseConfig {
         } catch (SQLException e) {
             System.out.println("Error getting genres count: " + e.getMessage());
             e.printStackTrace();
+        }
+        return 0;
+    }
+    public int totalGenre(String key){
+        var sql = "select count(*) from Genres ";
+        if(key != null){
+            sql += "where name like ?";
+        }
+        try{
+            var ps = connection.prepareStatement(sql);
+            if(key != null){
+                ps.setString(1, "%" + key + "%");
+            }
+            var rs = ps.executeQuery();
+            if(rs.next()){
+                return rs.getInt(1);
+            }
+
+        }
+        catch(SQLException ex){
+            return 0;
         }
         return 0;
     }

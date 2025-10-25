@@ -26,10 +26,18 @@ public class SongDAO extends DatabaseConfig {
         super();
     }
 
-    public int countSong() {
-        var sql = "select count(*) total from Songs";
+    public int countSong(String key) {
+        var sql = "select count(distinct s.id) total from Songs s";
+        sql += " left join SongArtists sa on s.id = sa.song_id left join Artists a on a.id = sa.artist_id ";
+        sql += (key != null && !key.isEmpty()) ? " where s.title like ? or a.name like ? " : "";
         try {
+            int index = 1;
             var ps = connection.prepareStatement(sql);
+            if(key != null && !key.isEmpty()){
+                var s = "%" + key  +"%";
+                ps.setString(index++, s);
+                ps.setString(index++, s);
+            }
             var rs = ps.executeQuery();
             if (rs.next()) {
                 return rs.getInt("total");
@@ -118,6 +126,46 @@ public class SongDAO extends DatabaseConfig {
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setLong(1, playlistId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Song song = mapRowToSong(rs);
+                // Load song artists
+                song.setSongArtists(findSongArtistsBySongId(song.getId()));
+                songs.add(song);
+            }
+            System.out.println(sql);
+        } catch (SQLException e) {
+            System.out.println("Error finding songs: " + e.getMessage());
+            return null;
+        }
+        return songs;
+    }
+    public List<Song> findAllWithPagination(String keyword, int limit, int offset) {
+        List<Song> songs = new ArrayList<>();
+        String base = "SELECT s.id, s.title, s.file_path, s.coverImage, s.duration, s.play_count, s.album_id, s.genre_id, s.lyric, "
+                +
+                "s.createdAt, s.updatedAt, " +
+                "a.id as album_id, a.title as album_title, a.cover_image_path, " +
+                "g.id as genre_id, g.name as genre_name " +
+                "FROM Songs s " +
+                "LEFT JOIN Albums a ON s.album_id = a.id " +
+                "LEFT JOIN Genres g ON s.genre_id = g.id";
+
+        String where = (keyword != null && !keyword.isBlank())
+                ? " WHERE s.title LIKE ? OR EXISTS (SELECT 1 FROM SongArtists sa JOIN Artists ar ON sa.artist_id = ar.id WHERE sa.song_id = s.id AND ar.name LIKE ?)"
+                : "";
+        String sql = base + where + " ORDER BY id DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            int index  = 1;
+            if (!where.isEmpty()) {
+                String kw = "%" + keyword.trim() + "%";
+                ps.setString(index++, kw);
+                ps.setString(index++, kw);
+            }
+            ps.setInt(index++, offset);
+            ps.setInt(index++, limit);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Song song = mapRowToSong(rs);

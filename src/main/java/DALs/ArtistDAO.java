@@ -19,10 +19,14 @@ public class ArtistDAO extends DatabaseConfig {
         super();
     }
 
-    public int countArtist() {
-        var sql = "select count(*) total from Artists";
+    public int countArtist(String key) {
+        var sql = "select count(*) total from Artists ";
+        var where = (key != null && !key.isEmpty()) ? " where name like ? " :"";
         try {
             var ps = connection.prepareStatement(sql);
+            if(!where.isEmpty()){
+                ps.setString(1, "%" + key + "%");
+            }
             var rs = ps.executeQuery();
             if (rs.next()) {
                 return rs.getInt("total");
@@ -32,6 +36,31 @@ public class ArtistDAO extends DatabaseConfig {
         }
         return 0;
     }
+    public List<Artist> findAllWithPagination(String keyword, int limit, int offset) {
+        List<Artist> artists = new ArrayList<>();
+        String base = "SELECT id, name, bio, image_path, createdAt, updatedAt FROM Artists";
+        String where = (keyword != null && !keyword.isBlank()) ? " WHERE name LIKE ? " : "";
+        String sql = base + where + " ORDER BY id DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            int index = 1;
+            if (!where.isEmpty()) {
+                String kw = "%" + keyword.trim() + "%";
+                ps.setString(index++, kw);
+            }
+            ps.setInt(index++, offset);
+            ps.setInt(index++, limit);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                artists.add(mapRowToArtist(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error finding artists: " + e.getMessage());
+            return null;
+        }
+        return artists;
+    }
 
     /**
      * Find all artists with optional keyword search
@@ -39,7 +68,7 @@ public class ArtistDAO extends DatabaseConfig {
     public List<Artist> findAll(String keyword) {
         List<Artist> artists = new ArrayList<>();
         String base = "SELECT id, name, bio, image_path, createdAt, updatedAt FROM Artists";
-        String where = (keyword != null && !keyword.isBlank()) ? " WHERE name LIKE ? OR bio LIKE ?" : "";
+        String where = (keyword != null && !keyword.isBlank()) ? " WHERE name LIKE ? " : "";
         String sql = base + where + " ORDER BY name ASC";
 
         try {
@@ -47,7 +76,6 @@ public class ArtistDAO extends DatabaseConfig {
             if (!where.isEmpty()) {
                 String kw = "%" + keyword.trim() + "%";
                 ps.setString(1, kw);
-                ps.setString(2, kw);
             }
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {

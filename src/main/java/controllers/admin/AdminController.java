@@ -49,30 +49,51 @@ public class AdminController extends HttpServlet {
     private static final String BASE_UPLOAD_PATH = "C:\\Users\\PC\\Documents\\FALL25\\upload";
     private static final String AUDIO_DIR = "music";
     private static final String IMAGE_DIR = "images";
+    private static final int PAGE_SIZE = 5;
 
     // Allowed file extensions
     private static final List<String> ALLOWED_AUDIO_EXTENSIONS = Arrays.asList("mp3", "m4a", "wav");
     private static final List<String> ALLOWED_IMAGE_EXTENSIONS = Arrays.asList("jpg", "jpeg", "png", "gif");
+    public int getCurrentPage(String pageParam, int totalPages ){
+        int currentPage = 1;
+        if(pageParam != null && !pageParam.isEmpty()){
+            currentPage = Integer.parseInt(pageParam);
+        }
+        if (totalPages > 0) {
+            if (currentPage < 1) {
+                currentPage = 1;
+            } else if (currentPage > totalPages) {
+                currentPage = totalPages;
+            }
+        } else {
+            currentPage = 1;
+        }
+        return currentPage;
+    }
+    public int getTotalPages(int size, long total){
+        return  (int) Math.ceil((double) total / size);
+
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
+        var userDAO = new UserDAO();
+        var songDAO = new SongDAO();
+        var albumDAO = new AlbumDAO();
+        var artistDAO = new ArtistDAO();
+        var genreDAO = new GenreDAO();
         String action = request.getParameter("action");
         if (action == null || action.isBlank() || action.equals("list")) {
             String type = request.getParameter("type");
             if (type == null || type.isBlank())
                 type = "dashboard";
             if ("dashboard".equalsIgnoreCase(type)) {
-                var userDAO = new UserDAO();
-                var songDAO = new SongDAO();
-                var albumDAO = new AlbumDAO();
-                var artistDAO = new ArtistDAO();
-                var totalUsers = userDAO.countUser();
+                var totalUsers = userDAO.countUser(null);
                 var totalAlbums = albumDAO.countAlbum();
-                var totalSongs = songDAO.countSong();
-                var totalArtist = artistDAO.countArtist();
+                var totalSongs = songDAO.countSong(null);
+                var totalArtist = artistDAO.countArtist(null);
                 User user = (User) request.getSession().getAttribute("user");
                 request.setAttribute("name", user.getName());
                 request.setAttribute("totalArtists", totalArtist);
@@ -82,26 +103,34 @@ public class AdminController extends HttpServlet {
                 request.setAttribute("viewPath", "/views/admin/dashboard.jsp");
             } else if ("users".equalsIgnoreCase(type)) {
                 String q = request.getParameter("q");
+                long totalUser = userDAO.countUser(q);
+                int totalPages = this.getTotalPages(PAGE_SIZE, totalUser);
+                String pageParam = request.getParameter("page");
+                int currentPage = this.getCurrentPage(pageParam, totalPages);
+                int offset = (currentPage - 1) * PAGE_SIZE;
                 var dao = new UserDAO();
                 var roleDAO = new RoleDAO();
-                var users = dao.findAll(q);
+                var users = dao.findAllWithPagination(q, PAGE_SIZE, offset);
                 var roles = roleDAO.findAll();
+                request.setAttribute("currentPage", currentPage);
+                request.setAttribute("totalPages", totalPages);
                 request.setAttribute("users", users);
                 request.setAttribute("roles", roles);
                 request.setAttribute("q", q == null ? "" : q);
                 request.setAttribute("viewPath", "/views/admin/user.jsp");
             } else if ("songs".equalsIgnoreCase(type)) {
                 String q = request.getParameter("q");
-                var songDAO = new SongDAO();
-                var artistDAO = new ArtistDAO();
-                var albumDAO = new AlbumDAO();
-                var genreDAO = new GenreDAO();
-
-                var songs = songDAO.findAll(q);
+                long totalSongs = songDAO.countSong(null);
+                int totalPages = this.getTotalPages(PAGE_SIZE, totalSongs);
+                String pageParam = request.getParameter("page");
+                int currentPage = this.getCurrentPage(pageParam, totalPages);
+                int offset = (currentPage -1) * PAGE_SIZE;
+                var songs = songDAO.findAllWithPagination(q, PAGE_SIZE, offset);
+                request.setAttribute("currentPage", currentPage);
+                request.setAttribute("totalPages", totalPages);
                 var artists = artistDAO.findAll(null);
-                var albums = albumDAO.findAll(null);
+                var albums = albumDAO.findAll(null);s
                 var genres = genreDAO.findAll(null);
-
                 request.setAttribute("songs", songs);
                 request.setAttribute("artists", artists);
                 request.setAttribute("albums", albums);
@@ -110,15 +139,19 @@ public class AdminController extends HttpServlet {
                 request.setAttribute("viewPath", "/views/admin/song.jsp");
             } else if ("artists".equalsIgnoreCase(type)) {
                 String q = request.getParameter("q");
-                var artistDAO = new ArtistDAO();
-                var artists = artistDAO.findAll(q);
+                long totalArtists = artistDAO.countArtist(q);
+                int totalPages =  this.getTotalPages(PAGE_SIZE, totalArtists);
+                String pageParam = request.getParameter("page");
+                int currentPage = this.getCurrentPage(pageParam, totalPages);
+                int offset = (currentPage -1) * PAGE_SIZE;
+                var artists = artistDAO.findAllWithPagination(q, PAGE_SIZE, offset);
+                request.setAttribute("currentPage", currentPage);
+                request.setAttribute("totalPages", totalPages);
                 request.setAttribute("artists", artists);
                 request.setAttribute("q", q == null ? "" : q);
                 request.setAttribute("viewPath", "/views/admin/artist.jsp");
             } else if ("albums".equalsIgnoreCase(type)) {
                 String q = request.getParameter("q");
-                var albumDAO = new AlbumDAO();
-                var artistDAO = new ArtistDAO();
                 var albums = albumDAO.findAll(q);
                 var artists = artistDAO.findAll(null);
                 request.setAttribute("albums", albums);
@@ -127,10 +160,16 @@ public class AdminController extends HttpServlet {
                 request.setAttribute("viewPath", "/views/admin/album.jsp");
             } else if ("genres".equalsIgnoreCase(type)) {
                 String q = request.getParameter("q");
-                var genreDAO = new GenreDAO();
-                var genres = genreDAO.findAll(q);
-                request.setAttribute("genres", genres);
+                long totalGenres = genreDAO.totalGenre(q);
+                int totalPages = this.getTotalPages(PAGE_SIZE, totalGenres);
+                String pageParam = request.getParameter("page");
+                int currentPage = this.getCurrentPage(pageParam, totalPages);
+                int offset = (currentPage - 1) * PAGE_SIZE;
+                var genresPagination = genreDAO.findAllWithPagination(q, PAGE_SIZE, offset);
+                request.setAttribute("genres", genresPagination);
                 request.setAttribute("q", q == null ? "" : q);
+                request.setAttribute("currentPage", currentPage);
+                request.setAttribute("totalPages", totalPages);
                 request.setAttribute("viewPath", "/views/admin/genre.jsp");
             } else {
                 request.setAttribute("viewTitle", type);
@@ -160,25 +199,18 @@ public class AdminController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
         String type = request.getParameter("type");
-        // Handle Song operations
         if ("songs".equalsIgnoreCase(type)) {
             handleSongOperationsUpdate(request, response, action);
             return;
         }
-
-        // Handle Artist operations
         if ("artists".equalsIgnoreCase(type)) {
             handleArtistOperations(request, response, action);
             return;
         }
-
-        // Handle Album operations
         if ("albums".equalsIgnoreCase(type)) {
             handleAlbumOperations(request, response, action);
             return;
         }
-
-        // Handle Genre operations
         if ("genres".equalsIgnoreCase(type)) {
             handleGenreOperations(request, response, action);
             return;

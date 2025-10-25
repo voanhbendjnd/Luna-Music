@@ -19,13 +19,19 @@ public class UserDAO extends DatabaseConfig {
         super();
     }
 
-    public int countUser() {
-        var sql = "select count(*) total from users";
+    public int countUser(String key) {
+        var sql = "select count(*) from users";
+        sql += (key != null && !key.isEmpty()) ? " where name like ? or email like ? ": "";
         try {
             var ps = connection.prepareStatement(sql);
+            if(key != null && !key.isEmpty()){
+                String s = "%" + key + "%";
+                ps.setString(1, s);
+                ps.setString(2, s);
+            }
             var rs = ps.executeQuery();
             if (rs.next()) {
-                return rs.getInt("total");
+                return rs.getInt(1);
             }
         } catch (SQLException ex) {
             return 0;
@@ -106,6 +112,30 @@ public class UserDAO extends DatabaseConfig {
         }
 
         return "";
+    }
+    public java.util.List<User> findAllWithPagination(String keyword, int limit, int offset) {
+        java.util.List<User> users = new java.util.ArrayList<>();
+        String base = "SELECT id, name, email, password, active, gender, role_id, createdAt, updatedAt, createdBy, updatedBy FROM Users";
+        String where = (keyword != null && !keyword.isBlank()) ? " WHERE name LIKE ? OR email LIKE ?" : "";
+        String sql = base + where + " ORDER BY id DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            int index = 1;
+            if (!where.isEmpty()) {
+                String kw = "%" + keyword.trim() + "%";
+                ps.setString(index++, kw);
+                ps.setString(index++, kw);
+            }
+            ps.setInt(index++, offset);
+            ps.setInt(index++, limit);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                users.add(mapRowToUser(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error finding users: " + e.getMessage());
+        }
+        return users;
     }
 
     public java.util.List<User> findAll(String keyword) {

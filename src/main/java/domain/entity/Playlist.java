@@ -5,23 +5,15 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "Playlists")
 public class Playlist {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "description", columnDefinition = "NVARCHAR(MAX)")
     private String description;
 
-    @Column(name = "createdAt")
     private LocalDateTime createdAt;
 
-    @Column(name = "updatedAt")
     private LocalDateTime updatedAt;
     private String coverImage;
 
@@ -29,16 +21,10 @@ public class Playlist {
         this.coverImage = coverImage;
     }
 
-    // Many-to-One relationship with User
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    // One-to-Many relationship with PlaylistSongs
-    @OneToMany(mappedBy = "playlist", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PlaylistSong> playlistSongs = new ArrayList<>();
 
-    // Constructors
     public Playlist() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();

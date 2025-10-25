@@ -109,6 +109,53 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <div class="card-footer bg-white border-top">
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination justify-content-center mb-0">
+
+                                        <!-- <c:url var="basePageUrl" value="${pageContext.request.contextPath}/admin">
+                                                                                <c:param name="action" value="list" />
+                                                                                <c:param name="type" value="genres" />
+                                                                                <c:if test="${not empty q}">
+                                                                                    <c:param name="q" value="${q}" />
+                                                                                </c:if>
+                                                                            </c:url> -->
+
+                                        <c:if test="${currentPage > 1}">
+                                            <a class="page-link"
+                                                href="${pageContext.request.contextPath}/admin?action=list&type=users&page=${currentPage - 1}">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-arrow-left-square-fill"
+                                                    viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M16 14a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2zm-4.5-6.5H5.707l2.147-2.146a.5.5 0 1 0-.708-.708l-3 3a.5.5 0 0 0 0 .708l3 3a.5.5 0 0 0 .708-.708L5.707 8.5H11.5a.5.5 0 0 0 0-1" />
+                                                </svg>
+                                            </a>
+                                        </c:if>
+                                        <c:forEach begin="1" end="${totalPages}" var="i">
+                                            <c:if test="${currentPage == i}">
+                                                <a class="page-link nav-link active"
+                                                    href="${pageContext.request.contextPath}/admin?action=list&type=users&page=${i}">${i}</a>
+                                            </c:if>
+                                            <c:if test="${currentPage != i}">
+                                                <a class="page-link"
+                                                    href="${pageContext.request.contextPath}/admin?action=list&type=users&page=${i}">${i}</a>
+                                            </c:if>
+                                        </c:forEach>
+                                        <c:if test="${currentPage < totalPages}">
+                                            <a class="page-link"
+                                                href="${pageContext.request.contextPath}/admin?action=list&type=users&page=${currentPage + 1}">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-arrow-right-square-fill"
+                                                    viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M0 14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2zm4.5-6.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5a.5.5 0 0 1 0-1" />
+                                                </svg>
+                                            </a>
+                                        </c:if>
+                                    </ul>
+                                </nav>
+                            </div>
                         </div>
                     </div>
                 </div>
