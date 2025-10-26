@@ -182,7 +182,7 @@ function viewAlbum(albumId) {
  */
 function initializePlaylistFunctionality() {
   // Load playlists
-  loadPlaylists();
+  // loadPlaylists();
 
   // Initialize add to library button
   const addToLibraryBtn = document.getElementById("addToLibraryBtn");
@@ -246,33 +246,9 @@ function filterPlaylists(query) {
   });
 }
 
-/**
- * Load playlists for the current user
- */
-function loadPlaylists() {
-  // Load playlists for sidebar only
-  loadSidebarPlaylists();
-}
 
-/**
- * Load playlists for sidebar
- */
-function loadSidebarPlaylists() {
-  // Playlists are already loaded from server-side rendering in JSP
-  // No need to make AJAX call - data is already available in the DOM
-  return;
-}
-/**
- * Display playlists from server response
- */
-function displayPlaylistsFromResponse(html) {
-  const playlistsList = document.getElementById("playlistsList");
-  if (!playlistsList) return;
 
-  // For now, just show demo playlists
-  // In a real implementation, you would parse the HTML or JSON response
-  showDemoPlaylists();
-}
+
 
 /**
  * Create a new playlist
@@ -281,87 +257,129 @@ function createPlaylist() {
   window.location.href = currentContextPath + "/playlist?action=create";
 }
 
-/**
- * View playlist detail
- */
+
 function viewPlaylist(playlistId) {
-  // Use the simplest URL pattern that should work
   const url = currentContextPath + "/playlist?id=" + playlistId;
 
-  // Navigate to playlist detail page
   window.location.href = url;
 }
 
-// Show All Functions
-function showAllSongs() {
-  // Show all hidden songs in the new songs container
+function showAllSongs(buttonElement) {
   const container = document.getElementById("new-songs-container");
-  if (container) {
-    const hiddenCards = container.querySelectorAll(
-      '.album-card[style*="display: none"]'
-    );
-    hiddenCards.forEach((card) => {
-      card.style.display = "block";
-    });
+  if (!container) {
+    return;
   }
+  let isShowingAll = buttonElement.getAttribute('data-showing-all') === 'true';
 
-  // Hide the show all button
-  const showAllBtn = document.querySelector('button[onclick="showAllSongs()"]');
-  if (showAllBtn) {
-    showAllBtn.style.display = "none";
-  }
+  if (!isShowingAll) {
+        const allCards = container.querySelectorAll('.album-card');
+        allCards.forEach(card => {
+            card.style.display = 'block'; 
+        });
+        buttonElement.textContent = 'Show Less';
+        buttonElement.setAttribute('data-showing-all', 'true');i
+
+    } else {
+        const allCards = container.querySelectorAll('.album-card');
+        allCards.forEach((card, index) => {
+            if (index >= 10) {
+                card.style.display = 'none';
+            } else {
+                card.style.display = 'block'; 
+            }
+        });
+        buttonElement.textContent = 'Show All';
+        buttonElement.setAttribute('data-showing-all', 'false'); 
+    }
+
 }
 
-function showAllArtists() {
-  // Show all hidden artists in the artists container
+function showAllArtists(buttonElement) {
   const container = document.getElementById("artists-container");
-  if (container) {
-    const hiddenCards = container.querySelectorAll(
-      '.artist-card[style*="display: none"]'
-    );
-    hiddenCards.forEach((card) => {
-      card.style.display = "block";
-    });
+  if (!container) {
+    return;
   }
+  let isShowingAll = buttonElement.getAttribute('data-showing-all') === 'true';
 
-  // Hide the show all button
-  const showAllBtn = document.querySelector(
-    'button[onclick="showAllArtists()"]'
-  );
-  if (showAllBtn) {
-    showAllBtn.style.display = "none";
-  }
+  if (!isShowingAll) {
+        const allCards = container.querySelectorAll('.artist-card');
+        allCards.forEach(card => {
+            card.style.display = 'block'; 
+        });
+        buttonElement.textContent = 'Show Less';
+        buttonElement.setAttribute('data-showing-all', 'true');i
+
+    } else {
+        const allCards = container.querySelectorAll('.artist-card');
+        allCards.forEach((card, index) => {
+            if (index >= 10) {
+                card.style.display = 'none';
+            } else {
+                card.style.display = 'block'; 
+            }
+        });
+        buttonElement.textContent = 'Show All';
+        buttonElement.setAttribute('data-showing-all', 'false'); 
+    }
 }
 
-function showAllAlbums() {
-  // Show all albums (no limit applied in JSP, so just hide button)
-  const showAllBtn = document.querySelector(
-    'button[onclick="showAllAlbums()"]'
-  );
-  if (showAllBtn) {
-    showAllBtn.style.display = "none";
+function showAllAlbums(buttonElement) {
+  const container = document.getElementById("albums-container");
+ if (!container) {
+    return;
   }
+  let isShowingAll = buttonElement.getAttribute('data-showing-all') === 'true';
+
+  if (!isShowingAll) {
+        const allCards = container.querySelectorAll('.album-card');
+        allCards.forEach(card => {
+            card.style.display = 'block'; 
+        });
+        buttonElement.textContent = 'Show Less';
+        buttonElement.setAttribute('data-showing-all', 'true');i
+
+    } else {
+        const allCards = container.querySelectorAll('.album-card');
+        allCards.forEach((card, index) => {
+            if (index >= 10) {
+                card.style.display = 'none';
+            } else {
+                card.style.display = 'block'; 
+            }
+        });
+        buttonElement.textContent = 'Show All';
+        buttonElement.setAttribute('data-showing-all', 'false'); 
+    }
 }
 
-function showAllPopularSongs() {
+function showAllPopularSongs(buttonElement) {
   // Show all hidden songs in the popular songs container
   const container = document.getElementById("popular-songs-container");
-  if (container) {
-    const hiddenCards = container.querySelectorAll(
-      '.album-card[style*="display: none"]'
-    );
-    hiddenCards.forEach((card) => {
-      card.style.display = "block";
-    });
+  if (!container) {
+    return;
   }
+  let isShowingAll = buttonElement.getAttribute('data-showing-all') === 'true';
 
-  // Hide the show all button
-  const showAllBtn = document.querySelector(
-    'button[onclick="showAllPopularSongs()"]'
-  );
-  if (showAllBtn) {
-    showAllBtn.style.display = "none";
-  }
+  if (!isShowingAll) {
+        const allCards = container.querySelectorAll('.album-card');
+        allCards.forEach(card => {
+            card.style.display = 'block'; 
+        });
+        buttonElement.textContent = 'Show Less';
+        buttonElement.setAttribute('data-showing-all', 'true');i
+
+    } else {
+        const allCards = container.querySelectorAll('.album-card');
+        allCards.forEach((card, index) => {
+            if (index >= 10) {
+                card.style.display = 'none';
+            } else {
+                card.style.display = 'block'; 
+            }
+        });
+        buttonElement.textContent = 'Show All';
+        buttonElement.setAttribute('data-showing-all', 'false'); 
+    }
 }
 /**
  * Remove playlist

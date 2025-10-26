@@ -118,13 +118,6 @@ function playAudio() {
 
   audioPlayer
     .play()
-    .then(() => {
-      // Update play count in database
-      updatePlayCount();
-    })
-    .catch((error) => {
-      showPlayError();
-    });
 }
 
 /**

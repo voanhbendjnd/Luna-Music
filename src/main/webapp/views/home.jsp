@@ -46,9 +46,6 @@
                                                 style="background-color: #030303 !important; border-color: #6c757d !important; box-shadow: none !important; outline: none !important;"
                                                 placeholder="Search in Your Library">
                                         </div>
-                                        <button class="btn btn-outline-secondary btn-sm player-btn-play" id="sortBtn">
-                                            <i class="fas fa-sort"></i>
-                                        </button>
                                     </div>
                                 </div>
 
@@ -116,7 +113,7 @@
                                             </c:if>
                                         </h2>
                                         <button class="btn btn-outline-light btn-sm show-all-btn"
-                                            onclick="showAllSongs()">
+                                            onclick="showAllSongs(this)" data-showing-all="false">
                                             Show All
                                         </button>
                                     </div>
@@ -148,7 +145,7 @@
                                     <div class="d-flex justify-content-between align-items-center mb-3">
                                         <h2 class="section-title mb-0">Artists</h2>
                                         <button class="btn btn-outline-light btn-sm show-all-btn"
-                                            onclick="showAllArtists()">
+                                            onclick="showAllArtists(this)" data-showing-all="false">
                                             Show All
                                         </button>
                                     </div>
@@ -159,7 +156,8 @@
                                                     varStatus="status">
                                                     <div class="artist-card" onclick="viewArtist(${artist.id})"
                                                         data-artist-id="${artist.id}" <c:if
-                                                        test="${status.index >= 10}">style="display: none;"</c:if>>
+                                                        test="${status.index >= 10}">style="display: none;"
+                                                        </c:if>>
                                                         <div class="position-relative mb-2">
                                                             <img src="${pageContext.request.contextPath}${artist.imagePath}"
                                                                 alt="${artist.name}"
@@ -186,13 +184,13 @@
                                     <div class="d-flex justify-content-between align-items-center mb-3">
                                         <h2 class="section-title mb-0">Albums</h2>
                                         <button class="btn btn-outline-light btn-sm show-all-btn"
-                                            onclick="showAllAlbums()">
+                                            data-showing-all="false" onclick="showAllAlbums(this)">
                                             Show All
                                         </button>
                                     </div>
                                     <c:choose>
                                         <c:when test="${not empty requestScope.albums}">
-                                            <div class="horizontal-scroll" id="popular-songs-container">
+                                            <div class="horizontal-scroll" id="albums-container">
                                                 <c:forEach var="album" items="${requestScope.albums}"
                                                     varStatus="status">
                                                     <div class="album-card" onclick="viewAlbum(${album.id})"
@@ -224,7 +222,7 @@
                                         <div class="d-flex justify-content-between align-items-center mb-3">
                                             <h2 class="section-title mb-0">Popular Songs</h2>
                                             <button class="btn btn-outline-light btn-sm show-all-btn"
-                                                onclick="showAllPopularSongs()">
+                                                data-showing-all="false" onclick="showAllPopularSongs(this)">
                                                 Show All
                                             </button>
                                         </div>
