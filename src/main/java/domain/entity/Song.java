@@ -12,8 +12,8 @@ public class Song {
     private Long id;
     private String title;
     private String filePath;
-    private String coverImage; // Cover image path for the song
-    private Integer duration; // Duration in seconds
+    private String coverImage;
+    private Integer duration;
     private Integer playCount;
     private Album album;
     private Genre genre;

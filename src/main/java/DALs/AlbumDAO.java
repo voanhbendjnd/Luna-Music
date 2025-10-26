@@ -20,10 +20,17 @@ public class AlbumDAO extends DatabaseConfig {
         super();
     }
 
-    public int countAlbum() {
-        var sql = "select count(*) total from Albums";
+    public int countAlbum(String key) {
+        var sql = "select count(distinct a.id) total from Albums a ";
+        var join = " left join artists ar on a.artist_id = ar.id ";
+        var where = (key != null && !key.isEmpty()) ? " where a.title like ? or  ar.name like ?" : "";
         try {
             var ps = connection.prepareStatement(sql);
+            if(!where.isEmpty()){
+                var s = "%" + key + "%";
+                ps.setString(1, key);
+                ps.setString(2, key);
+            }
             var rs = ps.executeQuery();
             if (rs.next()) {
                 return rs.getInt("total");
@@ -32,6 +39,36 @@ public class AlbumDAO extends DatabaseConfig {
             return 0;
         }
         return 0;
+    }
+    public List<Album> findAllWithPagination(String keyword, int limit,  int offset) {
+        List<Album> albums = new ArrayList<>();
+        String base = "SELECT a.id, a.title, a.artist_id, a.release_year, a.cover_image_path, a.createdAt, " +
+                "ar.id as artist_id, ar.name as artist_name, ar.bio as artist_bio, ar.image_path as artist_image_path "
+                +
+                "FROM Albums a " +
+                "JOIN Artists ar ON a.artist_id = ar.id";
+
+        String where = (keyword != null && !keyword.isBlank()) ? " WHERE a.title LIKE ? OR ar.name LIKE ?" : "";
+        String sql = base + where + " ORDER BY a.id DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            int index = 1;
+            if (!where.isEmpty()) {
+                String kw = "%" + keyword.trim() + "%";
+                ps.setString(index++, kw);
+                ps.setString(index++, kw);
+            }
+            ps.setInt(index++, offset);
+            ps.setInt(index++, limit);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                albums.add(mapRowToAlbum(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error finding albums: " + e.getMessage());
+        }
+        return albums;
     }
 
     /**

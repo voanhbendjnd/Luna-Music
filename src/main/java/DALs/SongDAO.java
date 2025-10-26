@@ -154,7 +154,7 @@ public class SongDAO extends DatabaseConfig {
         String where = (keyword != null && !keyword.isBlank())
                 ? " WHERE s.title LIKE ? OR EXISTS (SELECT 1 FROM SongArtists sa JOIN Artists ar ON sa.artist_id = ar.id WHERE sa.song_id = s.id AND ar.name LIKE ?)"
                 : "";
-        String sql = base + where + " ORDER BY id DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        String sql = base + where + " ORDER BY s.updatedAt DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
         try {
             PreparedStatement ps = connection.prepareStatement(sql);

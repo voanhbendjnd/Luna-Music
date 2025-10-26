@@ -44,14 +44,10 @@ import utils.HashPassword;
         maxRequestSize = 1024 * 1024 * 100 // 100MB
 )
 public class AdminController extends HttpServlet {
-
-    // File upload directories - Fixed paths on local machine
     private static final String BASE_UPLOAD_PATH = "C:\\Users\\PC\\Documents\\FALL25\\upload";
     private static final String AUDIO_DIR = "music";
     private static final String IMAGE_DIR = "images";
     private static final int PAGE_SIZE = 5;
-
-    // Allowed file extensions
     private static final List<String> ALLOWED_AUDIO_EXTENSIONS = Arrays.asList("mp3", "m4a", "wav");
     private static final List<String> ALLOWED_IMAGE_EXTENSIONS = Arrays.asList("jpg", "jpeg", "png", "gif");
     public int getCurrentPage(String pageParam, int totalPages ){
@@ -91,7 +87,7 @@ public class AdminController extends HttpServlet {
                 type = "dashboard";
             if ("dashboard".equalsIgnoreCase(type)) {
                 var totalUsers = userDAO.countUser(null);
-                var totalAlbums = albumDAO.countAlbum();
+                var totalAlbums = albumDAO.countAlbum(null);
                 var totalSongs = songDAO.countSong(null);
                 var totalArtist = artistDAO.countArtist(null);
                 User user = (User) request.getSession().getAttribute("user");
@@ -129,7 +125,7 @@ public class AdminController extends HttpServlet {
                 request.setAttribute("currentPage", currentPage);
                 request.setAttribute("totalPages", totalPages);
                 var artists = artistDAO.findAll(null);
-                var albums = albumDAO.findAll(null);s
+                var albums = albumDAO.findAll(null);
                 var genres = genreDAO.findAll(null);
                 request.setAttribute("songs", songs);
                 request.setAttribute("artists", artists);
@@ -152,8 +148,15 @@ public class AdminController extends HttpServlet {
                 request.setAttribute("viewPath", "/views/admin/artist.jsp");
             } else if ("albums".equalsIgnoreCase(type)) {
                 String q = request.getParameter("q");
-                var albums = albumDAO.findAll(q);
+                long totalAlbums = albumDAO.countAlbum(q);
+                int totalPages = this.getTotalPages(PAGE_SIZE,  totalAlbums);
+                String pageParam = request.getParameter("page");
+                int currentPage = this.getCurrentPage(pageParam,  totalPages);
+                int offset = (currentPage - 1) * PAGE_SIZE;
+                var albums = albumDAO.findAllWithPagination(q, PAGE_SIZE,  offset);
                 var artists = artistDAO.findAll(null);
+                request.setAttribute("currentPage", currentPage);
+                request.setAttribute("totalPages", totalPages);
                 request.setAttribute("albums", albums);
                 request.setAttribute("artists", artists);
                 request.setAttribute("q", q == null ? "" : q);
