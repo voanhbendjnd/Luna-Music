@@ -25,6 +25,44 @@ public class SongDAO extends DatabaseConfig {
     public SongDAO() {
         super();
     }
+    public String getGenreByTemp(String value){
+        return switch (value) {
+            case "Clouds" -> "Vpop";
+            case "Clear" -> "Kpop";
+            case "Rain", "Drizzle" -> "Us-uk";
+            case "Thunderstorm", "Snow", "Tornado", "Atmosphere" -> "Jpop";
+            default -> "Hiphop";
+        };
+    }
+    public List<Song> getSongByTemp(String c){
+        List<Song> songs = new ArrayList<>();
+        String base = "SELECT s.id, s.title, s.file_path, s.coverImage, s.duration, s.play_count, s.album_id, s.genre_id, s.lyric, "
+                +
+                "s.createdAt, s.updatedAt, " +
+                "a.id as album_id, a.title as album_title, a.cover_image_path, " +
+                "g.id as genre_id, g.name as genre_name " +
+                "FROM Songs s " +
+                "LEFT JOIN Albums a ON s.album_id = a.id " +
+                "LEFT JOIN Genres g ON s.genre_id = g.id " +
+                " where g.name = ?";
+        try{
+            var g = this.getGenreByTemp(c);
+            var ps = connection.prepareStatement(base);
+            ps.setString(1, g);
+            var rs = ps.executeQuery();
+            System.out.println(base + "<<<<<");
+            while(rs.next()){
+                Song song = mapRowToSong(rs);
+                song.setSongArtists(findSongArtistsBySongId(song.getId()));
+                songs.add(song);
+            }
+            return songs;
+        }
+        catch(SQLException ex){
+            return null;
+        }
+    }
+
 
     public int countSong(String key) {
         var sql = "select count(distinct s.id) total from Songs s";

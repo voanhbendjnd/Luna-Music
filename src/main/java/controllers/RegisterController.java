@@ -36,9 +36,11 @@ public class RegisterController extends HttpServlet {
             request.getRequestDispatcher("/views/register.jsp").forward(request, response);
             return;
         }
+        var city = request.getParameter("city");
         var name = request.getParameter("name");
         var gender = request.getParameter("gender");
         var password = request.getParameter("password");
+
 
 
         // create salt
@@ -48,7 +50,7 @@ public class RegisterController extends HttpServlet {
         String lastPassword = Base64.getEncoder().encodeToString(hashedPassword);
         String lastSalt = Base64.getEncoder().encodeToString(salt);
         // save
-        var check = userDAO.Register(name, gender, email, lastPassword, lastSalt);
+        var check = userDAO.Register(name, gender, email, lastPassword, lastSalt, city);
         if (check) {
             response.sendRedirect(request.getContextPath() + "/login");
         } else {

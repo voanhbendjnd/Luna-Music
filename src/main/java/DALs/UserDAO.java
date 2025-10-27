@@ -21,10 +21,10 @@ public class UserDAO extends DatabaseConfig {
 
     public int countUser(String key) {
         var sql = "select count(*) from users";
-        sql += (key != null && !key.isEmpty()) ? " where name like ? or email like ? ": "";
+        sql += (key != null && !key.isEmpty()) ? " where name like ? or email like ? " : "";
         try {
             var ps = connection.prepareStatement(sql);
-            if(key != null && !key.isEmpty()){
+            if (key != null && !key.isEmpty()) {
                 String s = "%" + key + "%";
                 ps.setString(1, s);
                 ps.setString(2, s);
@@ -54,8 +54,8 @@ public class UserDAO extends DatabaseConfig {
         return true;
     }
 
-    public boolean Register(String name, String gender, String email, String password, String salt) {
-        var sql = "insert into Users (name, gender, email, password, salt, role_id) values (?,?,?,?,?,?)";
+    public boolean Register(String name, String gender, String email, String password, String salt, String city) {
+        var sql = "insert into Users (name, gender, email, password, salt, role_id, city) values (?,?,?,?,?,?,?)";
         try {
             var ps = connection.prepareStatement(sql);
             ps.setString(1, name);
@@ -70,6 +70,7 @@ public class UserDAO extends DatabaseConfig {
             } else {
                 ps.setNull(6, java.sql.Types.INTEGER);
             }
+            ps.setString(7, city);
             return ps.executeUpdate() > 0;
         } catch (SQLException ex) {
             return false;
@@ -113,6 +114,7 @@ public class UserDAO extends DatabaseConfig {
 
         return "";
     }
+
     public java.util.List<User> findAllWithPagination(String keyword, int limit, int offset) {
         java.util.List<User> users = new java.util.ArrayList<>();
         String base = "SELECT id, name, email, password, active, gender, role_id, createdAt, updatedAt, createdBy, updatedBy FROM Users";
@@ -177,7 +179,7 @@ public class UserDAO extends DatabaseConfig {
     }
 
     public User LoginWithEmail(String email) {
-        var sql = "select id, name, email, password, salt, role_id from Users where email =?";
+        var sql = "select id, name, email, password, salt, role_id, city from Users where email =?";
         try {
             var ps = connection.prepareStatement(sql);
             ps.setString(1, email);
@@ -194,6 +196,7 @@ public class UserDAO extends DatabaseConfig {
                 if (role != null) {
                     user.setRole(role);
                 }
+                user.setCity(rs.getString("city"));
                 return user;
             }
         } catch (SQLException ex) {
@@ -293,6 +296,9 @@ public class UserDAO extends DatabaseConfig {
             user.setUpdatedAt(updatedAtStr.toInstant());
         user.setCreatedBy(rs.getString("createdBy"));
         user.setEmail(rs.getString("email"));
+        if (rs.getString("city") != null) {
+            user.setCity(rs.getString("city"));
+        }
         if (gender != null)
             user.setGender(GenderEnum.valueOf(gender.toUpperCase()));
         user.setId(rs.getLong("id"));

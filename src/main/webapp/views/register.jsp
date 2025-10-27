@@ -104,6 +104,22 @@
                                 margin-top: 0.25rem;
                                 text-align: left;
                             }
+
+                            .form-select {
+                                border: none;
+                                border: 1px solid #535353;
+                                background-color: #1a1a1a;
+                            }
+
+                            .form-select:focus {
+                                color: #000000;
+                                box-shadow: none;
+                            }
+
+                            .form-select:hover {
+                                color: #1ed760;
+
+                            }
                         </style>
                     </head>
 
@@ -170,6 +186,14 @@
                                     <input type="password" class="form-control" id="confirmPasswordInput"
                                         placeholder="Confirm password" name="confirmPassword" required
                                         onkeyup="validatePasswordMatch()">
+                                </div>
+                                <div class="mb-4 text-start">
+                                    <label>Your city</label>
+                                    <select class="form-control" name="city" required>
+                                        <option value="CAN%20THO">CẦN THƠ</option>
+                                        <option value="HO%20CHI%20MINH">HỒ CHÍNH MINH</option>
+                                        <option value="HA%20NOI">HÀ NỘI</option>
+                                    </select>
                                 </div>
 
                                 <p style="color: #ff3333; display: flex;">

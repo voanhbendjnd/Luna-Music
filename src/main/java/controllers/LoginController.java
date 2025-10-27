@@ -40,7 +40,7 @@ public class LoginController extends HttpServlet {
             boolean checkLoginSuccess = HashPassword.isExpectedPassword(password.toCharArray(), saveSalt, saveHash);
             if (checkLoginSuccess) {
                 HttpSession session = request.getSession();
-                session.setMaxInactiveInterval(30 * 60);
+                session.setMaxInactiveInterval(60 * 60);
                 session.setAttribute("lastAccessedTime", System.currentTimeMillis());
                 session.setAttribute("lastRequestTime", System.currentTimeMillis());
                 session.setAttribute("user", user);

@@ -154,6 +154,44 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                <div class="card-footer bg-white border-top">
+                                    <nav aria-label="Page navigation">
+                                        <ul class="pagination justify-content-center mb-0">
+                                            <c:if test="${currentPage > 1}">
+                                                <a class="page-link"
+                                                    href="${pageContext.request.contextPath}/admin?action=list&type=songs&page=${currentPage - 1}">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                        fill="currentColor" class="bi bi-arrow-left-square-fill"
+                                                        viewBox="0 0 16 16">
+                                                        <path
+                                                            d="M16 14a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2zm-4.5-6.5H5.707l2.147-2.146a.5.5 0 1 0-.708-.708l-3 3a.5.5 0 0 0 0 .708l3 3a.5.5 0 0 0 .708-.708L5.707 8.5H11.5a.5.5 0 0 0 0-1" />
+                                                    </svg>
+                                                </a>
+                                            </c:if>
+                                            <c:forEach begin="1" end="${totalPages}" var="i">
+                                                <c:if test="${currentPage == i}">
+                                                    <a class="page-link nav-link active"
+                                                        href="${pageContext.request.contextPath}/admin?action=list&type=songs&page=${i}">${i}</a>
+                                                </c:if>
+                                                <c:if test="${currentPage != i}">
+                                                    <a class="page-link"
+                                                        href="${pageContext.request.contextPath}/admin?action=list&type=songs&page=${i}">${i}</a>
+                                                </c:if>
+                                            </c:forEach>
+                                            <c:if test="${currentPage < totalPages}">
+                                                <a class="page-link"
+                                                    href="${pageContext.request.contextPath}/admin?action=list&type=songs&page=${currentPage + 1}">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                        fill="currentColor" class="bi bi-arrow-right-square-fill"
+                                                        viewBox="0 0 16 16">
+                                                        <path
+                                                            d="M0 14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2zm4.5-6.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5a.5.5 0 0 1 0-1" />
+                                                    </svg>
+                                                </a>
+                                            </c:if>
+                                        </ul>
+                                    </nav>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -181,7 +219,6 @@
                                             <input required name="title" class="form-control"
                                                 placeholder="Enter song title" />
                                         </div>
-
                                         <div class="mb-3">
                                             <label class="form-label">Artists <span class="text-danger">*</span></label>
                                             <select multiple class="form-select" name="artistIds" required>
@@ -193,7 +230,6 @@
                                             <small class="form-text text-muted">Hold Ctrl/Cmd to select multiple
                                                 artists</small>
                                         </div>
-
                                         <div class="mb-3">
                                             <label class="form-label">Album</label>
                                             <select class="form-select" name="albumId">
@@ -204,7 +240,6 @@
                                                 </c:forEach>
                                             </select>
                                         </div>
-
                                         <div class="mb-3">
                                             <label class="form-label">Genre</label>
                                             <select class="form-select" name="genreId" required>
@@ -215,7 +250,6 @@
                                             </select>
                                         </div>
                                     </div>
-
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label class="form-label">Audio File <span
@@ -224,23 +258,12 @@
                                                 accept=".mp3,.m4a,.wav" required />
                                             <small class="form-text text-muted">Supported formats: MP3, M4A, WAV</small>
                                         </div>
-                                        <div>
-                                            <div class="mb-3">
-                                                <label class="form-label">Cover Image</label>
-                                                <input type="file" name="coverImage" class="form-control"
-                                                    accept=".jpg,.jpeg,.png,.gif" />
-                                                <small class="form-text text-muted">Optional: JPG, PNG, GIF</small>
-                                            </div>
-                                            <div class="mb-3">
-                                                <div class="image-preview-container">
-                                                    <img id="createImagePreview" src="" alt="Preview"
-                                                        class="img-thumbnail d-none"
-                                                        style="max-width: 250px; max-height: 250px;">
-                                                </div>
-                                            </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Cover Image</label>
+                                            <input type="file" name="coverImage" class="form-control"
+                                                accept=".jpg,.jpeg,.png,.gif" />
+                                            <small class="form-text text-muted">Optional: JPG, PNG, GIF</small>
                                         </div>
-
-
                                         <div class="mb-3">
                                             <label class="form-label">Duration (seconds)</label>
                                             <input type="number" name="duration" class="form-control"
@@ -248,7 +271,6 @@
                                             <small class="form-text text-muted">Leave empty to auto-detect from audio
                                                 file</small>
                                         </div>
-
                                         <div class="mb-3">
                                             <label class="form-label">Lyric</label>
                                             <textarea required name="lyric" class="form-control"
@@ -289,7 +311,6 @@
                                                     class="text-danger">*</span></label>
                                             <input required name="title" id="editTitle" class="form-control" />
                                         </div>
-
                                         <div class="mb-3">
                                             <label class="form-label">Artists <span class="text-danger">*</span></label>
                                             <select multiple class="form-select" name="artistIds" id="editArtistIds"
@@ -302,7 +323,6 @@
                                             <small class="form-text text-muted">Hold Ctrl/Cmd to select multiple
                                                 artists</small>
                                         </div>
-
                                         <div class="mb-3">
                                             <label class="form-label">Album</label>
                                             <select class="form-select" name="albumId" id="editAlbumId">
@@ -313,7 +333,6 @@
                                                 </c:forEach>
                                             </select>
                                         </div>
-
                                         <div class="mb-3">
                                             <label class="form-label">Genre</label>
                                             <select class="form-select" name="genreId" id="editGenreId">
@@ -329,7 +348,6 @@
                                                 placeholder="Enter lyric"></textarea>
                                         </div>
                                     </div>
-
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label class="form-label">Audio File</label>
@@ -337,35 +355,18 @@
                                                 accept=".mp3,.m4a,.wav" />
                                             <small class="form-text text-muted">Leave empty to keep current file</small>
                                         </div>
-                                        <div>
-                                            <div class="mb-3">
-                                                <label class="form-label">Cover Image</label>
-                                                <input type="file" name="coverImage" class="form-control"
-                                                    accept=".jpg,.jpeg,.png,.gif" />
-                                                <small class="form-text text-muted">Leave empty to keep current
-                                                    image</small>
-                                            </div>
-                                            <div class="mb-3">
-                                                <div class="image-preview-container">
-                                                    <img id="editImagePreview" src="" alt="Current Image"
-                                                        class="img-thumbnail"
-                                                        style="max-width: 250px; max-height: 250px; display: none;">
-                                                    <div id="noCurrentImageLabel" class="text-muted"
-                                                        style="display: block;">
-                                                        <i class="fas fa-image me-2"></i>No current image
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Cover Image</label>
+                                            <input type="file" name="coverImage" class="form-control"
+                                                accept=".jpg,.jpeg,.png,.gif" />
+                                            <small class="form-text text-muted">Leave empty to keep current
+                                                image</small>
                                         </div>
-
-
                                         <div class="mb-3">
                                             <label class="form-label">Duration (seconds)</label>
                                             <input type="number" name="duration" id="editDuration"
                                                 class="form-control" />
                                         </div>
-
-
                                     </div>
                                 </div>
                             </div>
@@ -412,20 +413,6 @@
             </div>
 
             <script>
-                // DataTables initialization
-                window.addEventListener('DOMContentLoaded', () => {
-                    const table = document.getElementById('datatablesSimple');
-                    if (table && window.simpleDatatables) {
-                        new simpleDatatables.DataTable(table, {
-                            searchable: true,
-                            sortable: true,
-                            perPage: 10,
-                            perPageSelect: [5, 10, 15, 20, 25]
-                        });
-                    }
-                });
-
-                // File upload validation
                 document.addEventListener('DOMContentLoaded', function () {
                     // Audio file validation
                     const audioInputs = document.querySelectorAll('input[name="audioFile"]');
@@ -437,35 +424,30 @@
                                 const allowedTypes = ['audio/mpeg', 'audio/mp4', 'audio/wav', 'audio/x-m4a'];
 
                                 if (file.size > maxSize) {
-                                    // File size must be less than 50MB
+                                    alert('Audio file size must be less than 50MB');
                                     this.value = '';
                                     return;
                                 }
 
                                 if (!allowedTypes.includes(file.type) && !file.name.match(/\.(mp3|m4a|wav)$/i)) {
-                                    // Please select a valid audio file (MP3, M4A, WAV)
+                                    alert('Please select a valid audio file (MP3, M4A, WAV)');
                                     this.value = '';
                                     return;
                                 }
 
                                 // Auto-detect duration if possible
                                 if (this.name === 'audioFile') {
-                                    // Detect duration for both create and edit forms
                                     const form = this.closest('form');
                                     const durationInput = form.querySelector('input[name="duration"]') || form.querySelector('#editDuration');
-
                                     if (file && file.size > 0) {
-                                        // khi người dùng chon audio mới
                                         detectAudioDuration(file, durationInput);
                                     } else {
-                                        // khi người dùng xóa audio cũ
                                         if (form.id === 'editModal' || form.closest('#editModal')) {
                                             const originalDuration = form.querySelector('#editDuration').getAttribute('data-original-duration');
                                             if (originalDuration && durationInput) {
                                                 durationInput.value = originalDuration;
                                             }
                                         } else {
-                                            // khi người dùng chon audio mới
                                             if (durationInput) {
                                                 durationInput.value = '';
                                             }
@@ -474,72 +456,6 @@
                                 }
                             }
                         });
-                    });
-                    // Image preview functionality
-                    document.addEventListener('DOMContentLoaded', function () {
-                        // Create modal image preview
-                        const createImageInput = document.querySelector('#createModal input[name="coverImage"]');
-                        const createImagePreview = document.getElementById('createImagePreview');
-
-                        if (createImageInput && createImagePreview) {
-                            createImageInput.addEventListener('change', function () {
-                                const file = this.files[0];
-                                if (file) {
-                                    const reader = new FileReader();
-                                    reader.onload = function (e) {
-                                        createImagePreview.src = e.target.result;
-                                        createImagePreview.classList.remove('d-none');
-                                    };
-                                    reader.readAsDataURL(file);
-                                } else {
-                                    createImagePreview.classList.add('d-none');
-                                }
-                            });
-                        }
-
-                        // Edit modal image preview
-                        const editImageInput = document.querySelector('#editModal input[name="coverImage"]');
-                        const editImagePreview = document.getElementById('editImagePreview');
-
-                        if (editImageInput && editImagePreview) {
-                            editImageInput.addEventListener('change', function () {
-                                const file = this.files[0];
-                                const noCurrentImageLabel = document.getElementById('noCurrentImageLabel');
-                                if (file) {
-                                    const reader = new FileReader();
-                                    reader.onload = function (e) {
-                                        editImagePreview.src = e.target.result;
-                                        editImagePreview.style.display = 'block';
-                                        if (noCurrentImageLabel) {
-                                            noCurrentImageLabel.style.display = 'none';
-                                        }
-                                    };
-                                    reader.readAsDataURL(file);
-                                } else {
-                                    // Reset to current image or show "No current image"
-                                    const editModal = document.getElementById('editModal');
-                                    if (editModal) {
-                                        const modalBtn = editModal.querySelector('[data-bs-target="#editModal"]');
-                                        if (modalBtn) {
-                                            const currentImagePath = modalBtn.getAttribute('data-cover-image-path');
-                                            if (currentImagePath && currentImagePath.trim() !== '') {
-                                                editImagePreview.src = '${pageContext.request.contextPath}' + currentImagePath;
-                                                editImagePreview.style.display = 'block';
-                                                if (noCurrentImageLabel) {
-                                                    noCurrentImageLabel.style.display = 'none';
-                                                }
-                                            } else {
-                                                editImagePreview.src = '';
-                                                editImagePreview.style.display = 'none';
-                                                if (noCurrentImageLabel) {
-                                                    noCurrentImageLabel.style.display = 'block';
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            });
-                        }
                     });
 
                     // Image file validation
@@ -552,71 +468,29 @@
                                 const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
 
                                 if (file.size > maxSize) {
-                                    // Image size must be less than 5MB
+                                    alert('Image size must be less than 5MB');
                                     this.value = '';
                                     return;
                                 }
 
                                 if (!allowedTypes.includes(file.type) && !file.name.match(/\.(jpg|jpeg|png|gif)$/i)) {
-                                    // Please select a valid image file (JPG, PNG, GIF)
+                                    alert('Please select a valid image file (JPG, PNG, GIF)');
                                     this.value = '';
                                     return;
                                 }
                             }
                         });
                     });
-                });
 
-                // Audio duration detection
-                function detectAudioDuration(file, durationInput) {
-                    if (!file || !durationInput) return;
-
-                    const audio = new Audio();
-                    const url = URL.createObjectURL(file);
-
-                    // Show loading indicator
-                    durationInput.placeholder = 'Detecting duration...';
-                    durationInput.disabled = true;
-
-                    audio.addEventListener('loadedmetadata', function () {
-                        const duration = Math.round(audio.duration);
-                        if (duration > 0) {
-                            durationInput.value = duration;
-                            durationInput.placeholder = '';
-                        } else {
-                            durationInput.placeholder = 'Duration not detected';
-                        }
-                        durationInput.disabled = false;
-                        URL.revokeObjectURL(url);
-                    });
-
-                    audio.addEventListener('error', function () {
-                        durationInput.placeholder = 'Duration not detected';
-                        durationInput.disabled = false;
-                        URL.revokeObjectURL(url);
-                    });
-
-                    audio.src = url;
-                }
-
-                // Modal population for edit
-                document.addEventListener('DOMContentLoaded', function () {
+                    // Modal population for edit
                     const editModal = document.getElementById('editModal');
                     if (editModal) {
                         editModal.addEventListener('show.bs.modal', function (event) {
                             const btn = event.relatedTarget;
-
-                            // Reset file input
-                            const editImageInput = document.querySelector('#editModal input[name="coverImage"]');
-                            if (editImageInput) {
-                                editImageInput.value = '';
-                            }
-
-                            // Set basic fields
                             document.getElementById('editId').value = btn.getAttribute('data-id');
                             document.getElementById('editTitle').value = btn.getAttribute('data-title');
-                            // Set lyric
                             document.getElementById('editLyric').value = btn.getAttribute('data-lyric');
+
                             // Set album
                             const albumId = btn.getAttribute('data-album-id');
                             if (albumId) {
@@ -628,35 +502,14 @@
                             if (genreId) {
                                 document.getElementById('editGenreId').value = genreId;
                             }
-                            // Set current image
-                            const imagePath = btn.getAttribute('data-cover-image-path');
-                            const editImagePreview = document.getElementById('editImagePreview');
-                            const noCurrentImageLabel = document.getElementById('noCurrentImageLabel');
-                            if (editImagePreview && noCurrentImageLabel) {
-                                if (imagePath && imagePath.trim() !== '') {
-                                    const fullImagePath = '${pageContext.request.contextPath}' + imagePath;
-                                    editImagePreview.src = fullImagePath;
-                                    editImagePreview.style.display = 'block';
-                                    noCurrentImageLabel.style.display = 'none';
-                                } else {
-                                    editImagePreview.src = '';
-                                    editImagePreview.style.display = 'none';
-                                    noCurrentImageLabel.style.display = 'block';
-                                }
-                            }
 
-
-                            // Lấy duration từ database
-                            const durationValue = btn.getAttribute('data-duration-id'); // VD: "180"
-
-                            // Set vào input
+                            // Set duration
+                            const durationValue = btn.getAttribute('data-duration-id');
                             const editDurationInput = document.getElementById('editDuration');
-                            editDurationInput.value = durationValue;                    // duration = 180
+                            editDurationInput.value = durationValue;
+                            editDurationInput.setAttribute('data-original-duration', durationValue);
 
-                            // LƯU original duration để backup
-                            editDurationInput.setAttribute('data-original-duration', durationValue); // data-original-duration = "180"
-
-                            // Set artists (multiple selection)
+                            // Set artists
                             const artistIds = btn.getAttribute('data-artist-ids');
                             if (artistIds) {
                                 const artistSelect = document.getElementById('editArtistIds');
@@ -668,33 +521,6 @@
                         });
                     }
 
-                    // Reset edit form when modal is hidden
-                    editModal.addEventListener('hidden.bs.modal', function () {
-                        // Reset file inputs
-                        const audioInput = editModal.querySelector('input[name="audioFile"]');
-                        const imageInput = editModal.querySelector('input[name="coverImage"]');
-                        if (audioInput) audioInput.value = '';
-                        if (imageInput) imageInput.value = '';
-
-                        // Reset duration to original value
-                        const durationInput = document.getElementById('editDuration');
-                        const originalDuration = durationInput.getAttribute('data-original-duration');
-                        if (originalDuration) {
-                            durationInput.value = originalDuration;
-                            durationInput.placeholder = '';
-                            durationInput.disabled = false;
-                        }
-
-                        // Reset image preview
-                        const editImagePreview = document.getElementById('editImagePreview');
-                        const noCurrentImageLabel = document.getElementById('noCurrentImageLabel');
-                        if (editImagePreview && noCurrentImageLabel) {
-                            editImagePreview.src = '';
-                            editImagePreview.style.display = 'none';
-                            noCurrentImageLabel.style.display = 'block';
-                        }
-                    });
-
                     // Delete modal population
                     const deleteModal = document.getElementById('deleteModal');
                     if (deleteModal) {
@@ -704,10 +530,8 @@
                             document.getElementById('deleteTitle').textContent = btn.getAttribute('data-title');
                         });
                     }
-                });
 
-                // Form submission handling
-                document.addEventListener('DOMContentLoaded', function () {
+                    // Form submission handling
                     const createForm = document.querySelector('#createModal form');
                     if (createForm) {
                         createForm.addEventListener('submit', function (e) {
@@ -716,14 +540,14 @@
 
                             if (!audioFile.files[0]) {
                                 e.preventDefault();
-                                // Please select an audio file
+                                alert('Please select an audio file');
                                 return;
                             }
 
                             const selectedArtists = Array.from(artistIds.selectedOptions).map(option => option.value);
                             if (selectedArtists.length === 0) {
                                 e.preventDefault();
-                                // Please select at least one artist
+                                alert('Please select at least one artist');
                                 return;
                             }
 
@@ -741,10 +565,35 @@
                         });
                     }
                 });
+
+                // Audio duration detection
+                function detectAudioDuration(file, durationInput) {
+                    if (!file || !durationInput) return;
+                    const audio = new Audio();
+                    const url = URL.createObjectURL(file);
+                    durationInput.placeholder = 'Detecting duration...';
+                    durationInput.disabled = true;
+                    audio.addEventListener('loadedmetadata', function () {
+                        const duration = Math.round(audio.duration);
+                        if (duration > 0) {
+                            durationInput.value = duration;
+                            durationInput.placeholder = '';
+                        } else {
+                            durationInput.placeholder = 'Duration not detected';
+                        }
+                        durationInput.disabled = false;
+                        URL.revokeObjectURL(url);
+                    });
+                    audio.addEventListener('error', function () {
+                        durationInput.placeholder = 'Duration not detected';
+                        durationInput.disabled = false;
+                        URL.revokeObjectURL(url);
+                    });
+                    audio.src = url;
+                }
             </script>
 
             <style>
-                /* Custom styles for song management */
                 .container-fluid.px-0 {
                     padding-left: 0 !important;
                     padding-right: 0 !important;
@@ -794,69 +643,45 @@
                     margin-right: 0.25rem;
                 }
 
-                /* Audio player styling */
                 audio {
                     max-width: 200px;
                     height: 32px;
                 }
 
-                /* Badge styling */
                 .badge {
                     font-size: 0.75em;
                 }
 
-                /* Modal styling */
                 .modal-lg {
                     max-width: 800px;
                 }
 
-                /* File input styling */
                 .form-control[type="file"] {
                     padding: 0.375rem 0.75rem;
                 }
 
-                /* Multi-select styling */
                 select[multiple] {
                     min-height: 120px;
                 }
 
-                /* Image preview in table */
                 .table img {
                     border: 1px solid #dee2e6;
                 }
 
-                /* Loading state */
                 .btn:disabled {
                     opacity: 0.6;
                     cursor: not-allowed;
                 }
 
-                /* Alert styling */
                 .alert {
                     border-radius: 0.375rem;
                 }
 
-                /* Form validation */
                 .form-control:invalid {
                     border-color: #dc3545;
                 }
 
                 .form-control:valid {
                     border-color: #198754;
-                }
-
-                /* Responsive adjustments */
-                @media (max-width: 768px) {
-                    .modal-lg {
-                        max-width: 95%;
-                    }
-
-                    .table-responsive {
-                        font-size: 0.875rem;
-                    }
-
-                    audio {
-                        max-width: 150px;
-                    }
                 }
             </style>

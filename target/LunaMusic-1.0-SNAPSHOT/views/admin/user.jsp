@@ -28,15 +28,16 @@
                             </div>
 
                             <!-- Success/Error Messages -->
-                            <c:if test="${not empty requestScope.success}">
+                            <c:if test="${not empty success}">
                                 <div class="alert alert-success alert-dismissible fade show m-3" role="alert">
-                                    <i class="fas fa-check-circle me-2"></i>${requestScope.success}
+                                    <i class="fas fa-check-circle me-2"></i>${success}
                                     <button type="button" class="btn-close" data-bs-dismiss="alert"
                                         aria-label="Close"></button>
                                 </div>
                             </c:if>
                             <c:if test="${not empty error}">
-                                <div class="alert alert-danger alert-dismissible fade show m-3" role="alert">
+                                <div class="alert alert-danger alert-dismissible fade show m-3" role="alert"
+                                    id="errorMsg">
                                     <i class="fas fa-exclamation-circle me-2"></i>${error}
                                     <button type="button" class="btn-close" data-bs-dismiss="alert"
                                         aria-label="Close"></button>
@@ -108,6 +109,53 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <div class="card-footer bg-white border-top">
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination justify-content-center mb-0">
+
+                                        <!-- <c:url var="basePageUrl" value="${pageContext.request.contextPath}/admin">
+                                                                                <c:param name="action" value="list" />
+                                                                                <c:param name="type" value="genres" />
+                                                                                <c:if test="${not empty q}">
+                                                                                    <c:param name="q" value="${q}" />
+                                                                                </c:if>
+                                                                            </c:url> -->
+
+                                        <c:if test="${currentPage > 1}">
+                                            <a class="page-link"
+                                                href="${pageContext.request.contextPath}/admin?action=list&type=users&page=${currentPage - 1}">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-arrow-left-square-fill"
+                                                    viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M16 14a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2zm-4.5-6.5H5.707l2.147-2.146a.5.5 0 1 0-.708-.708l-3 3a.5.5 0 0 0 0 .708l3 3a.5.5 0 0 0 .708-.708L5.707 8.5H11.5a.5.5 0 0 0 0-1" />
+                                                </svg>
+                                            </a>
+                                        </c:if>
+                                        <c:forEach begin="1" end="${totalPages}" var="i">
+                                            <c:if test="${currentPage == i}">
+                                                <a class="page-link nav-link active"
+                                                    href="${pageContext.request.contextPath}/admin?action=list&type=users&page=${i}">${i}</a>
+                                            </c:if>
+                                            <c:if test="${currentPage != i}">
+                                                <a class="page-link"
+                                                    href="${pageContext.request.contextPath}/admin?action=list&type=users&page=${i}">${i}</a>
+                                            </c:if>
+                                        </c:forEach>
+                                        <c:if test="${currentPage < totalPages}">
+                                            <a class="page-link"
+                                                href="${pageContext.request.contextPath}/admin?action=list&type=users&page=${currentPage + 1}">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-arrow-right-square-fill"
+                                                    viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M0 14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2zm4.5-6.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5a.5.5 0 0 1 0-1" />
+                                                </svg>
+                                            </a>
+                                        </c:if>
+                                    </ul>
+                                </nav>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -142,7 +190,7 @@
                                 <div class="col-md-6">
                                     <label class="form-label">Gender</label>
                                     <select class="form-select" name="gender">
-                                        <option value="">Select gender</option>
+                                        <option value="NOT_PREFER">-Select gender-</option>
                                         <option value="MALE">Male</option>
                                         <option value="FEMALE">Female</option>
                                         <option value="OTHER">Other</option>
@@ -185,7 +233,6 @@
                     <form method="post" action="${pageContext.request.contextPath}/admin">
                         <input type="hidden" name="action" value="update" />
                         <input type="hidden" name="type" value="users" />
-
                         <input type="hidden" name="id" id="editId" />
                         <div class="modal-body">
                             <div class="mb-3">
@@ -196,15 +243,11 @@
                                 <label class="form-label">Email</label>
                                 <input required type="email" name="email" id="editEmail" class="form-control" />
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Password</label>
-                                <input type="password" name="password" id="editPassword" class="form-control" />
-                            </div>
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label class="form-label">Gender</label>
                                     <select class="form-select" name="gender" id="editGender">
-                                        <option value="">-Select Gender-</option>
+                                        <option value="NOT_PREFER">-Select Gender-</option>
                                         <option value="MALE">Male</option>
                                         <option value="FEMALE">Female</option>
                                         <option value="OTHER">Other</option>
@@ -270,59 +313,22 @@
                 }
             });
 
+            const ERROR_DISPLAY_TIME = 2000; // 3 giây
 
-            // Find create form specifically
-            const createForm = document.querySelector('form[action*="/admin"] input[name="action"][value="create"]')?.closest('form');
+            setTimeout(function () {
+                const msg = document.getElementById('errorMsg');
+                if (msg) {
+                    // Thêm hiệu ứng mờ dần (fade out)
+                    msg.style.transition = "opacity 0.5s ease";
+                    msg.style.opacity = "0";
 
-            // Form validation only - similar to other entities
-            if (createForm) {
-                createForm.addEventListener('submit', function (e) {
-                    const name = this.querySelector('input[name="name"]')?.value?.trim() || '';
-                    const email = this.querySelector('input[name="email"]')?.value?.trim() || '';
-                    const password = this.querySelector('input[name="password"]')?.value?.trim() || '';
-                    const gender = this.querySelector('select[name="gender"]')?.value || '';
-                    const role = this.querySelector('select[name="role"]')?.value || '';
 
-                    // Client-side validation
-                    if (!name) {
-                        e.preventDefault();
-                        // Please enter user name
-                        return;
-                    }
-                    if (!email) {
-                        e.preventDefault();
-                        // Please enter email
-                        return;
-                    }
-                    if (!password) {
-                        e.preventDefault();
-                        // Please enter password
-                        return;
-                    }
-                    if (!gender) {
-                        e.preventDefault();
-                        // Please select gender
-                        return;
-                    }
-                    if (!role) {
-                        e.preventDefault();
-                        // Please select role
-                        return;
-                    }
+                    // Sau khi mờ dần thì ẩn hoàn toàn
+                    setTimeout(() => msg.style.display = 'none', 500);
+                }
+            }, ERROR_DISPLAY_TIME);
 
-                    // Show loading state like other entities
-                    const submitBtn = this.querySelector('button[type="submit"]');
-                    const originalText = submitBtn.innerHTML;
-                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Saving...';
-                    submitBtn.disabled = true;
 
-                    // Re-enable button if form submission fails
-                    setTimeout(() => {
-                        submitBtn.innerHTML = originalText;
-                        submitBtn.disabled = false;
-                    }, 10000);
-                });
-            }
 
             // Modal population
             document.addEventListener('DOMContentLoaded', function () {
@@ -333,7 +339,6 @@
                         document.getElementById('editId').value = btn.getAttribute('data-id');
                         document.getElementById('editName').value = btn.getAttribute('data-name');
                         document.getElementById('editEmail').value = btn.getAttribute('data-email');
-                        document.getElementById('editPassword').value = '';
                         const gender = btn.getAttribute('data-gender') || '';
                         document.getElementById('editGender').value = gender;
                         const role = btn.getAttribute('data-role') || '';
