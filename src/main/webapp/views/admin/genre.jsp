@@ -303,17 +303,7 @@
                 });
 
                 // Auto-capitalize genre names
-                document.addEventListener('DOMContentLoaded', function () {
-                    const nameInputs = document.querySelectorAll('input[name="name"]');
-                    nameInputs.forEach(input => {
-                        input.addEventListener('input', function () {
-                            const value = this.value;
-                            if (value.length > 0) {
-                                this.value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
-                            }
-                        });
-                    });
-                });
+
             </script>
 
             <style>

@@ -142,17 +142,12 @@
                         <c:if test="${not empty search}">
                             <p style="font-style: italic;">Results for "${search}"</p>
                         </c:if>
-                        <h1>Thời tiết hiện tại tại ${city}</h1>
-                        <p><strong>Nhiệt độ:</strong> ${temperature}</p>
-                        <p><strong>Mô tả:</strong> ${weatherDesc}</p>
-                        <p style="font-size: 10px;">(Dữ liệu được lấy từ Server thông qua API
-                            OpenWeatherMap)</p>
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h2 class="section-title mb-0">
                                 <c:if test="${not empty search}">
                                     Song
                                 </c:if>
-                                <c:if test="${empty requestScope.search}">
+                                <c:if test="${empty search}">
                                     New Songs
                                 </c:if>
                             </h2>
@@ -217,7 +212,7 @@
                             <c:otherwise>
                                 <div class="empty-state">
                                     <i class="fas fa-music"></i>
-                                    <p>No songs available at the moment.</p>
+                                    <p>No artists available at the moment.</p>
                                 </div>
                             </c:otherwise>
                         </c:choose>
@@ -252,7 +247,7 @@
                             <c:otherwise>
                                 <div class="empty-state">
                                     <i class="fas fa-music"></i>
-                                    <p>No songs available at the moment.</p>
+                                    <p>No albums available at the moment.</p>
                                 </div>
                             </c:otherwise>
                         </c:choose>

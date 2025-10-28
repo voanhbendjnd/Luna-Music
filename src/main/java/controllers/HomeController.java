@@ -86,7 +86,6 @@ public class HomeController extends HttpServlet {
         if (session != null && session.getAttribute("search") != null) {
             session.removeAttribute("search");
         }
-        // Get popular songs (limit to 20)
         var songDAO = new SongDAO();
         List<Song> songs = songDAO.findAll(null);
         if (songs.size() > 20) {
@@ -99,7 +98,6 @@ public class HomeController extends HttpServlet {
         }
         request.setAttribute("popularSong", popularSongs);
 
-        // Get featured artists (limit to 10)
         var artistDAO = new ArtistDAO();
         List<Artist> artists = artistDAO.findAll(null);
         if (artists.size() > 20) {
@@ -107,7 +105,6 @@ public class HomeController extends HttpServlet {
         }
         request.setAttribute("artists", artists);
 
-        // Get featured albums (limit to 15)
         var albumDAO = new AlbumDAO();
         List<Album> albums = albumDAO.findAll(null);
         if (albums.size() > 20) {
@@ -115,7 +112,6 @@ public class HomeController extends HttpServlet {
         }
         request.setAttribute("albums", albums);
 
-        // Get user playlists if user is logged in
         if (currentUser != null) {
             var playlistDAO = new PlaylistDAO();
             List<Playlist> userPlaylists = playlistDAO.getPlaylistsByUserId(currentUser.getId());

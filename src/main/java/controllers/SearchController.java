@@ -28,9 +28,19 @@ public class SearchController extends HttpServlet {
         var songs = res.getSongs();
         var albums = res.getAlbums();
         var artists = res.getArtists();
-        request.setAttribute("songs", songs);
-        request.setAttribute("albums", albums);
-        request.setAttribute("artists", artists);
+        if(songs != null && !songs.isEmpty()){
+            request.setAttribute("songs", songs);
+
+        }
+        if(albums != null && !songs.isEmpty()){
+            request.setAttribute("albums", albums);
+
+        }
+        if(artists != null && !songs.isEmpty()){
+            request.setAttribute("artists", artists);
+
+        }
+
         request.setAttribute("popularSong", songs);
         var session = request.getSession(false);
         User currentUser = (User)session.getAttribute("user");

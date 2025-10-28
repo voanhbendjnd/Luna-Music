@@ -27,11 +27,11 @@ public class SongDAO extends DatabaseConfig {
     }
     public String getGenreByTemp(String value){
         return switch (value) {
-            case "Clouds" -> "Vpop";
-            case "Clear" -> "Kpop";
-            case "Rain", "Drizzle" -> "Us-uk";
-            case "Thunderstorm", "Snow", "Tornado", "Atmosphere" -> "Jpop";
-            default -> "Hiphop";
+            case "Clouds" -> "Happy";
+            case "Clear" -> "Holiday";
+            case "Rain", "Drizzle" -> "Remix";
+            case "Thunderstorm", "Snow", "Tornado", "Atmosphere" -> "Sad";
+            default -> "Us-uk";
         };
     }
     public List<Song> getSongByTemp(String c){
@@ -50,7 +50,7 @@ public class SongDAO extends DatabaseConfig {
             var ps = connection.prepareStatement(base);
             ps.setString(1, g);
             var rs = ps.executeQuery();
-            System.out.println(base + "<<<<<");
+            System.out.println(base);
             while(rs.next()){
                 Song song = mapRowToSong(rs);
                 song.setSongArtists(findSongArtistsBySongId(song.getId()));
@@ -105,14 +105,14 @@ public class SongDAO extends DatabaseConfig {
             ps.setString(3, kw);
 
             var rs = ps.executeQuery();
-            var songs = new ArrayList<Song>();
-            var artists = new ArrayList<Artist>();
-            var albums = new ArrayList<Album>();
+            List<Song> songs =  new ArrayList<>();
+            List<Album>  albums = new ArrayList<>();
+            List<Artist> artists = new ArrayList<>();
             while (rs.next()) {
                 var song = new Song();
                 var artist = new Artist();
                 var album = new Album();
-                var songID = rs.getLong("songId");
+                Long songID = rs.getLong("songId");
                 song.setId(songID);
                 song.setTitle(rs.getString("songTitle"));
                 song.setCoverImage(rs.getString("songImage"));
@@ -124,23 +124,30 @@ public class SongDAO extends DatabaseConfig {
                 album.setId(albumID);
                 album.setTitle(rs.getString("albumTitle"));
                 album.setCoverImagePath(rs.getString("albumImage"));
-                if(songs.stream().anyMatch(x -> x.getId().equals(songID))){
-                    continue;
+                // it nhat 1 cai la false
+                if(songID != 0 && songs.stream().noneMatch(x -> x.getId().equals(songID))){
+                    songs.add(song);
                 }
-                songs.add(song);
-
-                if (artists.stream().anyMatch(x -> x.getId().equals(artistID))
-                        || albums.stream().anyMatch(x -> x.getId().equals(albumID))) {
-                    continue;
+                if (artistID != 0 && artists.stream().noneMatch(x -> x.getId().equals(artistID))) {
+                    artists.add(artist);
                 }
-                artists.add(artist);
-                albums.add(album);
+                if(albumID != 0 && albums.stream().noneMatch(x -> x.getId().equals(albumID))){
+                    albums.add(album);
+                }
             }
-            resSearch.setSongs(songs);
-            resSearch.setAlbums(albums);
-            resSearch.setArtist(artists);
+            if(!songs.isEmpty()){
+                resSearch.setSongs(songs);
+
+            }
+            if(!albums.isEmpty()){
+                resSearch.setAlbums(albums);
+
+            }
+            if(!artists.isEmpty()){
+                resSearch.setArtist(artists);
+
+            }
         } catch (SQLException ex) {
-            ex.printStackTrace();
             return null;
         }
         return resSearch;

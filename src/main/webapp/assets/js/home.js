@@ -263,6 +263,35 @@ function viewPlaylist(playlistId) {
 
   window.location.href = url;
 }
+function showAllSongsSuggest(buttonElement) {
+  const container = document.getElementById("new-songs-container-new");
+  if (!container) {
+    return;
+  }
+  let isShowingAll = buttonElement.getAttribute('data-showing-all') === 'true';
+
+  if (!isShowingAll) {
+        const allCards = container.querySelectorAll('.album-card');
+        allCards.forEach(card => {
+            card.style.display = 'block'; 
+        });
+        buttonElement.textContent = 'Show Less';
+        buttonElement.setAttribute('data-showing-all', 'true');i
+
+    } else {
+        const allCards = container.querySelectorAll('.album-card');
+        allCards.forEach((card, index) => {
+            if (index >= 10) {
+                card.style.display = 'none';
+            } else {
+                card.style.display = 'block'; 
+            }
+        });
+        buttonElement.textContent = 'Show All';
+        buttonElement.setAttribute('data-showing-all', 'false'); 
+    }
+
+}
 
 function showAllSongs(buttonElement) {
   const container = document.getElementById("new-songs-container");
