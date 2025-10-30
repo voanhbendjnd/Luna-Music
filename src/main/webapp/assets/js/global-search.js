@@ -37,13 +37,7 @@ function submitSearch(query) {
   queryInput.name = "q";
   queryInput.value = query;
 
-  const typeInput = document.createElement("input");
-  typeInput.type = "hidden";
-  typeInput.name = "type";
-  typeInput.value = "all";
-
   form.appendChild(queryInput);
-  form.appendChild(typeInput);
 
   document.body.appendChild(form);
   form.submit();

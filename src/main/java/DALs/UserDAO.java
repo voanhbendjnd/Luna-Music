@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.List;
 
 import constant.GenderEnum;
 import utils.DatabaseConfig;
@@ -115,9 +116,9 @@ public class UserDAO extends DatabaseConfig {
         return "";
     }
 
-    public java.util.List<User> findAllWithPagination(String keyword, int limit, int offset) {
+    public List<User> findAllWithPagination(String keyword, int limit, int offset) {
         java.util.List<User> users = new java.util.ArrayList<>();
-        String base = "SELECT id, name, email, password, active, gender, role_id, createdAt, updatedAt, createdBy, updatedBy FROM Users";
+        String base = "SELECT id, name, email, password, active, gender, role_id, createdAt, updatedAt, createdBy, updatedBy, city FROM Users";
         String where = (keyword != null && !keyword.isBlank()) ? " WHERE name LIKE ? OR email LIKE ?" : "";
         String sql = base + where + " ORDER BY id DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
         try {
@@ -140,9 +141,9 @@ public class UserDAO extends DatabaseConfig {
         return users;
     }
 
-    public java.util.List<User> findAll(String keyword) {
-        java.util.List<User> users = new java.util.ArrayList<>();
-        String base = "SELECT id, name, email, password, active, gender, role_id, createdAt, updatedAt, createdBy, updatedBy FROM Users";
+    public List<User> findAll(String keyword) {
+        List<User> users = new java.util.ArrayList<>();
+        String base = "SELECT id, name, email, password, active, gender, role_id, createdAt, updatedAt, createdBy, updatedBy, city FROM Users";
         String where = (keyword != null && !keyword.isBlank()) ? " WHERE name LIKE ? OR email LIKE ?" : "";
         String sql = base + where + " ORDER BY id DESC";
         try {
@@ -164,7 +165,7 @@ public class UserDAO extends DatabaseConfig {
     }
 
     public User findById(long id) {
-        String sql = "SELECT id, name, email, password, active, gender, role_id, createdAt, updatedAt, createdBy, updatedBy FROM Users WHERE id = ?";
+        String sql = "SELECT id, name, email, password, active, gender, role_id, createdAt, updatedAt, createdBy, updatedBy, city FROM Users WHERE id = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setLong(1, id);
@@ -206,7 +207,7 @@ public class UserDAO extends DatabaseConfig {
     }
 
     public User findByEmail(String email) {
-        String sql = "SELECT id, name, email, password, active, gender, role_id, createdAt, updatedAt, createdBy, updatedBy FROM Users WHERE email = ?";
+        String sql = "SELECT id, name, email, password, active, gender, role_id, createdAt, updatedAt, createdBy, updatedBy, city FROM Users WHERE email = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, email);
@@ -221,7 +222,7 @@ public class UserDAO extends DatabaseConfig {
     }
 
     public boolean create(User u) {
-        String sql = "INSERT INTO Users(name, email, password, active, gender, createdAt, updatedAt, createdBy, updatedBy, role_id, salt) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO Users(name, email, password, active, gender, createdAt, updatedAt, createdBy, updatedBy, role_id, salt, city) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, u.getName());
@@ -240,6 +241,7 @@ public class UserDAO extends DatabaseConfig {
                 ps.setNull(10, java.sql.Types.INTEGER);
             }
             ps.setString(11, u.getSalt());
+            ps.setString(12, "CAN%20THO");
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             System.out.println("Error creating user: " + e.getMessage());
@@ -308,7 +310,7 @@ public class UserDAO extends DatabaseConfig {
 
         // Handle role_id - load full role information
         Long roleId = rs.getLong("role_id");
-        if (!rs.wasNull() && roleId != null) {
+        if (roleId != null) {
             try {
                 var roleDAO = new DALs.RoleDAO();
                 domain.entity.Role role = roleDAO.findById(roleId);

@@ -32,8 +32,6 @@ public class HomeController extends HttpServlet {
         return songs.stream().sorted(Comparator.comparing(Song::getPlayCount).reversed()).toList();
     }
 
-
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -44,11 +42,12 @@ public class HomeController extends HttpServlet {
         if (session != null && session.getAttribute("user") != null) {
             currentUser = (User) session.getAttribute("user");
             request.setAttribute("user", currentUser);
-            apiUrl += "http://api.openweathermap.org/data/2.5/weather?q=" + currentUser.getCity() + "&appid=" + api_key + "&units=metric";
+            apiUrl += "http://api.openweathermap.org/data/2.5/weather?q=" + currentUser.getCity() + "&appid=" + api_key
+                    + "&units=metric";
 
         }
         response.setContentType("text/html;charset=UTF-8");
-        if(!apiUrl.isBlank() && currentUser.getCity() != null){
+        if (!apiUrl.isBlank() && currentUser.getCity() != null) {
             try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
                 HttpGet httpGet = new HttpGet(apiUrl);
 
@@ -58,30 +57,35 @@ public class HomeController extends HttpServlet {
                     ObjectMapper mapper = new ObjectMapper();
                     JsonNode root = mapper.readTree(jsonResponse);
 
-                    String description = root.path("weather").get(0).path("description").asText();
+                    // String description =
+                    // root.path("weather").get(0).path("description").asText();
                     String main = root.path("weather").get(0).path("main").asText();
                     double temperature = root.path("main").path("temp").asDouble();
-                        request.setAttribute("city", currentUser.getCity().replace("%20", " ").trim());
-                        request.setAttribute("weatherDesc", main);
-                        request.setAttribute("temperature", String.format("%.1f", temperature) + "°C");
-                        var songDAO = new SongDAO();
-                        var songs = songDAO.getSongByTemp(main);
-                        request.setAttribute("mySongs", songs);
-
-
+                    request.setAttribute("city", currentUser.getCity().replace("%20", " ").trim());
+                    request.setAttribute("weatherDesc", main);
+                    request.setAttribute("temperature", String.format("%.1f", temperature) + "°C");
+                    var songDAO = new SongDAO();
+                    var songs = songDAO.getSongByTemp(main);
+                    request.setAttribute("mySongs", songs);
 
                 } catch (Exception e) {
                     response.sendRedirect(request.getContextPath() + "/");
+                    return;
                 }
             }
-            var action = request.getParameter("action");
-            if (action != null) {
+
+        }
+        var action = request.getParameter("action");
+        if (action != null) {
+            if(action.equalsIgnoreCase("filter")){
                 this.filterHome(request, response, request.getParameter("type"));
                 return;
             }
+            else if(action.equalsIgnoreCase("search")){
+
+            }
+
         }
-
-
 
         if (session != null && session.getAttribute("search") != null) {
             session.removeAttribute("search");

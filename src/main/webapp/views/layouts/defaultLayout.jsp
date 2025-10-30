@@ -13,15 +13,17 @@
             <body>
 
                 <%@include file="../components/header.jsp" %>
-                    <nav class="nav nav-pills nav-fill" style="width: 30%; margin: 0 auto;">
-                        <a class="nav-link"
-                            href="${pageContext.request.contextPath}/home?action=filter&type=Vpop">Vpop</a>
+                    <nav class="nav nav-pills nav-fill d-flex flex-nowrap w-100 justify-content-center"
+                        style="margin: 0 auto; max-width: 600px;" ">
+                        <a class=" nav-link" href="${pageContext.request.contextPath}/home?action=filter&type=Vpop">
+                        Vpop</a>
                         <a class="nav-link"
                             href="${pageContext.request.contextPath}/home?action=filter&type=Kpop">Kpop</a>
                         <a class="nav-link"
                             href="${pageContext.request.contextPath}/home?action=filter&type=Jpop">Jpop</a>
                         <a class="nav-link"
                             href="${pageContext.request.contextPath}/home?action=filter&type=Us-uk">Usuk</a>
+
                     </nav>
                     <div class="main-content">
                         <%@include file="../home.jsp" %>
