@@ -4,7 +4,7 @@
 
             <head>
                 <title>Your Library - Luna Music</title>
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
                 <meta charset="utf-8">
                 <meta name="context-path" content="${pageContext.request.contextPath}">
 
@@ -139,7 +139,8 @@
                                         <i class="fas fa-step-backward"></i>
                                     </a>
                                 </button>
-                                <button class="control-btn main-play-btn" id="bottomPlayBtn">
+                                <button class="control-btn main-play-btn" id="bottomPlayBtn"
+                                    style="background-color:#1ed760">
                                     <i class="fas fa-play"></i>
                                 </button>
                                 <button class="control-btn next-btn">

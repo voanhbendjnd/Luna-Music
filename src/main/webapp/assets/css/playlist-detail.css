@@ -15,6 +15,7 @@
     left: 0;
     right: 0;
     z-index: 1000;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom));
 }
 
 .progress-bar {
@@ -86,6 +87,44 @@
     display: flex;
     align-items: center;
     gap: 24px;
+}
+
+.bottom-song-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.bottom-song-info .song-meta {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.bottom-title,
+.bottom-artist {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media (max-width: 768px) {
+    .player-content {
+        max-width: none;
+        width: 100%;
+        padding: 0 12px;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        grid-template-areas:
+            "info controls"
+            "info progress";
+        align-items: center;
+        gap: 8px 12px;
+    }
+
+    .bottom-song-info { grid-area: info; min-width: 0; }
+    .main-controls { grid-area: controls; justify-self: center; }
+    .progress-container { grid-area: progress; width: 100%; align-self: center; }
 }
 
 /* Animation for smooth transitions */
@@ -165,6 +204,7 @@ body {
     background-color: #121212;
     color: #ffffff;
     overflow-x: hidden;
+    padding-bottom: calc(120px + env(safe-area-inset-bottom));
 }
 
 .playlist-description {
@@ -536,5 +576,25 @@ body {
     .song-cover {
         width: 40px;
         height: 40px;
+    }
+
+    .player-content {
+        gap: 8px;
+    }
+
+    .control-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 16px;
+    }
+
+    .main-play-btn {
+        width: 48px;
+        height: 48px;
+        font-size: 18px;
+    }
+
+    .main-controls {
+        gap: 8px;
     }
 }

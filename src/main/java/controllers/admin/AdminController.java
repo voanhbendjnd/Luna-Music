@@ -116,7 +116,7 @@ public class AdminController extends HttpServlet {
                 request.setAttribute("viewPath", "/views/admin/user.jsp");
             } else if ("songs".equalsIgnoreCase(type)) {
                 String q = request.getParameter("q");
-                long totalSongs = songDAO.countSong(null);
+                long totalSongs = songDAO.countSong(q);
                 int totalPages = this.getTotalPages(PAGE_SIZE, totalSongs);
                 String pageParam = request.getParameter("page");
                 int currentPage = this.getCurrentPage(pageParam, totalPages);
