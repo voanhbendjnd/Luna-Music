@@ -6,20 +6,15 @@
             <meta charset="utf-8" />
         </head>
         <style>
-            /* bottom-nav.css */
-            /* Định nghĩa màu xanh (hoặc màu nổi bật) cho trạng thái đang hoạt động */
             .bottom-nav-link.active .bottom-nav-icon,
             .bottom-nav-link.active .bottom-nav-text {
                 color: #1db954;
-                /* Ví dụ: Màu xanh dương */
-                /* Hoặc bạn có thể dùng một màu khác tùy ý */
+
             }
 
-            /* Đảm bảo icon và text có màu mặc định khi không active */
             .bottom-nav-link .bottom-nav-icon,
             .bottom-nav-link .bottom-nav-text {
                 color: #909090;
-                /* Ví dụ: Màu xám */
             }
         </style>
         <div class="bottom-nav-container d-lg-none">
@@ -130,41 +125,30 @@
         </div>
         <script>
             document.addEventListener("DOMContentLoaded", function () {
-                // Lấy đường dẫn URL hiện tại (chỉ lấy phần path, không lấy domain)
-                // Ví dụ: /myapp/search?genre=happy
+
                 const currentPath = window.location.pathname + window.location.search;
 
-                // Lấy tất cả các liên kết trong thanh điều hướng
                 const navLinks = document.querySelectorAll('.bottom-nav-list .bottom-nav-link');
 
                 navLinks.forEach(link => {
-                    // Lấy URL đích của liên kết, bỏ qua phần getContextPath/
-                    // Ví dụ: /search?genre=happy
                     const linkHref = link.getAttribute('href').replace('<%= request.getContextPath() %>', '');
 
-                    // ⭐ Xử lý đặc biệt cho Trang chủ (root path)
                     if (linkHref === '/') {
-                        // Trang chủ chỉ active khi đường dẫn chính xác là / hoặc /index.jsp
                         if (currentPath === '<%= request.getContextPath() %>/' || currentPath === '/') {
                             link.classList.add('active');
                         } else {
                             link.classList.remove('active');
                         }
                     }
-                    // ⭐ Xử lý cho các liên kết còn lại (Happy, Remix, Piano)
                     else if (currentPath.startsWith(linkHref)) {
-                        // Áp dụng class 'active' nếu URL hiện tại BẮT ĐẦU bằng URL đích của liên kết
                         link.classList.add('active');
                     } else {
                         link.classList.remove('active');
                     }
 
-                    // ⭐ (Tùy chọn) Thêm hiệu ứng nhấn vào: Remove 'active' cho tất cả
-                    // và thêm lại 'active' cho liên kết vừa click (thao tác này chỉ mang tính thị giác nhanh)
                     link.addEventListener('click', function () {
                         navLinks.forEach(item => item.classList.remove('active'));
                         this.classList.add('active');
-                        // Lưu ý: Sau khi chuyển trang, logic DOMContentLoaded sẽ chạy lại để xác định trang active chính xác.
                     });
                 });
             });

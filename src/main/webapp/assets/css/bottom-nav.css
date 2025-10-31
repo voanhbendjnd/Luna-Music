@@ -161,3 +161,48 @@
         display: none;
     }
 }
+
+/* Playlist page: Rounded bar with 4 items + circular search button (mobile) */
+@media (max-width: 768px) {
+    .playlist-page .bottom-nav-container {
+        background: transparent;
+        padding: 0 16px 12px;
+        z-index: 1035; /* above page content, below player */
+    }
+
+    .playlist-page .bottom-nav-bar {
+        background-color: #1c1c1e;
+        border: 1px solid #2a2a2e;
+        border-radius: 20px;
+        box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+        padding: 10px 12px;
+    }
+
+    .playlist-page .bottom-nav-list {
+        align-items: center;
+        gap: 14px;
+        justify-content: space-between;
+    }
+
+    /* Keep all 4 items visible with labels */
+    .playlist-page .bottom-nav-item { flex: 1; }
+
+    /* Search button aligned right, circular */
+    .playlist-page .bottom-nav-search { flex: 0; margin-left: auto; }
+    .playlist-page .bottom-nav-search .bottom-nav-link {
+        width: 48px;
+        height: 48px;
+        min-height: 48px;
+        padding: 0;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #1a1a1a;
+        border: 1px solid #2f2f2f;
+        pointer-events: auto;
+        cursor: pointer;
+    }
+    .playlist-page .bottom-nav-search .bottom-nav-text { display: none; }
+    .playlist-page .bottom-nav-search .bottom-nav-icon { margin: 0; width: 22px; height: 22px; }
+}

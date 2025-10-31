@@ -122,9 +122,95 @@
         gap: 8px 12px;
     }
 
-    .bottom-song-info { grid-area: info; min-width: 0; }
-    .main-controls { grid-area: controls; justify-self: center; }
-    .progress-container { grid-area: progress; width: 100%; align-self: center; }
+    .bottom-song-info {
+        grid-area: info;
+        min-width: 0;
+    }
+
+    .main-controls {
+        grid-area: controls;
+        justify-self: center;
+    }
+
+    .progress-container {
+        grid-area: progress;
+        width: 100%;
+        align-self: center;
+    }
+}
+
+/* Playlist page: Floating pill-style bottom player (mobile) */
+@media (max-width: 768px) {
+    .playlist-page .bottom-player-bar {
+        background-color: #060675;
+        /* match bottom nav */
+        border-top: none;
+        padding: 0 16px 18px;
+        bottom: 84px;
+        /* sit above bottom nav */
+        z-index: 1040;
+        pointer-events: none;
+        /* allow pill to manage interactions */
+    }
+
+    .playlist-page .player-content {
+        grid-template-areas: "info controls";
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        background-color: #1c1c1e;
+        border: 1px solid #2a2a2e;
+        border-radius: 22px;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+        padding: 10px 12px;
+        width: 100%;
+        margin: 0 auto;
+        pointer-events: auto;
+    }
+
+    .playlist-page .bottom-song-info {
+        gap: 10px;
+    }
+
+    .playlist-page .bottom-cover {
+        width: 44px !important;
+        height: 44px !important;
+        border-radius: 8px !important;
+    }
+
+    .playlist-page .bottom-title {
+        font-weight: 800;
+        font-size: 14px;
+    }
+
+    .playlist-page .bottom-artist {
+        color: #b7b7b7 !important;
+        font-size: 12px;
+    }
+
+    .playlist-page .main-controls {
+        gap: 6px;
+    }
+
+    .playlist-page .control-btn {
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+        background: #2a2a2e;
+        border: 1px solid #3a3a3e;
+    }
+
+    .playlist-page .main-play-btn {
+        background-color: #ffffff !important;
+        color: #111 !important;
+        width: 44px;
+        height: 44px;
+        border-radius: 16px;
+    }
+
+    /* Hide progress bar inside compact pill */
+    .playlist-page .progress-container {
+        display: none;
+    }
 }
 
 /* Animation for smooth transitions */
@@ -205,6 +291,13 @@ body {
     color: #ffffff;
     overflow-x: hidden;
     padding-bottom: calc(120px + env(safe-area-inset-bottom));
+}
+
+@media (max-width: 768px) {
+    .playlist-page {
+        padding-bottom: calc(190px + env(safe-area-inset-bottom));
+        /* space for both player and nav */
+    }
 }
 
 .playlist-description {
