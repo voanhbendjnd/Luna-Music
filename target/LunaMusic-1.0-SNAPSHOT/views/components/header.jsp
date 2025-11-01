@@ -51,7 +51,8 @@
                                 <a href="<%= request.getContextPath() %>/login" class="login-button">Log in</a>
                             </c:if>
                             <c:if test="${not empty user}">
-                                <span class="welcome-text me-3">Welcome, ${user.name}!</span>
+                                <span class="welcome-text me-3"><a style="text-decoration: none; color: white;"
+                                        href="<%= request.getContextPath()%>/account">Welcome, ${user.name}!</a></span>
                                 <a href="<%= request.getContextPath()%>/logout" class="login-button">Logout</a>
                             </c:if>
                         </div>
@@ -81,6 +82,8 @@
                                     <a href="<%= request.getContextPath() %>/login" class="btn btn-light">Login</a>
                                 </c:if>
                                 <c:if test="${not empty user}">
+                                    <a href="<%= request.getContextPath() %>/account" class="btn btn-light">My
+                                        Account</a>
                                     <a href="<%= request.getContextPath()%>/logout"
                                         class="btn btn-outline-light">Logout</a>
                                 </c:if>

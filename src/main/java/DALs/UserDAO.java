@@ -19,6 +19,36 @@ public class UserDAO extends DatabaseConfig {
     public UserDAO() {
         super();
     }
+    public boolean updateAccount(String name, String gender, String city, String email){
+        var sql =  "update users set name = ?, gender = ?, city = ? where email = ?";
+        try{
+            var ps = connection.prepareStatement(sql);
+            ps.setString(1, name);
+            ps.setString(2, gender);
+            ps.setString(3, city);
+            ps.setString(4, email);
+            return ps.executeUpdate() >0;
+        }
+        catch(SQLException ex){
+            return false;
+        }
+    }
+    public boolean updatePassword(String password, String salt, String email){
+        var sql = "update users set password = ?, salt = ? where email = ?";
+        try{
+            var ps = connection.prepareStatement(sql);
+            ps.setString(1, password);
+            ps.setString(2, salt);
+            ps.setString(3, email);
+            if(ps.executeUpdate() >0){
+                return true;
+            }
+        }
+        catch(SQLException ex){
+            return false;
+        }
+        return false;
+    }
 
     public int countUser(String key) {
         var sql = "select count(*) from users";
@@ -180,7 +210,7 @@ public class UserDAO extends DatabaseConfig {
     }
 
     public User LoginWithEmail(String email) {
-        var sql = "select id, name, email, password, salt, role_id, city from Users where email =?";
+        var sql = "select id, name, email, password, salt, role_id, city, gender from Users where email =?";
         try {
             var ps = connection.prepareStatement(sql);
             ps.setString(1, email);
@@ -188,6 +218,9 @@ public class UserDAO extends DatabaseConfig {
             System.out.println(sql);
             if (rs.next()) {
                 var user = new User();
+                user.setEmail(rs.getString("email"));
+                var gender = rs.getString("gender");
+                user.setGender(GenderEnum.valueOf(gender));
                 user.setName(rs.getString("name"));
                 user.setId(rs.getLong("id"));
                 user.setPassword(rs.getString("password"));

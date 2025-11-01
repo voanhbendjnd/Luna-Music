@@ -10,9 +10,7 @@ import utils.DatabaseConfig;
 
 import java.sql.*;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -34,7 +32,7 @@ public class SongDAO extends DatabaseConfig {
             default -> "Us-uk";
         };
     }
-    public List<Song> getSongByTemp(String c){
+    public List<Song> getSongByTempOptimal(String c){
         List<Song> songs = new ArrayList<>();
         String base = "SELECT s.id, s.title, s.file_path, s.coverImage, s.duration, s.play_count, s.album_id, s.genre_id, s.lyric, "
                 +
@@ -47,20 +45,67 @@ public class SongDAO extends DatabaseConfig {
                 " where g.name = ?";
         try{
             var g = this.getGenreByTemp(c);
+            var ids = new ArrayList<Long>();
             var ps = connection.prepareStatement(base);
             ps.setString(1, g);
             var rs = ps.executeQuery();
             System.out.println(base);
             while(rs.next()){
                 Song song = mapRowToSong(rs);
-                song.setSongArtists(findSongArtistsBySongId(song.getId()));
+                ids.add(song.getId());
                 songs.add(song);
+            }
+            if(!songs.isEmpty() && !ids.isEmpty()){
+                Map<Long, List<SongArtist>> mp = this.findAllSongArtistBySongIds(ids);
+                for(var x : songs){
+                    x.setSongArtists(mp.get(x.getId()));
+                }
             }
             return songs;
         }
         catch(SQLException ex){
             return null;
         }
+    }
+
+    public Map<Long, List<SongArtist>> findAllSongArtistBySongIds(List<Long> ids){
+        Map<Long, List<SongArtist>> mp = new HashMap<>();
+        String idsStr = ids.stream().map(String::valueOf).collect(Collectors.joining(", "));
+        var countIds = new ArrayList<String>();
+        for(var x : ids){
+            countIds.add("?");
+        }
+        String sql = "SELECT sa.song_id, sa.artist_id, a.name as artist_name, a.bio, a.image_path " +
+                "FROM SongArtists sa " +
+                "JOIN Artists a ON sa.artist_id = a.id " +
+                "WHERE sa.song_id IN (" + String.join(",", countIds) + ")";
+        try{
+            var ps = connection.prepareStatement(sql);
+            for(int i = 0; i < ids.size(); i++){
+                ps.setLong(i+ 1, ids.get(i));
+            }
+            var rs = ps.executeQuery();
+            while(rs.next()){
+                var songArtist = new SongArtist();
+                Long id  = rs.getLong("song_id");
+                var song = new Song();
+                song.setId(id);
+                songArtist.setSong(song);
+                Artist artist = new Artist();
+                artist.setId(rs.getLong("artist_id"));
+                artist.setName(rs.getString("artist_name"));
+                artist.setBio(rs.getString("bio"));
+                artist.setImagePath(rs.getString("image_path"));
+                songArtist.setArtist(artist);
+                mp.computeIfAbsent(id, x -> new ArrayList<>()).add(songArtist);
+            }
+            return mp;
+        }
+        catch (SQLException ex){
+            return null;
+        }
+
+
     }
 
 
@@ -236,7 +281,6 @@ public class SongDAO extends DatabaseConfig {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Song song = mapRowToSong(rs);
-                // Load song artists
                 song.setSongArtists(findSongArtistsBySongId(song.getId()));
                 songs.add(song);
             }
@@ -273,12 +317,18 @@ public class SongDAO extends DatabaseConfig {
             }
             ps.setInt(index++, offset);
             ps.setInt(index++, limit);
+            var ids = new ArrayList<Long>();
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Song song = mapRowToSong(rs);
-                // Load song artists
-                song.setSongArtists(findSongArtistsBySongId(song.getId()));
+                ids.add(song.getId());
                 songs.add(song);
+            }
+            if(!songs.isEmpty() && !ids.isEmpty()){
+                Map<Long, List<SongArtist>> mp = this.findAllSongArtistBySongIds(ids);
+                for(var x : songs){
+                    x.setSongArtists(mp.get(x.getId()));
+                }
             }
             System.out.println(sql);
         } catch (SQLException e) {
@@ -314,12 +364,18 @@ public class SongDAO extends DatabaseConfig {
                 ps.setString(1, kw);
                 ps.setString(2, kw);
             }
+            var ids = new ArrayList<Long>();
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Song song = mapRowToSong(rs);
-                // Load song artists
-                song.setSongArtists(findSongArtistsBySongId(song.getId()));
+                ids.add(song.getId());
                 songs.add(song);
+            }
+            if(!songs.isEmpty() && !ids.isEmpty()){
+                Map<Long, List<SongArtist>> mp = this.findAllSongArtistBySongIds(ids);
+                for(var x : songs){
+                    x.setSongArtists(mp.get(x.getId()));
+                }
             }
             System.out.println(sql);
         } catch (SQLException e) {
@@ -397,7 +453,6 @@ public class SongDAO extends DatabaseConfig {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 Song song = mapRowToSong(rs);
-                // Load song artists
                 song.setSongArtists(findSongArtistsBySongId(song.getId()));
                 System.out.println(sql);
                 return song;
@@ -652,11 +707,18 @@ public class SongDAO extends DatabaseConfig {
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setLong(1, artistId);
+            var ids = new ArrayList<Long>();
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Song song = mapRowToSong(rs);
-                song.setSongArtists(findSongArtistsBySongId(song.getId()));
+                ids.add(song.getId());
                 songs.add(song);
+            }
+            if(!songs.isEmpty() && !ids.isEmpty()){
+                Map<Long, List<SongArtist>> mp = this.findAllSongArtistBySongIds(ids);
+                for(var x : songs){
+                    x.setSongArtists(mp.get(x.getId()));
+                }
             }
         } catch (SQLException e) {
             System.out.println("Error finding songs by artist: " + e.getMessage());
@@ -684,11 +746,18 @@ public class SongDAO extends DatabaseConfig {
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setLong(1, albumId);
+            var ids = new ArrayList<Long>();
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Song song = mapRowToSong(rs);
-                song.setSongArtists(findSongArtistsBySongId(song.getId()));
+                ids.add(song.getId());
                 songs.add(song);
+            }
+            if(!songs.isEmpty() && !ids.isEmpty()){
+                Map<Long, List<SongArtist>> mp = this.findAllSongArtistBySongIds(ids);
+                for(var x : songs){
+                    x.setSongArtists(mp.get(x.getId()));
+                }
             }
         } catch (SQLException e) {
             System.out.println("Error finding songs by album: " + e.getMessage());

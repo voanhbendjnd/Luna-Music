@@ -65,7 +65,7 @@ public class HomeController extends HttpServlet {
                     request.setAttribute("weatherDesc", main);
                     request.setAttribute("temperature", String.format("%.1f", temperature) + "°C");
                     var songDAO = new SongDAO();
-                    var songs = songDAO.getSongByTemp(main);
+                    var songs = songDAO.getSongByTempOptimal(main);
                     request.setAttribute("mySongs", songs);
 
                 } catch (Exception e) {
