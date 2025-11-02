@@ -194,7 +194,7 @@ public class PlaylistDAO extends DatabaseConfig {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            return null;
         }
         return playlists;
     }
@@ -214,7 +214,8 @@ public class PlaylistDAO extends DatabaseConfig {
                 return playlist;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            return null;
+
         }
         return null;
     }
@@ -229,9 +230,8 @@ public class PlaylistDAO extends DatabaseConfig {
             int affectedRows = ps.executeUpdate();
             return affectedRows > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            return false;
         }
-        return false;
     }
 
     // Add song to playlist
@@ -249,7 +249,6 @@ public class PlaylistDAO extends DatabaseConfig {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             return false;
         }
 
@@ -260,13 +259,10 @@ public class PlaylistDAO extends DatabaseConfig {
             ps.setLong(1, playlistId);
             ps.setLong(2, songId);
             ps.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
-
-            int affectedRows = ps.executeUpdate();
-            return affectedRows > 0;
+            return  ps.executeUpdate() >0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            return false;
         }
-        return false;
     }
 
     // Remove song from playlist

@@ -558,7 +558,6 @@ body {
     }
 }
 
-/* Lyrics Text Formatting - 10 characters per line */
 .lyrics-text {
     color: #e0e0e0;
     font-size: 14px;
@@ -567,11 +566,9 @@ body {
     margin: 10px 0;
     padding: 15px;
     border-radius: 8px;
-    /* Force line break every 10 characters */
     word-break: break-all;
     white-space: pre-wrap;
-    max-width: 300px;
-    /* Width for approximately 10 characters */
+    max-width: 400px;
 }
 
 .no-lyrics {
