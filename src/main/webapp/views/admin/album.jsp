@@ -270,7 +270,7 @@
                                         <div class="mb-3">
                                             <label class="form-label">Release Year</label>
                                             <input type="number" name="releaseYear" id="editReleaseYear"
-                                                class="form-control" min="1900" max="2030" />
+                                                class="form-control" min="1900" max="2025" />
                                         </div>
                                     </div>
 
@@ -278,9 +278,11 @@
                                         <div class="mb-3">
                                             <label class="form-label">Cover Image</label>
                                             <input type="file" name="coverImage" class="form-control"
-                                                accept=".jpg,.jpeg,.png,.gif" />
+                                                id="editCoverImageInput" accept=".jpg,.jpeg,.png,.gif" />
                                             <small class="form-text text-muted">Leave empty to keep current
                                                 image</small>
+                                            <p id="currentFileName" class="mt-2 text-primary"></p>
+                                            <p id="newFileName" class="mt-2 text-success d-none"></p>
                                         </div>
 
                                         <div class="mb-3">
@@ -336,45 +338,7 @@
 
             <script>
 
-                // Image preview functionality
-                document.addEventListener('DOMContentLoaded', function () {
-                    // Create modal image preview
-                    const createImageInput = document.querySelector('#createModal input[name="coverImage"]');
-                    const createImagePreview = document.getElementById('createImagePreview');
 
-                    if (createImageInput && createImagePreview) {
-                        createImageInput.addEventListener('change', function () {
-                            const file = this.files[0];
-                            if (file) {
-                                const reader = new FileReader();
-                                reader.onload = function (e) {
-                                    createImagePreview.src = e.target.result;
-                                    createImagePreview.classList.remove('d-none');
-                                };
-                                reader.readAsDataURL(file);
-                            } else {
-                                createImagePreview.classList.add('d-none');
-                            }
-                        });
-                    }
-
-                    // Edit modal image preview
-                    const editImageInput = document.querySelector('#editModal input[name="coverImage"]');
-                    const editImagePreview = document.getElementById('editImagePreview');
-
-                    if (editImageInput && editImagePreview) {
-                        editImageInput.addEventListener('change', function () {
-                            const file = this.files[0];
-                            if (file) {
-                                const reader = new FileReader();
-                                reader.onload = function (e) {
-                                    editImagePreview.src = e.target.result;
-                                };
-                                reader.readAsDataURL(file);
-                            }
-                        });
-                    }
-                });
 
                 // File validation
                 document.addEventListener('DOMContentLoaded', function () {
@@ -387,13 +351,11 @@
                                 const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
 
                                 if (file.size > maxSize) {
-                                    // Image size must be less than 5MB
                                     this.value = '';
                                     return;
                                 }
 
                                 if (!allowedTypes.includes(file.type) && !file.name.match(/\.(jpg|jpeg|png|gif)$/i)) {
-                                    // Please select a valid image file (JPG, PNG, GIF)
                                     this.value = '';
                                     return;
                                 }
@@ -408,19 +370,24 @@
                     if (editModal) {
                         editModal.addEventListener('show.bs.modal', function (event) {
                             const btn = event.relatedTarget;
-
-                            // Set basic fields
+                            const contextPath = '${pageContext.request.contextPath}';
+                            const currentFileNameEl = document.getElementById('currentFileName');
+                            const editCoverImageInput = document.getElementById('editCoverImageInput');
                             document.getElementById('editId').value = btn.getAttribute('data-id');
                             document.getElementById('editTitle').value = btn.getAttribute('data-title');
                             document.getElementById('editArtistId').value = btn.getAttribute('data-artist-id');
                             document.getElementById('editReleaseYear').value = btn.getAttribute('data-release-year') || '';
-
-                            // Set current image
                             const imagePath = btn.getAttribute('data-cover-image-path');
                             const editImagePreview = document.getElementById('editImagePreview');
                             if (imagePath && imagePath.trim() !== '') {
+                                // hiển ảnh
                                 editImagePreview.src = '${pageContext.request.contextPath}' + imagePath;
                                 editImagePreview.classList.remove('d-none');
+
+                                // file hiện tại
+                                const fileName = imagePath.substring(imagePath.lastIndexOf('/') + 1);
+                                currentFileNameEl.textContent = 'Current file: ' + fileName;
+                                currentFileNameEl.classList.remove('d-none');
                             } else {
                                 editImagePreview.src = '';
                                 editImagePreview.classList.add('d-none');
@@ -534,22 +501,6 @@
                 /* File input styling */
                 .form-control[type="file"] {
                     padding: 0.375rem 0.75rem;
-                }
-
-                /* Image preview styling */
-                .image-preview-container {
-                    min-height: 250px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    border: 2px dashed #dee2e6;
-                    border-radius: 0.375rem;
-                    background-color: #f8f9fa;
-                }
-
-                .img-thumbnail {
-                    border: 1px solid #dee2e6;
-                    border-radius: 0.375rem;
                 }
 
                 /* Badge styling */

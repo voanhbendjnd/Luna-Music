@@ -215,18 +215,40 @@ public class ArtistDAO extends DatabaseConfig {
         return false;
     }
 
-    /**
-     * Delete artist by ID
-     */
     public boolean delete(long id) {
-        String sql = "DELETE FROM Artists WHERE id = ?";
         try {
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setLong(1, id);
-            return ps.executeUpdate() > 0;
+            connection.setAutoCommit(false);
+            String deleteAlbumsSql = "DELETE FROM Albums WHERE artist_id = ?";
+            try (PreparedStatement psAlbums = connection.prepareStatement(deleteAlbumsSql)) {
+                psAlbums.setLong(1, id);
+                psAlbums.executeUpdate();
+            }
+            String deleteArtistSql = "DELETE FROM Artists WHERE id = ?";
+            int rowsDeleted;
+            try (PreparedStatement psArtist = connection.prepareStatement(deleteArtistSql)) {
+                psArtist.setLong(1, id);
+                rowsDeleted = psArtist.executeUpdate();
+            }
+            connection.commit();
+            return rowsDeleted > 0;
         } catch (SQLException e) {
-            System.out.println("Error deleting artist: " + e.getMessage());
-            e.printStackTrace();
+            try {
+                if (connection != null) {
+                    connection.rollback();
+                }
+            } catch (SQLException ex) {
+                System.err.println("Rollback failed: " + ex.getMessage());
+            }
+            System.err.println("Error deleting artist in transaction: " + e.getMessage());
+
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.setAutoCommit(true);
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error resetting AutoCommit: " + ex.getMessage());
+            }
         }
         return false;
     }

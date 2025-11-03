@@ -248,9 +248,11 @@
                                         <div class="mb-3">
                                             <label class="form-label">Artist Image</label>
                                             <input type="file" name="imageFile" class="form-control"
-                                                accept=".jpg,.jpeg,.png,.gif" />
+                                                id="editCoverImageInput" accept=".jpg,.jpeg,.png,.gif" />
                                             <small class="form-text text-muted">Leave empty to keep current
                                                 image</small>
+                                            <p id="currentFileName" class="mt-2 text-primary"></p>
+                                            <p id="newFileName" class="mt-2 text-success d-none"></p>
                                         </div>
 
                                         <div class="mb-3">
@@ -305,59 +307,6 @@
             </div>
 
             <script>
-                // DataTables initialization
-                window.addEventListener('DOMContentLoaded', () => {
-                    const table = document.getElementById('datatablesSimple');
-                    if (table && window.simpleDatatables) {
-                        new simpleDatatables.DataTable(table, {
-                            searchable: true,
-                            sortable: true,
-                            perPage: 10,
-                            perPageSelect: [5, 10, 15, 20, 25]
-                        });
-                    }
-                });
-
-                // Image preview functionality
-                document.addEventListener('DOMContentLoaded', function () {
-                    // Create modal image preview
-                    const createImageInput = document.querySelector('#createModal input[name="imageFile"]');
-                    const createImagePreview = document.getElementById('createImagePreview');
-
-                    if (createImageInput && createImagePreview) {
-                        createImageInput.addEventListener('change', function () {
-                            const file = this.files[0];
-                            if (file) {
-                                const reader = new FileReader();
-                                reader.onload = function (e) {
-                                    createImagePreview.src = e.target.result;
-                                    createImagePreview.classList.remove('d-none');
-                                };
-                                reader.readAsDataURL(file);
-                            } else {
-                                createImagePreview.classList.add('d-none');
-                            }
-                        });
-                    }
-
-                    // Edit modal image preview
-                    const editImageInput = document.querySelector('#editModal input[name="imageFile"]');
-                    const editImagePreview = document.getElementById('editImagePreview');
-
-                    if (editImageInput && editImagePreview) {
-                        editImageInput.addEventListener('change', function () {
-                            const file = this.files[0];
-                            if (file) {
-                                const reader = new FileReader();
-                                reader.onload = function (e) {
-                                    editImagePreview.src = e.target.result;
-                                };
-                                reader.readAsDataURL(file);
-                            }
-                        });
-                    }
-                });
-
                 // File validation
                 document.addEventListener('DOMContentLoaded', function () {
                     const imageInputs = document.querySelectorAll('input[name="imageFile"]');
@@ -390,18 +339,20 @@
                     if (editModal) {
                         editModal.addEventListener('show.bs.modal', function (event) {
                             const btn = event.relatedTarget;
-
-                            // Set basic fields
+                            const contextPath = '${pageContext.request.contextPath}';
+                            const currentFileNameEl = document.getElementById('currentFileName');
+                            const editCoverImageInput = document.getElementById('editCoverImageInput');
                             document.getElementById('editId').value = btn.getAttribute('data-id');
                             document.getElementById('editName').value = btn.getAttribute('data-name');
                             document.getElementById('editBio').value = btn.getAttribute('data-bio') || '';
-
-                            // Set current image
                             const imagePath = btn.getAttribute('data-image-path');
                             const editImagePreview = document.getElementById('editImagePreview');
                             if (imagePath && imagePath.trim() !== '') {
                                 editImagePreview.src = '${pageContext.request.contextPath}' + imagePath;
                                 editImagePreview.classList.remove('d-none');
+                                const fileName = imagePath.substring(imagePath.lastIndexOf('/') + 1);
+                                currentFileNameEl.textContent = 'Current file: ' + fileName;
+                                currentFileNameEl.classList.remove('d-none');
                             } else {
                                 editImagePreview.src = '';
                                 editImagePreview.classList.add('d-none');
@@ -510,16 +461,7 @@
                     padding: 0.375rem 0.75rem;
                 }
 
-                /* Image preview styling */
-                .image-preview-container {
-                    min-height: 200px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    border: 2px dashed #dee2e6;
-                    border-radius: 0.375rem;
-                    background-color: #f8f9fa;
-                }
+
 
                 .img-thumbnail {
                     border: 1px solid #dee2e6;

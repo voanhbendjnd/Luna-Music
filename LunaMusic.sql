@@ -33,7 +33,6 @@ create table Users(
         REFERENCES Roles(id)
         ON DELETE SET NULL, -- Nếu Role bị xóa, User đó sẽ mất Role
     
-    -- Ràng buộc kiểm tra cho giới tính (Mô phỏng ENUM)
     CONSTRAINT CK_User_Gender
         CHECK (gender IS NULL OR gender IN ('MALE', 'FEMALE', 'OTHER'))
 )
