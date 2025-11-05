@@ -50,9 +50,10 @@ public class AdminController extends HttpServlet {
     private static final int PAGE_SIZE = 5;
     private static final List<String> ALLOWED_AUDIO_EXTENSIONS = Arrays.asList("mp3", "m4a", "wav");
     private static final List<String> ALLOWED_IMAGE_EXTENSIONS = Arrays.asList("jpg", "jpeg", "png", "gif");
-    public int getCurrentPage(String pageParam, int totalPages ){
+
+    public int getCurrentPage(String pageParam, int totalPages) {
         int currentPage = 1;
-        if(pageParam != null && !pageParam.isEmpty()){
+        if (pageParam != null && !pageParam.isEmpty()) {
             currentPage = Integer.parseInt(pageParam);
         }
         if (totalPages > 0) {
@@ -66,8 +67,9 @@ public class AdminController extends HttpServlet {
         }
         return currentPage;
     }
-    public int getTotalPages(int size, long total){
-        return  (int) Math.ceil((double) total / size);
+
+    public int getTotalPages(int size, long total) {
+        return (int) Math.ceil((double) total / size);
 
     }
 
@@ -120,7 +122,7 @@ public class AdminController extends HttpServlet {
                 int totalPages = this.getTotalPages(PAGE_SIZE, totalSongs);
                 String pageParam = request.getParameter("page");
                 int currentPage = this.getCurrentPage(pageParam, totalPages);
-                int offset = (currentPage -1) * PAGE_SIZE;
+                int offset = (currentPage - 1) * PAGE_SIZE;
                 var songs = songDAO.findAllWithPagination(q, PAGE_SIZE, offset);
                 request.setAttribute("currentPage", currentPage);
                 request.setAttribute("totalPages", totalPages);
@@ -136,10 +138,10 @@ public class AdminController extends HttpServlet {
             } else if ("artists".equalsIgnoreCase(type)) {
                 String q = request.getParameter("q");
                 long totalArtists = artistDAO.countArtist(q);
-                int totalPages =  this.getTotalPages(PAGE_SIZE, totalArtists);
+                int totalPages = this.getTotalPages(PAGE_SIZE, totalArtists);
                 String pageParam = request.getParameter("page");
                 int currentPage = this.getCurrentPage(pageParam, totalPages);
-                int offset = (currentPage -1) * PAGE_SIZE;
+                int offset = (currentPage - 1) * PAGE_SIZE;
                 var artists = artistDAO.findAllWithPagination(q, PAGE_SIZE, offset);
                 request.setAttribute("currentPage", currentPage);
                 request.setAttribute("totalPages", totalPages);
@@ -149,11 +151,11 @@ public class AdminController extends HttpServlet {
             } else if ("albums".equalsIgnoreCase(type)) {
                 String q = request.getParameter("q");
                 long totalAlbums = albumDAO.countAlbum(q);
-                int totalPages = this.getTotalPages(PAGE_SIZE,  totalAlbums);
+                int totalPages = this.getTotalPages(PAGE_SIZE, totalAlbums);
                 String pageParam = request.getParameter("page");
-                int currentPage = this.getCurrentPage(pageParam,  totalPages);
+                int currentPage = this.getCurrentPage(pageParam, totalPages);
                 int offset = (currentPage - 1) * PAGE_SIZE;
-                var albums = albumDAO.findAllWithPagination(q, PAGE_SIZE,  offset);
+                var albums = albumDAO.findAllWithPagination(q, PAGE_SIZE, offset);
                 var artists = artistDAO.findAll(null);
                 request.setAttribute("currentPage", currentPage);
                 request.setAttribute("totalPages", totalPages);
@@ -174,9 +176,6 @@ public class AdminController extends HttpServlet {
                 request.setAttribute("currentPage", currentPage);
                 request.setAttribute("totalPages", totalPages);
                 request.setAttribute("viewPath", "/views/admin/genre.jsp");
-            } else {
-                request.setAttribute("viewTitle", type);
-                request.setAttribute("viewPath", "/views/admin/table/placeholder.jsp");
             }
             request.getRequestDispatcher("/views/admin/tables.jsp").forward(request, response);
             return;
@@ -256,13 +255,12 @@ public class AdminController extends HttpServlet {
         }
         if ("delete".equals(action)) {
             String idStr = request.getParameter("id");
-            if (idStr != null && !idStr.isBlank()){
-                var success =  dao.delete(Long.parseLong(idStr));
-                if(success){
+            if (idStr != null && !idStr.isBlank()) {
+                var success = dao.delete(Long.parseLong(idStr));
+                if (success) {
                     response.sendRedirect(request.getContextPath() + "/admin?action=list&type=users");
                 }
             }
-
 
         }
     }
@@ -275,10 +273,9 @@ public class AdminController extends HttpServlet {
         u.setActive(
                 "on".equals(request.getParameter("active")) || "true".equalsIgnoreCase(request.getParameter("active")));
         String gender = request.getParameter("gender");
-        if(gender.equals("NOT_PREFER")){
+        if (gender.equals("NOT_PREFER")) {
             u.setGender(GenderEnum.OTHER);
-        }
-       else {
+        } else {
             u.setGender(GenderEnum.valueOf(gender.toUpperCase()));
         }
 
@@ -561,7 +558,7 @@ public class AdminController extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/admin?action=list&type=artists");
             }
         } catch (Exception e) {
-           return;
+            return;
         }
     }
 

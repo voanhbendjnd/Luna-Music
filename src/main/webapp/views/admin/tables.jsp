@@ -17,7 +17,6 @@
             </head>
 
             <body>
-
                 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
                     <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle">
                         <i class="fas fa-bars"></i>
@@ -26,7 +25,6 @@
                         href="${pageContext.request.contextPath}/admin?action=list&type=dashboard">
                         Luna Music Admin
                     </a>
-
                     <div class="ms-auto d-flex align-items-center">
                         <span class="text-light me-3">
                             <i class="fas fa-user-circle me-2"></i>
