@@ -293,15 +293,11 @@ public class AdminController extends HttpServlet {
         return u;
     }
 
-    /**
-     * Handle Song CRUD operations
-     */
+
     private void handleSongOperationsUpdate(HttpServletRequest request, HttpServletResponse response, String action)
             throws ServletException, IOException {
         var songDAO = new SongDAO();
         var songArtistDAO = new SongArtistDAO();
-
-        try {
             if ("create".equals(action)) {
                 Song song = buildSongFromRequest(request);
                 if (songDAO.create(song)) {
@@ -397,14 +393,10 @@ public class AdminController extends HttpServlet {
                 }
                 response.sendRedirect(request.getContextPath() + "/admin?action=list&type=songs");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
     }
 
-    /**
-     * Build Song object from request parameters and uploaded files
-     */
+
     private Song buildSongFromRequest(HttpServletRequest request) throws IOException, ServletException {
         Song song = new Song();
         song.setTitle(request.getParameter("title"));
@@ -450,12 +442,7 @@ public class AdminController extends HttpServlet {
         return song;
     }
 
-    /**
-     * Handle file upload and return the saved filename
-     * partName ex: audioFile, coverImage
-     * subDir ex: music, images
-     * allowedExtensions ex: mp3, m4a, wav, jpg, jpeg, png, gif
-     */
+
     private String handleFileUpload(HttpServletRequest request, String partName, String subDir,
             List<String> allowedExtensions) throws IOException, ServletException {
         // get file part ex: audioFile, coverImage
@@ -491,9 +478,6 @@ public class AdminController extends HttpServlet {
         return uniqueFileName;
     }
 
-    /**
-     * Extract filename from Part
-     */
     private String getFileName(Part part) {
         String contentDisposition = part.getHeader("content-disposition");
         String[] tokens = contentDisposition.split(";");
@@ -505,9 +489,7 @@ public class AdminController extends HttpServlet {
         return null;
     }
 
-    /**
-     * Get file extension from filename
-     */
+
     private String getFileExtension(String fileName) {
         if (fileName == null || fileName.isEmpty()) {
             return "";
@@ -519,9 +501,7 @@ public class AdminController extends HttpServlet {
         return fileName.substring(lastDotIndex + 1);
     }
 
-    /**
-     * Handle Artist CRUD operations
-     */
+
     private void handleArtistOperations(HttpServletRequest request, HttpServletResponse response, String action)
             throws ServletException, IOException {
         var artistDAO = new ArtistDAO();
@@ -562,9 +542,6 @@ public class AdminController extends HttpServlet {
         }
     }
 
-    /**
-     * Handle Album CRUD operations
-     */
     private void handleAlbumOperations(HttpServletRequest request, HttpServletResponse response, String action)
             throws ServletException, IOException {
         var albumDAO = new AlbumDAO();

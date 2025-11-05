@@ -107,7 +107,6 @@ public class SongDetailController extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/home");
         } catch (Exception e) {
             System.err.println("Error loading song detail: " + e.getMessage());
-            e.printStackTrace();
             response.sendRedirect(request.getContextPath() + "/home");
         }
     }
@@ -172,7 +171,6 @@ public class SongDetailController extends HttpServlet {
             response.getWriter().write("{\"success\": false, \"message\": \"Invalid song ID format\"}");
         } catch (Exception e) {
             System.err.println("Error updating play count: " + e.getMessage());
-            e.printStackTrace();
             response.getWriter().write("{\"success\": false, \"message\": \"Internal server error\"}");
         }
     }
