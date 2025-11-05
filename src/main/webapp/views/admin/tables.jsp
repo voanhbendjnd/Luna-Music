@@ -47,38 +47,36 @@
                                             type="dashboard" ;%>
 
                                             <div class="sb-sidenav-menu-heading">Dashboard</div>
-                                            <a class="nav-link <%= " dashboard".equalsIgnoreCase(type) ? "active" : ""
-                                                %>"
+                                            <a class="nav-link"
                                                 href="${pageContext.request.contextPath}/admin?action=list&type=dashboard">
                                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i>
                                                 </div>
                                                 Dashboard
                                             </a>
-
                                             <div class="sb-sidenav-menu-heading">Content Management</div>
-                                            <a class="nav-link <%= " songs".equalsIgnoreCase(type) ? "active" : "" %>"
+                                            <a class="nav-link"
                                                 href="${pageContext.request.contextPath}/admin?action=list&type=songs">
                                                 <div class="sb-nav-link-icon"><i class="fas fa-music"></i></div>
                                                 Songs
                                             </a>
-                                            <a class="nav-link <%= " albums".equalsIgnoreCase(type) ? "active" : "" %>"
+                                            <a class="nav-link"
                                                 href="${pageContext.request.contextPath}/admin?action=list&type=albums">
                                                 <div class="sb-nav-link-icon"><i class="fas fa-compact-disc"></i></div>
                                                 Albums
                                             </a>
-                                            <a class="nav-link <%= " artists".equalsIgnoreCase(type) ? "active" : "" %>"
+                                            <a class="nav-link"
                                                 href="${pageContext.request.contextPath}/admin?action=list&type=artists">
                                                 <div class="sb-nav-link-icon"><i class="fas fa-microphone"></i></div>
                                                 Artists
                                             </a>
-                                            <a class="nav-link <%= " genres".equalsIgnoreCase(type) ? "active" : "" %>"
+                                            <a class="nav-link"
                                                 href="${pageContext.request.contextPath}/admin?action=list&type=genres">
                                                 <div class="sb-nav-link-icon"><i class="fas fa-tags"></i></div>
                                                 Genres
                                             </a>
 
                                             <div class="sb-sidenav-menu-heading">User Management</div>
-                                            <a class="nav-link <%= " users".equalsIgnoreCase(type) ? "active" : "" %>"
+                                            <a class="nav-link"
                                                 href="${pageContext.request.contextPath}/admin?action=list&type=users">
                                                 <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                                                 Users
@@ -137,7 +135,7 @@
                                                     ("dashboard".equalsIgnoreCase(type) ? "Home" : type)))))%>
                                             </li>
                                         </ol>
-                                        <jsp:include page="${requestScope.viewPath}" />
+                                        <jsp:include page="${viewPath}" />
                                 </div>
                                 </main>
                             </div>

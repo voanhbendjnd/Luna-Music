@@ -112,15 +112,6 @@
                             <div class="card-footer bg-white border-top">
                                 <nav aria-label="Page navigation">
                                     <ul class="pagination justify-content-center mb-0">
-
-                                        <!-- <c:url var="basePageUrl" value="${pageContext.request.contextPath}/admin">
-                                                                                <c:param name="action" value="list" />
-                                                                                <c:param name="type" value="genres" />
-                                                                                <c:if test="${not empty q}">
-                                                                                    <c:param name="q" value="${q}" />
-                                                                                </c:if>
-                                                                            </c:url> -->
-
                                         <c:if test="${currentPage > 1}">
                                             <a class="page-link"
                                                 href="${pageContext.request.contextPath}/admin?action=list&type=users&page=${currentPage - 1}">
