@@ -27,7 +27,6 @@
                         Luna Music Admin
                     </a>
 
-                    <!-- User Info -->
                     <div class="ms-auto d-flex align-items-center">
                         <span class="text-light me-3">
                             <i class="fas fa-user-circle me-2"></i>
@@ -150,7 +149,6 @@
 
                         <script src="${pageContext.request.contextPath}/assets/js/bootstrap.bundle.min.js"></script>
                         <script>
-                            // Enhanced Sidebar toggle with smooth animation
                             document.addEventListener('DOMContentLoaded', function () {
                                 const toggle = document.getElementById('sidebarToggle');
                                 const sidenav = document.getElementById('sidenavAccordion');
@@ -165,20 +163,16 @@
                                         if (collapsed) {
                                             sidenav.classList.add('collapsed');
                                             content.classList.add('expanded');
-                                            // Update toggle button icon
                                             toggle.innerHTML = '<i class="fas fa-bars"></i>';
                                         } else {
                                             sidenav.classList.remove('collapsed');
                                             content.classList.remove('expanded');
-                                            // Update toggle button icon
                                             toggle.innerHTML = '<i class="fas fa-bars"></i>';
                                         }
 
-                                        // Save state to localStorage
                                         localStorage.setItem('sidebarCollapsed', collapsed);
                                     };
 
-                                    // Load saved state
                                     const savedState = localStorage.getItem('sidebarCollapsed');
                                     if (savedState === 'true') {
                                         collapsed = true;
@@ -188,19 +182,16 @@
 
                                     toggle.addEventListener('click', toggleSidebar);
 
-                                    // Initialize sidebar state
                                     if (!collapsed) {
                                         sidenav.classList.remove('collapsed');
                                         content.classList.remove('expanded');
                                     }
 
-                                    // Add smooth transitions to nav links
                                     const navLinks = document.querySelectorAll('.sb-sidenav-menu .nav-link');
                                     navLinks.forEach((link, index) => {
                                         link.style.animationDelay = `${index * 0.1}s`;
                                     });
 
-                                    // Add click animation to buttons
                                     const buttons = document.querySelectorAll('.btn');
                                     buttons.forEach(button => {
                                         button.addEventListener('click', function (e) {
