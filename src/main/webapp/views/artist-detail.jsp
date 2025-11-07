@@ -16,7 +16,6 @@
                 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/if-footer-song-detail.css">
 
                 <style>
-                    /* Dynamic background styles */
                     .song-detail-section {
                         transition: background 1.5s ease-in-out;
                         position: relative;
