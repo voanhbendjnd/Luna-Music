@@ -176,25 +176,19 @@
                             </div>
                         </div>
                         <%@include file="/views/components/footer.jsp" %>
-                            <!-- Scripts -->
                             <script src="${pageContext.request.contextPath}/assets/js/bootstrap.bundle.min.js"></script>
                             <script src="${pageContext.request.contextPath}/assets/js/color-extractor.js"></script>
                             <script src="${pageContext.request.contextPath}/assets/js/dynamic-background.js"></script>
                             <script src="${pageContext.request.contextPath}/assets/js/song-detail.js"></script>
 
                             <script>
-                                // Context path for navigation
                                 const currentContextPath = "${pageContext.request.contextPath}";
 
-                                /**
-                                 * Play related song
-                                 */
+
                                 function playSong(songId) {
-                                    // Navigate đến song-detail page
                                     window.location.href = currentContextPath + "/song-detail?id=" + songId;
                                 }
 
-                                // Export function globally
                                 window.playSong = playSong;
                             </script>
                     </body>
