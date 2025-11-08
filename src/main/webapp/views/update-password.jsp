@@ -59,7 +59,6 @@
                                 padding: 0.8rem 0;
                                 transition: background-color 0.15s ease-in-out;
                             }
-
                             .btn-success-custom:hover,
                             .btn-success-custom:focus {
                                 background-color: #1fdf64;
@@ -67,32 +66,26 @@
                                 color: #000000;
                                 box-shadow: none;
                             }
-
                             .login-text {
                                 margin-top: 3rem;
                                 color: #a7a7a7;
                             }
-
                             .login-link {
                                 color: #ffffff;
                                 font-weight: bold;
                                 text-decoration: none;
                             }
-
                             .login-link:hover {
                                 color: #1ed760;
                             }
-
                             .spotify-logo {
                                 margin-bottom: 2rem;
                                 height: 40px;
                                 width: 40px;
                             }
-
                             .form-check-label {
                                 color: #ffffff;
                             }
-
                             /* Custom error message style */
                             .error-message {
                                 color: #ff3333;
@@ -101,13 +94,11 @@
                                 margin-top: 0.25rem;
                                 text-align: left;
                             }
-
                             .form-select {
                                 border: none;
                                 border: 1px solid #535353;
                                 background-color: #1a1a1a;
                             }
-
                             .form-select:focus {
                                 color: #000000;
                                 box-shadow: none;
