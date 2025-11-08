@@ -25,20 +25,17 @@
                                 margin: 0;
                                 font-family: Arial, sans-serif;
                             }
-
                             .signup-container {
                                 width: 100%;
                                 max-width: 450px;
                                 padding: 20px;
                                 text-align: center;
                             }
-
                             .signup-container h1 {
                                 font-weight: 900;
                                 font-size: 2.5rem;
                                 margin-bottom: 3rem;
                             }
-
                             .form-control {
                                 background-color: #1a1a1a;
                                 border: 1px solid #535353;
