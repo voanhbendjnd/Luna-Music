@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
+
 package controllers;
 
 import java.io.*;
@@ -11,13 +8,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 /**
- * Servlet to serve files from the fixed upload directory
  * 
  * @author Vo Anh Ben - CE190709
  */
 public class FileServlet extends HttpServlet {
 
-    // Base upload path - same as in AdminController
     private static final String BASE_UPLOAD_PATH = "C:\\Users\\PC\\Documents\\FALL25\\upload";
 
     @Override
@@ -74,9 +69,6 @@ public class FileServlet extends HttpServlet {
             }
             out.flush();
         } catch (IOException e) {
-            // Log the error (you might want to use a proper logging framework) ex: Error
-            // serving file: C:\Users\PC\Documents\FALL25/upload\music\filename.mp3, Error:
-            // java.io.IOException
             System.err.println("Error serving file: " + file.getAbsolutePath() + ", Error: " + e.getMessage());
         }
     }
